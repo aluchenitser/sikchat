@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>sikchat</title>
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/sikchat.css">
+        
+
+
+    </head>
+    <body>
+        <h1>welcome to sikchat, bruh</h1>  
+
+        <div>what's your name BROSKI: <input id="username" name="username" autocomplete="off" /></div>
+        <hr />
+        <form id="form">
+            <div class="form-wrapper">
+                <input id="message" name="message" autocomplete="off" />
+                <button>
+                    <span class="text-send">send</span>
+                    <span class="underline"></span>
+                </button>
+            </div>
+        </form>
+
+        <div id="messages"></div>
+
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+
+        <script>
+            var socket = io();
+
+            document.getElementById('form').addEventListener('submit', (e)=> {
+                e.preventDefault();
+
+                let text = document.getElementById('message').value;
+                if(!text) return false;
+                let username = document.getElementById('username').value || 'someone'; 
+
+                socket.emit('chat_message', { text, username });
+
+            })
+
+            socket.on('chat_message', msg => { 
+                const html = `<div class='message-output'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
+                $(html).prependTo("#messages");
+                document.getElementById("message").value = "";
+            });
+        </script>
+    </body>
+</html>
