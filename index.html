@@ -14,9 +14,18 @@
             <form id="form">
                 <input id="message" name="message" autocomplete="off" /><button>></button>
             </form>
-            <div class="spacer"></div>
-            <!-- <div>moniker: <input id="username" name="username" autocomplete="off" /></div> -->
-            <div class="sikchat-logo"><span>sikchat</span></div>
+
+            <!-- <div class="spacer"></div> -->
+
+            <div class="logo-column">
+                <div class="ghost-drawer"><div class="ghost-logo">sikchat</div></div>
+                <div class="drawer">
+                    <div class="drawer-contents"><div>moniker: <input id="username" name="username" autocomplete="off" /></div></div>
+                    <div class="drawer-handle">
+                        <span id="logo">sikchat</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="flip-wrapper">
         
@@ -45,6 +54,10 @@
                 const html = `<div class='message-output'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
                 $(html).prependTo("#messages");
                 document.getElementById("message").value = "";
+            });
+
+            document.getElementById('logo').addEventListener("click", () => {
+
             });
         </script>
     </body>

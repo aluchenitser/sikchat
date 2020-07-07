@@ -5,6 +5,10 @@ html, body {
   padding: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: monospace, Arial;
 }
@@ -18,15 +22,13 @@ h1, p {
   color: white;
   justify-content: space-between;
 }
-.header > div, .header > form {
-  background-color: #EE90EE;
-}
 .header #form {
   display: flex;
   flex: 1.5 1 0;
   width: 100%;
   padding: 12px 0 10px 15px;
   border-radius: 0 0 0 21px;
+  background-color: #EE90EE;
 }
 .header #form #message, .header #form button {
   font-size: inherit;
@@ -44,21 +46,38 @@ h1, p {
   color: white;
   flex: 0 0 35px;
 }
-.header .spacer {
-  flex: 0.5 1 auto;
-}
-.header .sikchat-logo {
+.header .logo-column {
   flex: 0.5 1 0;
-  padding: 12px 15px 10px 0;
+  position: relative;
   font-size: 22px;
   text-align: right;
   font-style: italic;
   text-decoration: underline;
 }
-.header .sikchat-logo > span {
+.header .logo-column .ghost-drawer {
+  padding: 12px 15px 10px 0;
+  visibility: hidden;
+}
+.header .logo-column .ghost-drawer .ghost-logo {
   padding: 0 15px;
 }
-.header .sikchat-logo > span:hover {
+.header .logo-column .drawer {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  padding: 12px 15px 10px 0;
+  position: absolute;
+  top: 0;
+  background-color: #EE90EE;
+}
+.header .logo-column .drawer .drawer-contents {
+  flex: 0 1 0;
+  overflow: hidden;
+}
+.header .logo-column .drawer .drawer-handle #logo {
+  padding: 0 15px;
+}
+.header .logo-column .drawer .drawer-handle #logo:hover {
   cursor: pointer;
 }
 
@@ -68,6 +87,7 @@ h1, p {
 
 #messages {
   width: 50%;
+  padding-left: 15px;
 }
 #messages .message-output {
   margin-top: 11px;
