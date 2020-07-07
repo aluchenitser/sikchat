@@ -1,9 +1,8 @@
 /* ----------------- VARIABLES ----------------- */
-$font-size-base: 18px;
 
+$header-background-color: #EE90EE;
 
-
-/* ----------------- VARIABLES ----------------- */
+/* --------------------------------------------- */
 
 html, body {
     margin: 0;
@@ -20,23 +19,62 @@ h1, p {
 
 .header {
     display: flex;
-    background-color: #EE90EE;
-    padding: 15px;
+    // padding: 12px 15px 10px 15px;
     color: white;
-    border-radius: 0 0 5px 5px;
     justify-content: space-between;
 
-    * { margin: 0 }
+    > div, > form {
+        background-color: $header-background-color;
+    }
 
-    > * {
-        flex: 1 1 0;
+    #form  {
+        display: flex;
+        flex: 1.5 1 0;
+
+        width: 100%;
+        padding: 12px 0 10px 15px;
+        border-radius: 0 0 0 21px;
+
+        #message, button {
+            font-size: inherit;
+            outline: none;
+            border: none;
+            height: 100%;
+        }
+
+        #message {
+            padding: 0;
+            flex: 1 1 auto;
+            border-radius: 0 0 0 7px;
+            padding-left: 10px;
+        }
+
+        button {
+            color: white;
+            flex: 0 0 35px;
+        }
+    }
+
+    .spacer {
+        flex: .5 1 auto;
     }
 
     .sikchat-logo {
+        flex: .5 1 0;
+
+        padding: 12px 15px 10px 0;
         font-size: 22px;
         text-align: right;
         font-style: italic;
         text-decoration: underline;
+
+        > span {
+            padding: 0 15px;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
     }
 }
 
@@ -44,32 +82,13 @@ h1, p {
     display: flex;
 }
 
-#form  {
-    width: 100%;
-    align-items: stretch;
-
-    #message, button {
-        font-size: inherit;
-        outline: none;
-        border: none;
-        height: 100%;
-        
-    }
-
-    #message {
-        padding: 0;
-    }
-
-    button {
-        color: white;
-    }
-}
 
 #messages {
     width: 50%;
 
     .message-output {
         margin-top: 11px;
+        letter-spacing: -1.5px;
 
         .user-name {
             font-size: 12px;

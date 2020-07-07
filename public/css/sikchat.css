@@ -1,5 +1,5 @@
 /* ----------------- VARIABLES ----------------- */
-/* ----------------- VARIABLES ----------------- */
+/* --------------------------------------------- */
 html, body {
   margin: 0;
   padding: 0;
@@ -15,44 +15,55 @@ h1, p {
 
 .header {
   display: flex;
-  background-color: #EE90EE;
-  padding: 15px;
   color: white;
-  border-radius: 0 0 5px 5px;
   justify-content: space-between;
 }
-.header * {
-  margin: 0;
+.header > div, .header > form {
+  background-color: #EE90EE;
 }
-.header > * {
-  flex: 1 1 0;
-}
-.header .sikchat-logo {
-  font-size: 22px;
-  text-align: right;
-  font-style: italic;
-  text-decoration: underline;
-}
-
-.flip-wrapper {
+.header #form {
   display: flex;
-}
-
-#form {
+  flex: 1.5 1 0;
   width: 100%;
-  align-items: stretch;
+  padding: 12px 0 10px 15px;
+  border-radius: 0 0 0 21px;
 }
-#form #message, #form button {
+.header #form #message, .header #form button {
   font-size: inherit;
   outline: none;
   border: none;
   height: 100%;
 }
-#form #message {
+.header #form #message {
   padding: 0;
+  flex: 1 1 auto;
+  border-radius: 0 0 0 7px;
+  padding-left: 10px;
 }
-#form button {
+.header #form button {
   color: white;
+  flex: 0 0 35px;
+}
+.header .spacer {
+  flex: 0.5 1 auto;
+}
+.header .sikchat-logo {
+  flex: 0.5 1 0;
+  padding: 12px 15px 10px 0;
+  font-size: 22px;
+  text-align: right;
+  font-style: italic;
+  text-decoration: underline;
+}
+.header .sikchat-logo > span {
+  padding: 0 15px;
+}
+.header .sikchat-logo > span:hover {
+  cursor: pointer;
+}
+
+.flip-wrapper {
+  display: flex;
 }
 
 #messages {
@@ -60,6 +71,7 @@ h1, p {
 }
 #messages .message-output {
   margin-top: 11px;
+  letter-spacing: -1.5px;
 }
 #messages .message-output .user-name {
   font-size: 12px;
