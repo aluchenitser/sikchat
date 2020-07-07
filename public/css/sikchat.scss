@@ -1,6 +1,11 @@
 /* ----------------- VARIABLES ----------------- */
 
 $header-background-color: #EE90EE;
+$label-text-color: gray;
+
+$font-size-message: 16px;
+$font-size-username: 22px;
+$font-size-logo: 20px;
 
 /* --------------------------------------------- */
 
@@ -22,16 +27,14 @@ h1, p {
 }
 
 
-
+// NOTE: major flex values are in the RESPONSIVE area further down the file
 .header {
     display: flex;
-    // padding: 12px 15px 10px 15px;
     color: white;
     justify-content: space-between;
 
      #form  {
         display: flex;
-        flex: 1.5 1 0;
 
         width: 100%;
         padding: 12px 0 10px 15px;
@@ -39,14 +42,14 @@ h1, p {
 
         background-color: $header-background-color;
 
-        #message, button {
-            font-size: inherit;
+        #message-input, button {
+            font-size: $font-size-message;
             outline: none;
             border: none;
             height: 100%;
         }
 
-        #message {
+        #message-input {
             padding: 0;
             flex: 1 1 auto;
             border-radius: 0 0 0 7px;
@@ -61,11 +64,9 @@ h1, p {
 
     .spacer {
         background-color: $header-background-color;
-        flex: .5 1 auto;
     }
 
     .logo-column {
-        flex: .5 1 0;
 
         position: relative;
         font-size: 22px;
@@ -105,7 +106,7 @@ h1, p {
 
                     label {
                         font-size: 12px;
-                        color: gray;
+                        color: $label-text-color;
                     }
                     
                     input {
@@ -127,10 +128,15 @@ h1, p {
                 background-color: $header-background-color;
                 padding: 12px 15px 10px 0;
                 transition: transform .5s;
+                
+                // prevents horizontal scroll bar
+                position: relative;
+                left: -1px;
 
                 &:hover { cursor: pointer; }
                 
                 #logo {
+                    font-size: $font-size-logo;
                     padding: 0 15px;
                 }
             }
@@ -172,4 +178,50 @@ h1, p {
             text-align: right;
         }
     }
+}
+
+/* ---------------- RESPONSIVE ----------------- */
+
+// extra small
+@media (max-width: 575px) {
+
+}
+
+// small
+@media (max-width: 767px) {
+    
+}
+
+// medium
+@media (max-width: 991px) {
+    .header {
+        #form {            flex: 1.5 1 0;        }
+        .spacer {          flex: .1 1 auto;      }
+        .logo-column {     flex: .5 1 0;         }
+    }
+}
+
+// large
+@media (max-width: 1199px) {
+    .header {
+        #form {            flex: 1.5 1 0;        }
+        .spacer {          flex: .2 1 auto;      }
+        .logo-column {     flex: .5 1 0;         }
+    }
+}
+
+// extra large
+@media (min-width: 1200px) {
+    .header {
+        #form {            flex: 1.5 1 0;        }
+        .spacer {          flex: .35 1 auto;      }
+        .logo-column {     flex: .5 1 0;         }
+    }
+}
+
+// orca whale
+@media (min-width: 1500px) {
+    #form {            flex: 1.5 1 0;        }
+    .spacer {          flex: .5 1 auto;      }
+    .logo-column {     flex: .5 1 0;         }    
 }

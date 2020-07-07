@@ -9,7 +9,7 @@
     <body>
         <div class="header">
             <form id="form">
-                <input id="message" name="message" autocomplete="off" /><button>></button>
+                <input id="message-input" name="message-input" autocomplete="off" maxlength="280" /><button>></button>
             </form>
 
             <div class="spacer"></div>
@@ -44,19 +44,26 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
 
         <script>
-            var socket = io();
-
+            var inputElem = document.getElementById('username');
+            
+            inputElem.addEventListener("keydown", (e) => {
+                if(e.code == "Enter" || e.code == "NumpadEnter" || e.code == "Tab") {
+                    e.preventDefault();
+                    closeDrawer();
+                }
+            })
+            
             document.getElementById('form').addEventListener('submit', (e)=> {
                 e.preventDefault();
-
-                let text = document.getElementById('message').value;
+                
+                let text = document.getElementById('message-input').value;
                 if(!text) return false;
                 let username = document.getElementById('username').value || 'someone'; 
-
+                
                 socket.emit('chat_message', { text, username });
-
             })
 
+            var socket = io();
             socket.on('chat_message', msg => { 
                 let user = document.getElementById('username').value || 'someone'; 
                 let messageClass = user == msg.username && user != 'someone'
@@ -65,13 +72,22 @@
 
                 const html = `<div class='${messageClass}'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
                 $(html).prependTo("#messages");
-                document.getElementById("message").value = "";
+                document.getElementById("message-input").value = "";
             });
 
-            document.querySelector('.drawer-handle').addEventListener("click", () => {
+            document.querySelector('.drawer-handle').addEventListener("click", openDrawer);
+
+            /* ------------------ FUNCTIONS ------------------ */
+
+            function openDrawer() {
                 $(".drawer").toggleClass("open");
                 document.getElementById('username').focus();
-            });
+            }
+
+            function closeDrawer() {
+                $(".drawer").toggleClass("open");
+                document.getElementById('message-input').focus();
+            }
         </script>
     </body>
 </html>

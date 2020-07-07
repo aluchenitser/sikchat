@@ -24,19 +24,18 @@ h1, p {
 }
 .header #form {
   display: flex;
-  flex: 1.5 1 0;
   width: 100%;
   padding: 12px 0 10px 15px;
   border-radius: 0 0 0 21px;
   background-color: #EE90EE;
 }
-.header #form #message, .header #form button {
-  font-size: inherit;
+.header #form #message-input, .header #form button {
+  font-size: 16px;
   outline: none;
   border: none;
   height: 100%;
 }
-.header #form #message {
+.header #form #message-input {
   padding: 0;
   flex: 1 1 auto;
   border-radius: 0 0 0 7px;
@@ -48,10 +47,8 @@ h1, p {
 }
 .header .spacer {
   background-color: #EE90EE;
-  flex: 0.5 1 auto;
 }
 .header .logo-column {
-  flex: 0.5 1 0;
   position: relative;
   font-size: 22px;
   text-align: right;
@@ -103,11 +100,14 @@ h1, p {
   background-color: #EE90EE;
   padding: 12px 15px 10px 0;
   transition: transform 0.5s;
+  position: relative;
+  left: -1px;
 }
 .header .logo-column .drawer .drawer-handle:hover {
   cursor: pointer;
 }
 .header .logo-column .drawer .drawer-handle #logo {
+  font-size: 20px;
   padding: 0 15px;
 }
 .header .logo-column .drawer.open {
@@ -138,6 +138,54 @@ h1, p {
 }
 #messages .message-output.is-current-user {
   text-align: right;
+}
+
+/* ---------------- RESPONSIVE ----------------- */
+@media (max-width: 991px) {
+  .header #form {
+    flex: 1.5 1 0;
+  }
+  .header .spacer {
+    flex: 0.1 1 auto;
+  }
+  .header .logo-column {
+    flex: 0.5 1 0;
+  }
+}
+@media (max-width: 1199px) {
+  .header #form {
+    flex: 1.5 1 0;
+  }
+  .header .spacer {
+    flex: 0.2 1 auto;
+  }
+  .header .logo-column {
+    flex: 0.5 1 0;
+  }
+}
+@media (min-width: 1200px) {
+  .header #form {
+    flex: 1.5 1 0;
+  }
+  .header .spacer {
+    flex: 0.35 1 auto;
+  }
+  .header .logo-column {
+    flex: 0.5 1 0;
+  }
+}
+@media (min-width: 1500px) {
+  #form {
+    flex: 1.5 1 0;
+  }
+
+  .spacer {
+    flex: 0.5 1 auto;
+  }
+
+  .logo-column {
+    flex: 0.5 1 0;
+  }
 }
 
 /*# sourceMappingURL=sikchat.css.map */
