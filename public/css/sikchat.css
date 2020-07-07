@@ -84,6 +84,7 @@ h1, p {
 .header .logo-column .drawer .drawer-contents .drawer-item {
   display: flex;
   flex-flow: column;
+  padding: 0 10px;
 }
 .header .logo-column .drawer .drawer-contents .drawer-item label {
   font-size: 12px;
@@ -103,11 +104,11 @@ h1, p {
   padding: 12px 15px 10px 0;
   transition: transform 0.5s;
 }
+.header .logo-column .drawer .drawer-handle:hover {
+  cursor: pointer;
+}
 .header .logo-column .drawer .drawer-handle #logo {
   padding: 0 15px;
-}
-.header .logo-column .drawer .drawer-handle #logo:hover {
-  cursor: pointer;
 }
 .header .logo-column .drawer.open {
   height: 250%;
@@ -134,6 +135,9 @@ h1, p {
 }
 #messages .message-output .output-text {
   font-size: 18px;
+}
+#messages .message-output.is-current-user {
+  text-align: right;
 }
 
 /*# sourceMappingURL=sikchat.css.map */

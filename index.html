@@ -23,7 +23,7 @@
                                 <label>moniker</label> 
                             </div>
                             <div>
-                                <input id="username" name="username" autocomplete="off" />
+                                <input id="username" name="username" autocomplete="off" spellcheck="false" maxlength="20" />
                             </div>
                         </div>
                     </div>
@@ -58,13 +58,19 @@
             })
 
             socket.on('chat_message', msg => { 
-                const html = `<div class='message-output'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
+                let user = document.getElementById('username').value || 'someone'; 
+                let messageClass = user == msg.username && user != 'someone'
+                    ? 'message-output is-current-user'
+                    : 'message-output';
+
+                const html = `<div class='${messageClass}'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
                 $(html).prependTo("#messages");
                 document.getElementById("message").value = "";
             });
 
-            document.getElementById('logo').addEventListener("click", () => {
+            document.querySelector('.drawer-handle').addEventListener("click", () => {
                 $(".drawer").toggleClass("open");
+                document.getElementById('username').focus();
             });
         </script>
     </body>

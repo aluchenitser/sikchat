@@ -101,6 +101,7 @@ h1, p {
                 .drawer-item {
                     display: flex;
                     flex-flow: column;
+                    padding: 0 10px;
 
                     label {
                         font-size: 12px;
@@ -123,22 +124,23 @@ h1, p {
             
             .drawer-handle {
                 flex: 0 1 auto;
-                
                 background-color: $header-background-color;
                 padding: 12px 15px 10px 0;
-
                 transition: transform .5s;
+
+                &:hover { cursor: pointer; }
                 
                 #logo {
                     padding: 0 15px;
-                    &:hover { cursor: pointer; }
                 }
             }
             
             // OPEN THE DRAWER
             &.open {
                 height: 250%;
-                .drawer-handle { transform: rotate(4deg); }
+                .drawer-handle { 
+                    transform: rotate(4deg); 
+                }
             }
         }
     }
@@ -164,6 +166,10 @@ h1, p {
 
         .output-text {
             font-size: 18px;
+        }
+
+        &.is-current-user {
+            text-align: right;
         }
     }
 }
