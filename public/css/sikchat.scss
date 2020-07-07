@@ -98,9 +98,27 @@ h1, p {
                 color: black;
                 font-style: normal;
 
-                label {
-                    font-size: 14px;
-                }                
+                .drawer-item {
+                    display: flex;
+                    flex-flow: column;
+
+                    label {
+                        font-size: 12px;
+                        color: gray;
+                    }
+                    
+                    input {
+                        border: none;
+                        border-bottom: 1px solid darkgray;
+                        outline: none;
+                        direction: rtl;
+                        font-size: 20px;
+                        width: 100%;
+                    }
+                    
+
+                }
+
             }
             
             .drawer-handle {
@@ -119,7 +137,7 @@ h1, p {
             
             // OPEN THE DRAWER
             &.open {
-                height: 500%;
+                height: 250%;
                 .drawer-handle { transform: rotate(4deg); }
             }
         }
