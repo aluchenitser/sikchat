@@ -46,6 +46,10 @@ h1, p {
   color: white;
   flex: 0 0 35px;
 }
+.header .spacer {
+  background-color: #EE90EE;
+  flex: 0.5 1 auto;
+}
 .header .logo-column {
   flex: 0.5 1 0;
   position: relative;
@@ -65,20 +69,38 @@ h1, p {
   display: flex;
   flex-flow: column;
   width: 100%;
-  padding: 12px 15px 10px 0;
   position: absolute;
   top: 0;
-  background-color: #EE90EE;
+  height: 100%;
+  transition: height 0.5s;
+  transform-origin: left;
 }
 .header .logo-column .drawer .drawer-contents {
-  flex: 0 1 0;
+  flex: 1 1 0;
   overflow: hidden;
+  color: black;
+  font-style: normal;
+}
+.header .logo-column .drawer .drawer-contents label {
+  font-size: 14px;
+}
+.header .logo-column .drawer .drawer-handle {
+  flex: 0 1 auto;
+  background-color: #EE90EE;
+  padding: 12px 15px 10px 0;
+  transition: transform 0.5s;
 }
 .header .logo-column .drawer .drawer-handle #logo {
   padding: 0 15px;
 }
 .header .logo-column .drawer .drawer-handle #logo:hover {
   cursor: pointer;
+}
+.header .logo-column .drawer.open {
+  height: 500%;
+}
+.header .logo-column .drawer.open .drawer-handle {
+  transform: rotate(4deg);
 }
 
 .flip-wrapper {

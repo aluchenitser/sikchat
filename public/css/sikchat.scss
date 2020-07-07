@@ -21,6 +21,8 @@ h1, p {
     margin: 0 0 12px 0;
 }
 
+
+
 .header {
     display: flex;
     // padding: 12px 15px 10px 15px;
@@ -57,10 +59,10 @@ h1, p {
         }
     }
 
-    // .spacer {
-    //     background-color: $header-background-color;
-    //     flex: .5 1 auto;
-    // }
+    .spacer {
+        background-color: $header-background-color;
+        flex: .5 1 auto;
+    }
 
     .logo-column {
         flex: .5 1 0;
@@ -83,22 +85,42 @@ h1, p {
             display: flex;
             flex-flow: column;
             width: 100%;
-            padding: 12px 15px 10px 0;
             position: absolute;
             top: 0;
-            
-            background-color: $header-background-color;
+            height: 100%;
+            transition: height .5s;
+            transform-origin: left;
 
+            
             .drawer-contents {
-                flex: 0 1 0;
+                flex: 1 1 0;
                 overflow: hidden;
+                color: black;
+                font-style: normal;
+
+                label {
+                    font-size: 14px;
+                }                
             }
             
             .drawer-handle {
+                flex: 0 1 auto;
+                
+                background-color: $header-background-color;
+                padding: 12px 15px 10px 0;
+
+                transition: transform .5s;
+                
                 #logo {
                     padding: 0 15px;
                     &:hover { cursor: pointer; }
                 }
+            }
+            
+            // OPEN THE DRAWER
+            &.open {
+                height: 500%;
+                .drawer-handle { transform: rotate(4deg); }
             }
         }
     }

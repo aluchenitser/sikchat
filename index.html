@@ -5,9 +5,6 @@
         <title>sikchat</title>
         <link rel="stylesheet" type="text/css" href="css/normalize.css">
         <link rel="stylesheet" type="text/css" href="css/sikchat.css">
-        
-
-
     </head>
     <body>
         <div class="header">
@@ -15,12 +12,17 @@
                 <input id="message" name="message" autocomplete="off" /><button>></button>
             </form>
 
-            <!-- <div class="spacer"></div> -->
+            <div class="spacer"></div>
 
             <div class="logo-column">
                 <div class="ghost-drawer"><div class="ghost-logo">sikchat</div></div>
                 <div class="drawer">
-                    <div class="drawer-contents"><div>moniker: <input id="username" name="username" autocomplete="off" /></div></div>
+                    <div class="drawer-contents">
+                        <div class="drawer-item">
+                            <label>moniker</label> <input id="username" name="username" autocomplete="off" />
+                        </div>
+                    </div>
+
                     <div class="drawer-handle">
                         <span id="logo">sikchat</span>
                     </div>
@@ -57,7 +59,7 @@
             });
 
             document.getElementById('logo').addEventListener("click", () => {
-
+                $(".drawer").toggleClass("open");
             });
         </script>
     </body>
