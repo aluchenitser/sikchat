@@ -10,21 +10,18 @@
 
     </head>
     <body>
-        <h1>welcome to sikchat, bruh</h1>  
+        <div class="header">
+                <form id="form">
+                    <input id="message" name="message" autocomplete="off" /><button>></button>
+                </form>
+            <div>moniker: <input id="username" name="username" autocomplete="off" /></div>
+            <div class="sikchat-logo">sikchat</div>  
+        </div>
+        <div class="flip-wrapper">
+        
 
-        <div>what's your name BROSKI: <input id="username" name="username" autocomplete="off" /></div>
-        <hr />
-        <form id="form">
-            <div class="form-wrapper">
-                <input id="message" name="message" autocomplete="off" />
-                <button>
-                    <span class="text-send">send</span>
-                    <span class="underline"></span>
-                </button>
-            </div>
-        </form>
-
-        <div id="messages"></div>
+            <div id="messages"></div>
+        </div>
 
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>

@@ -44,6 +44,12 @@ io.on('connection', (socket) => {
 
 // });
 
-const server = http.listen(3000, function() {
-    console.log('listening on *:3000');
+// command line port selection or default to 3000
+let port = parseInt(process.argv[2]);
+port = port && port >= 1023 && port <= 65535
+    ? port
+    : 3000;
+
+const server = http.listen(port, function() {
+    console.log(`listening on *:${port}`);
 });
