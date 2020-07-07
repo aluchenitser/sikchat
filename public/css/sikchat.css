@@ -1,5 +1,5 @@
 /* ----------------- VARIABLES ----------------- */
-/* --------------------------------------------- */
+/* ----------------- GENERAL ----------------- */
 html, body {
   margin: 0;
   padding: 0;
@@ -17,6 +17,7 @@ h1, p {
   margin: 0 0 12px 0;
 }
 
+/* ----------------- HEADER ----------------- */
 .header {
   display: flex;
   color: white;
@@ -117,73 +118,70 @@ h1, p {
   transform: rotate(4deg);
 }
 
-.flip-wrapper {
+/* ----------------- BODY ----------------- */
+.chat-body {
   display: flex;
+  justify-content: space-between;
 }
-
-#messages {
-  width: 50%;
+.chat-body #messages {
   padding-left: 15px;
 }
-#messages .message-output {
+.chat-body #messages .message-output {
   margin-top: 11px;
   letter-spacing: -1.5px;
 }
-#messages .message-output .user-name {
+.chat-body #messages .message-output .user-name {
   font-size: 12px;
   text-decoration: underline;
 }
-#messages .message-output .output-text {
+.chat-body #messages .message-output .output-text {
   font-size: 18px;
 }
-#messages .message-output.is-current-user {
+.chat-body #messages .message-output.is-current-user {
   text-align: right;
 }
-
 /* ---------------- RESPONSIVE ----------------- */
 @media (max-width: 991px) {
-  .header #form {
+  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer {
+  .header .spacer, .chat-body .spacer {
     flex: 0.1 1 auto;
   }
-  .header .logo-column {
+  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
     flex: 0.5 1 0;
   }
 }
 @media (max-width: 1199px) {
-  .header #form {
+  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer {
+  .header .spacer, .chat-body .spacer {
     flex: 0.2 1 auto;
   }
-  .header .logo-column {
+  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
     flex: 0.5 1 0;
   }
 }
 @media (min-width: 1200px) {
-  .header #form {
+  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer {
+  .header .spacer, .chat-body .spacer {
     flex: 0.35 1 auto;
   }
-  .header .logo-column {
+  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
     flex: 0.5 1 0;
   }
 }
 @media (min-width: 1500px) {
-  #form {
+  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
     flex: 1.5 1 0;
   }
-
-  .spacer {
+  .header .spacer, .chat-body .spacer {
     flex: 0.5 1 auto;
   }
-
-  .logo-column {
+  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
     flex: 0.5 1 0;
   }
 }

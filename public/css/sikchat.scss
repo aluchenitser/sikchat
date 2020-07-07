@@ -1,3 +1,5 @@
+// IMPORTANT NOTE: major flex values for the header and body are in the RESPONSIVE area further down the file
+
 /* ----------------- VARIABLES ----------------- */
 
 $header-background-color: #EE90EE;
@@ -7,7 +9,7 @@ $font-size-message: 16px;
 $font-size-username: 22px;
 $font-size-logo: 20px;
 
-/* --------------------------------------------- */
+/* ----------------- GENERAL ----------------- */
 
 html, body {
     margin: 0;
@@ -26,8 +28,9 @@ h1, p {
     margin: 0 0 12px 0;
 }
 
+/* ----------------- HEADER ----------------- */
 
-// NOTE: major flex values are in the RESPONSIVE area further down the file
+
 .header {
     display: flex;
     color: white;
@@ -152,31 +155,47 @@ h1, p {
     }
 }
 
-.flip-wrapper {
+
+
+/* ----------------- BODY ----------------- */
+
+.chat-body {
     display: flex;
-}
+    justify-content: space-between;
 
+    > * {
+        // outline: 1px dotted pink;
+    }
 
-#messages {
-    width: 50%;
-    padding-left: 15px;
+    #messages {
+        // width: 50%;
+        padding-left: 15px;
 
-    .message-output {
-        margin-top: 11px;
-        letter-spacing: -1.5px;
+        .message-output {
+            margin-top: 11px;
+            letter-spacing: -1.5px;
 
-        .user-name {
-            font-size: 12px;
-            text-decoration: underline;
+            .user-name {
+                font-size: 12px;
+                text-decoration: underline;
+            }
+
+            .output-text {
+                font-size: 18px;
+            }
+
+            &.is-current-user {
+                text-align: right;
+            }
         }
+    }
 
-        .output-text {
-            font-size: 18px;
-        }
+    .spacer {
 
-        &.is-current-user {
-            text-align: right;
-        }
+    }
+
+    .extra {
+
     }
 }
 
@@ -194,34 +213,44 @@ h1, p {
 
 // medium
 @media (max-width: 991px) {
-    .header {
-        #form {            flex: 1.5 1 0;        }
-        .spacer {          flex: .1 1 auto;      }
-        .logo-column {     flex: .5 1 0;         }
+    .header, .chat-body {
+        #form, #messages {              flex: 1.5 1 0;        }
+        .spacer {                       flex: .1 1 auto;      }
+        .logo-column, .extra {          flex: .5 1 0;         }
     }
+
+
 }
 
 // large
 @media (max-width: 1199px) {
-    .header {
-        #form {            flex: 1.5 1 0;        }
-        .spacer {          flex: .2 1 auto;      }
-        .logo-column {     flex: .5 1 0;         }
+    .header, .chat-body {
+        #form, #messages {              flex: 1.5 1 0;        }
+        .spacer {                       flex: .2 1 auto;      }
+        .logo-column, .extra {          flex: .5 1 0;         }
     }
 }
 
 // extra large
 @media (min-width: 1200px) {
-    .header {
-        #form {            flex: 1.5 1 0;        }
-        .spacer {          flex: .35 1 auto;      }
-        .logo-column {     flex: .5 1 0;         }
+    .header, .chat-body {
+        #form, #messages {            flex: 1.5 1 0;        }
+        .spacer {                     flex: .35 1 auto;      }
+        .logo-column, .extra {        flex: .5 1 0;         }
     }
 }
 
 // orca whale
 @media (min-width: 1500px) {
-    #form {            flex: 1.5 1 0;        }
-    .spacer {          flex: .5 1 auto;      }
-    .logo-column {     flex: .5 1 0;         }    
+    .header, .chat-body {
+        #form, #messages {          flex: 1.5 1 0;        }
+        .spacer {                   flex: .5 1 auto;      }
+        .logo-column, .extra {      flex: .5 1 0;         }    
+    }
+
+    // .chat-body {
+    //     #messages {      }
+    //     .spacer {        }
+    //     .extra {         }
+    // }
 }
