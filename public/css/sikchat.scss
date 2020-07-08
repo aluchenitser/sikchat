@@ -14,6 +14,7 @@ $font-size-logo: 20px;
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
 }
 
 * {
@@ -35,6 +36,7 @@ h1, p {
     display: flex;
     color: white;
     justify-content: space-between;
+    height: 47px;
 
      #form  {
         display: flex;
@@ -161,15 +163,20 @@ h1, p {
 
 .chat-body {
     display: flex;
-    justify-content: space-between;
+    height: calc(100% - 47px);
+    // background-color: black;
 
-    > * {
-        // outline: 1px dotted pink;
-    }
+    // > * {
+    //     outline: 1px dotted pink;
+    // }
 
     #messages {
         // width: 50%;
-        padding-left: 15px;
+        padding: 0 15px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column-reverse;
+        // background-color: white;
 
         .message-output {
             margin-top: 11px;

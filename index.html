@@ -44,16 +44,25 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
 
         <script>
+
+            /* -------------------- UI --------------------- */
+
             var inputElem = document.getElementById('username');
             
-            inputElem.addEventListener("keydown", (e) => {
+            inputElem.addEventListener("keydown", e => {
                 if(e.code == "Enter" || e.code == "NumpadEnter" || e.code == "Tab") {
                     e.preventDefault();
-                    closeDrawer();
+                    e.code == "Tab" ? focusMessageInput() : closeDrawerFocusMessageInput();
                 }
-            })
+            });
+
+            inputElem.addEventListener("blur", e => {
+                console.log(e);
+            });
+
+
             
-            document.getElementById('form').addEventListener('submit', (e)=> {
+            document.getElementById('form').addEventListener('submit', e => {
                 e.preventDefault();
                 
                 let text = document.getElementById('message-input').value;
@@ -62,6 +71,8 @@
                 
                 socket.emit('chat_message', { text, username });
             })
+            
+            /* ------------------ SOCKETS ------------------- */
 
             var socket = io();
             socket.on('chat_message', msg => { 
@@ -75,19 +86,27 @@
                 document.getElementById("message-input").value = "";
             });
 
-            document.querySelector('.drawer-handle').addEventListener("click", openDrawer);
+            document.querySelector('.drawer-handle').addEventListener("click", toggleDrawer);
 
             /* ------------------ FUNCTIONS ------------------ */
 
-            function openDrawer() {
+            function toggleDrawer() {
                 $(".drawer").toggleClass("open");
-                document.getElementById('username').focus();
             }
 
-            function closeDrawer() {
+            function closeDrawerFocusMessageInput() {
                 $(".drawer").toggleClass("open");
                 document.getElementById('message-input').focus();
             }
+
+            function focusMessageInput() {
+                document.getElementById('message-input').focus();
+            }
+
+            function saveUserName() {
+
+            }
+
         </script>
     </body>
 </html>
