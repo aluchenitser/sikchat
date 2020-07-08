@@ -29,8 +29,22 @@ h1, p {
     margin: 0 0 12px 0;
 }
 
-/* ----------------- HEADER ----------------- */
+.user-name-display {
+    position: absolute;
+    color: white;
+    font-size: 11px;
+    padding-left: 15px;
+    top: 1px;
+    transition: opacity .5s;
+    opacity: 1;
 
+    @at-root body.drawer-is-open & {
+        opacity: 0;
+    }
+}
+
+
+/* ----------------- HEADER ----------------- */
 
 .header {
     display: flex;
@@ -59,6 +73,10 @@ h1, p {
             flex: 1 1 auto;
             border-radius: 0 0 0 7px;
             padding-left: 10px;
+
+            &:before {
+                content: 'fred'
+            }
         }
 
         button {
@@ -122,10 +140,7 @@ h1, p {
                         font-size: 20px;
                         width: 100%;
                     }
-                    
-
                 }
-
             }
             
             .drawer-handle {
@@ -133,6 +148,7 @@ h1, p {
                 background-color: $header-background-color;
                 padding: 12px 15px 10px 0;
                 transition: transform .5s;
+                height: 47px;
                 
                 // prevents horizontal scroll bar
                 position: relative;
@@ -147,7 +163,7 @@ h1, p {
             }
             
             // OPEN THE DRAWER
-            &.open {
+            @at-root body.drawer-is-open & {
                 height: 250%;
                 .drawer-handle { 
                     transform: rotate(4deg); 
@@ -156,6 +172,8 @@ h1, p {
         }
     }
 }
+
+
 
 
 

@@ -7,6 +7,7 @@
         <link rel="stylesheet" type="text/css" href="css/sikchat.css">
     </head>
     <body>
+        <div class="user-name-display">someone</div>
         <div class="header">
             <form id="form">
                 <input id="message-input" name="message-input" autocomplete="off" maxlength="280" /><button>></button>
@@ -42,11 +43,13 @@
 
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js" integrity="sha512-vs7+jbztHoMto5Yd/yinM4/y2DOkPLt0fATcN+j+G4ANY2z4faIzZIOMkpBmWdcxt+596FemCh9M18NUJTZwvw==" crossorigin="anonymous"></script>
+        
         <script>
 
             /* -------------------- UI --------------------- */
 
+            // --- process username UI
             var inputElem = document.getElementById('username');
             
             inputElem.addEventListener("keydown", e => {
@@ -57,11 +60,11 @@
             });
 
             inputElem.addEventListener("blur", e => {
-                console.log(e);
+                document.querySelector(".user-name-display").innerHTML = e.target.value;
             });
 
 
-            
+            // --- process entered message UI
             document.getElementById('form').addEventListener('submit', e => {
                 e.preventDefault();
                 
@@ -75,6 +78,8 @@
             /* ------------------ SOCKETS ------------------- */
 
             var socket = io();
+
+            // --- process entered message sockets
             socket.on('chat_message', msg => { 
                 let user = document.getElementById('username').value || 'someone'; 
                 let messageClass = user == msg.username && user != 'someone'
@@ -91,11 +96,11 @@
             /* ------------------ FUNCTIONS ------------------ */
 
             function toggleDrawer() {
-                $(".drawer").toggleClass("open");
+                $("body").toggleClass("drawer-is-open");
             }
 
             function closeDrawerFocusMessageInput() {
-                $(".drawer").toggleClass("open");
+                $("body").removeClass("drawer-is-open");
                 document.getElementById('message-input').focus();
             }
 
@@ -103,9 +108,6 @@
                 document.getElementById('message-input').focus();
             }
 
-            function saveUserName() {
-
-            }
 
         </script>
     </body>

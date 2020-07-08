@@ -18,6 +18,19 @@ h1, p {
   margin: 0 0 12px 0;
 }
 
+.user-name-display {
+  position: absolute;
+  color: white;
+  font-size: 11px;
+  padding-left: 15px;
+  top: 1px;
+  transition: opacity 0.5s;
+  opacity: 1;
+}
+body.drawer-is-open .user-name-display {
+  opacity: 0;
+}
+
 /* ----------------- HEADER ----------------- */
 .header {
   display: flex;
@@ -43,6 +56,9 @@ h1, p {
   flex: 1 1 auto;
   border-radius: 0 0 0 7px;
   padding-left: 10px;
+}
+.header #form #message-input:before {
+  content: "fred";
 }
 .header #form button {
   color: white;
@@ -103,6 +119,7 @@ h1, p {
   background-color: #EE90EE;
   padding: 12px 15px 10px 0;
   transition: transform 0.5s;
+  height: 47px;
   position: relative;
   left: -1px;
 }
@@ -113,10 +130,10 @@ h1, p {
   font-size: 20px;
   padding: 0 15px;
 }
-.header .logo-column .drawer.open {
+body.drawer-is-open .header .logo-column .drawer {
   height: 250%;
 }
-.header .logo-column .drawer.open .drawer-handle {
+body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   transform: rotate(4deg);
 }
 
