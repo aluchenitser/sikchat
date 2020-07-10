@@ -52,7 +52,8 @@
         <script>
             
             /* ------------------ SETUP -------------------- */
-
+            
+            // DOM objects
             var messageInputElement = document.getElementById('message-input')
             var submitButtonElement = document.getElementById('submit-button')
             var drawerHandleElement = document.querySelector('.drawer-handle')
@@ -63,21 +64,30 @@
             var checkingUsernameElement = document.querySelector('.checking-username')
             var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
 
-            // var navCodes = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]
-            var currentUserId = null;
+            // cookie data
+            var currentUserName = "";
+            var currentUserGUID = "";
+            var cookieData;
             
+            try {
+                cookieData = JSON.parse(getCookie("userData"));
+            }
+            catch(e) { } 
+
+            if(cookieData) {
+                currentUserName = cookieData.moniker;
+                userInputElement.value = cookieData.moniker;
+                currentUserGUID = cookieData.guid;
+            }
 
             var networkPort = 3000
+
             var validUserPattern = /^[a-z0-9_-]{1,16}$/
             
             var socket = io()
             
             /* -------------------- UI --------------------- */
-            var userDataCookie = JSON.parse(getCookie("userData"));
-            if(userDataCookie.username) {
-                userInputElement.value = userDataCookie.username
-            }
-
+       
 
             // --- username & drawer logic
             userInputElement.addEventListener("keydown", e => {
@@ -95,7 +105,6 @@
                     }
                 } 
             })
-
             
             let timeoutCounter = 0;      // assign to timeout so that lookup messages have better UX
             let timer = null;
@@ -105,7 +114,7 @@
             userInputElement.addEventListener("keyup", e => {
 
                 let username = e.target.value;
-                if(e.target.value == username) return;
+                if(username == currentUserName) return;
 
                 if(validUserPattern.test(username)) {
                     
@@ -115,7 +124,7 @@
                     // buffer for UX, lookup waits a second
                     clearTimeout(timer)
                     timer = setTimeout(()=> {
-                        socket.emit('username_update', username)
+                        socket.emit('username_update', {username, guid: currentUserGUID})
                     }, 1000)
                 }
                 else {

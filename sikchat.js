@@ -15,7 +15,7 @@ app.get('/', function(req, res) {
     
     // load page
     res.sendFile(__dirname + '/index.html');
-    console.log("req.cookie--------", req.cookies);
+    // console.log("req.cookie--------", req.cookies);
 
     // detect or create user
     if(!req.cookies.userData) {
@@ -25,15 +25,10 @@ app.get('/', function(req, res) {
         res.cookie("userData", JSON.stringify(user));
     }
     else {
-
+        res.cookie("userData", JSON.stringify(user))
+        console.log(req.cookies)
 
     }
-
-
-
-
-    // res.cookie(name_of_cookie, value_of_cookie);
-    // res.send("<pre>" + JSON.stringify(req.query) + "</pre>"); 
 });
 
 
@@ -47,19 +42,34 @@ io.on('connection', (socket) => {
         console.log(msg)
     })
 
-    
-    socket.on('username_update', (username) => {
+    // { username, guid }
+    socket.on('username_update', (msg) => {
         let foundDuplicate = false;
 
-        for(i = 0; i < usersRepo.length; i++) {
-            if(user.moniker == username) {
+        // look for duplicate moniker
+        let i = 0;
+        while(i < usersRepo.length) {
+            if (usersRepo[i].moniker == msg.username) {
                 foundDuplicate = true;
                 break;
             }
+            i++;
         }
 
-        io.emit('username_update_response', {username, foundDuplicate});
-        console.log({username, foundDuplicate});
+        // if all is clear, update the user with the new moniker
+        let j = 0;
+        if(!foundDuplicate) {
+            while(j < usersRepo.length) {
+                if (usersRepo[j].guid == msg.guid) {
+                    usersRepo[j].moniker = msg.username;
+                    break;
+                }
+                j++;
+            }
+        }
+
+        io.emit('username_update_response', {username: msg.username, foundDuplicate});
+        console.log({username: msg.username, foundDuplicate});
     })
 
     socket.on('disconnect', () => {
