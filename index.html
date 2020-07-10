@@ -40,7 +40,7 @@
                 <div class="spacer"></div>
                 <div class="extra"></div>
         </div>
-
+        <script src="js/utility.js"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js" integrity="sha512-vs7+jbztHoMto5Yd/yinM4/y2DOkPLt0fATcN+j+G4ANY2z4faIzZIOMkpBmWdcxt+596FemCh9M18NUJTZwvw==" crossorigin="anonymous"></script>
@@ -52,6 +52,8 @@
             var userInputElement = document.getElementById('username')
             var messageInputElement = document.getElementById('message-input')
             var submitButtonElement = document.getElementById('submit-button')
+            var drawerHandleElement = document.querySelector('.drawer-handle')
+            var networkPort = 3000;
 
             var socket = io()
             
@@ -103,9 +105,8 @@
                 document.querySelector(".user-name-display").innerHTML = e.target.value
             })
             
-            document.querySelector('.drawer-handle').addEventListener("click", toggleDrawerFreeFLoat)
-            
-            
+            drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
+           
             // --- send chat
             document.getElementById('form').addEventListener('submit', e => {
                 e.preventDefault()
@@ -129,7 +130,6 @@
                 $(markup).appendTo("#messages")
                 messageInputElement.value = ""
             })
-
 
 
             /* ------------------ FUNCTIONS ------------------ */
