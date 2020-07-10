@@ -60,9 +60,26 @@ body.drawer-is-open .user-name-display {
 .header #form #message-input:before {
   content: "fred";
 }
-.header #form button {
+.header #form button#submit-button {
   color: white;
   flex: 0 0 35px;
+  background-color: #efefef;
+  transition: background-color 0.3s;
+}
+.header #form button#submit-button:focus {
+  text-decoration: underline;
+  background-color: #dedede;
+}
+@keyframes focusCycle {
+  0% {
+    background-color: #efefef;
+  }
+  50% {
+    background-color: #dedede;
+  }
+  100% {
+    background-color: #efefef;
+  }
 }
 .header .spacer {
   background-color: #EE90EE;
@@ -146,7 +163,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   padding: 0 15px;
   overflow-y: scroll;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 .chat-body #messages .message-output {
   margin-top: 11px;
@@ -172,6 +189,10 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   }
   .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
     flex: 0.5 1 0;
+  }
+
+  #username {
+    font-size: 16px;
   }
 }
 @media (max-width: 1199px) {

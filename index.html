@@ -10,7 +10,7 @@
         <div class="user-name-display">someone</div>
         <div class="header">
             <form id="form">
-                <input id="message-input" name="message-input" autocomplete="off" maxlength="280" /><button>></button>
+                <input id="message-input" name="message-input" autocomplete="off" maxlength="280" /><button id="submit-button">></button>
             </form>
 
             <div class="spacer"></div>
@@ -46,52 +46,69 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js" integrity="sha512-vs7+jbztHoMto5Yd/yinM4/y2DOkPLt0fATcN+j+G4ANY2z4faIzZIOMkpBmWdcxt+596FemCh9M18NUJTZwvw==" crossorigin="anonymous"></script>
         
         <script>
+            
+            /* ------------------ SETUP -------------------- */
 
+            var userInputElement = document.getElementById('username');
+            var messageInputElement = document.getElementById('message-input');
+            var submitButtonElement = document.getElementById('submit-button');
+
+            var socket = io();
+            
             /* -------------------- UI --------------------- */
 
-            // --- process username UI
-            var inputElem = document.getElementById('username');
-            
-            inputElem.addEventListener("keydown", e => {
+            // --- username
+            userInputElement.addEventListener("keydown", e => {
                 if(e.code == "Enter" || e.code == "NumpadEnter" || e.code == "Tab") {
                     e.preventDefault();
-                    e.code == "Tab" ? focusMessageInput() : closeDrawerFocusMessageInput();
+                    if(e.code == "Tab") {
+                        e.shiftKey ? submitButtonElement.focus() : messageInputElement.focus()
+                    }
+                    else { closeDrawerFocusMessageInput() }
                 }
             });
 
-            inputElem.addEventListener("blur", e => {
+            userInputElement.addEventListener("blur", e => {
                 document.querySelector(".user-name-display").innerHTML = e.target.value;
             });
 
+            var userInputMouseDown = false;
+            userInputElement.addEventListener('mousedown', function () {
+                userInputMouseDown = true;
+            });
 
-            // --- process entered message UI
+            userInputElement.addEventListener('focusin', function () {
+                if(!userInputMouseDown) openDrawer();
+                userInputMouseDown = false;
+            });
+
+
+            // --- send chat
             document.getElementById('form').addEventListener('submit', e => {
                 e.preventDefault();
                 
-                let text = document.getElementById('message-input').value;
+                let text = messageInputElement.value;
                 if(!text) return false;
-                let username = document.getElementById('username').value || 'someone'; 
+                let username = userInputElement.value || 'someone'; 
                 
                 socket.emit('chat_message', { text, username });
             })
-            
-            /* ------------------ SOCKETS ------------------- */
 
-            var socket = io();
-
-            // --- process entered message sockets
+            // --- receive chat
             socket.on('chat_message', msg => { 
-                let user = document.getElementById('username').value || 'someone'; 
+                let user = userInputElement.value || 'someone'; 
                 let messageClass = user == msg.username && user != 'someone'
                     ? 'message-output is-current-user'
                     : 'message-output';
 
-                const html = `<div class='${messageClass}'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
-                $(html).prependTo("#messages");
-                document.getElementById("message-input").value = "";
+                // add new message to UI
+                const markup = `<div class='${messageClass}'><div class='user-name'>${msg.username}</div><p class='output-text'>${msg.text}</p></div>`;
+                $(markup).appendTo("#messages");
+                messageInputElement.value = "";
             });
 
             document.querySelector('.drawer-handle').addEventListener("click", toggleDrawer);
+
 
             /* ------------------ FUNCTIONS ------------------ */
 
@@ -99,15 +116,14 @@
                 $("body").toggleClass("drawer-is-open");
             }
 
+            function openDrawer() {
+                $("body").addClass("drawer-is-open");
+            }
+
             function closeDrawerFocusMessageInput() {
                 $("body").removeClass("drawer-is-open");
-                document.getElementById('message-input').focus();
+                messageInputElement.focus();
             }
-
-            function focusMessageInput() {
-                document.getElementById('message-input').focus();
-            }
-
 
         </script>
     </body>
