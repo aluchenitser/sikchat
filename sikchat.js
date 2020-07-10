@@ -4,24 +4,31 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const cookieParser = require('cookie-parser')
-const util = require('./classes.js')
+const User = require('./classes.js').User
 
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public/"));
 
-var users = [];
+var usersRepo = [];
 
 app.get('/', function(req, res) {
-    const User = util.User;
-    // res.send('Hello world!');
-    console.log("req.cookies--------")
-    console.log(req.cookies)
-
-    let user = JSON.stringify(new User('userData'));
-    console.log("user stringified---------")
     
+    // load page
     res.sendFile(__dirname + '/index.html');
-    res.cookie("userData", user);
+    console.log("req.cookie--------", req.cookies);
+
+    // detect or create user
+    if(!req.cookies.userData) {
+        let user = new User()
+        usersRepo.push(user)
+        
+        res.cookie("userData", JSON.stringify(user));
+    }
+    else {
+
+
+    }
+
 
 
 
@@ -36,6 +43,11 @@ io.on('connection', (socket) => {
 
     socket.on('chat_message', (msg) => {
         io.emit('chat_message', msg);
+        console.log(msg)
+    })
+
+    socket.on('moniker_update', (msg) => {
+        io.emit('moniker_update', msg);
         console.log(msg)
     })
 

@@ -1,9 +1,9 @@
 module.exports = {
     User: class User {
-        constructor(moniker, domain) {
+        constructor(moniker = null, domain = null) {
             // setup
-            let d = new Date(); 
-            let createdDate = JSON.stringify(d); 
+            let d = new Date()
+            let createdDate = JSON.stringify(d)
             d.setFullYear(2050)
             let expiresDate = JSON.stringify(d)
 
