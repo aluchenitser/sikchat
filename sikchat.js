@@ -21,13 +21,27 @@ app.get('/', function(req, res) {
     if(!req.cookies.userData) {
         let user = new User()
         usersRepo.push(user)
+        console.log(usersRepo);
         
         res.cookie("userData", JSON.stringify(user));
     }
     else {
-        res.cookie("userData", JSON.stringify(user))
-        console.log(req.cookies)
+        console.log("usersRepo")
+        console.log(usersRepo)
+        let data = JSON.parse(req.cookies.userData)
 
+        let i = 0;
+        while(i < usersRepo.length) {
+            console.log(usersRepo[i].guid, data.guid)
+
+            if (usersRepo[i].guid == data.guid) {
+                res.cookie("userData", JSON.stringify(usersRepo[i]));
+                break;
+            }
+            i++;
+        }
+
+        console.log("existing cookie found")
     }
 });
 
