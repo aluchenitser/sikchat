@@ -49,17 +49,15 @@
             
             /* ------------------ SETUP -------------------- */
 
-            var userInputElement = document.getElementById('username');
-            var messageInputElement = document.getElementById('message-input');
-            var submitButtonElement = document.getElementById('submit-button');
+            var userInputElement = document.getElementById('username')
+            var messageInputElement = document.getElementById('message-input')
+            var submitButtonElement = document.getElementById('submit-button')
 
-            var socket = io();
+            var socket = io()
             
             /* -------------------- UI --------------------- */
 
             // --- username & drawer logic
-            
-            
             userInputElement.addEventListener("keydown", e => {
                 if(e.code == "Enter" || e.code == "NumpadEnter" || e.code == "Tab")
                 e.preventDefault()
@@ -75,35 +73,48 @@
                 }
             })
             
-            var userInputMouseDown = false;
-            var userInputArrivedByTab = false;
+            var userInputMouseDown = false
+            var userInputArrivedByTab = false
+            var drawerIsFreeFloating = false
+
+            document.body.addEventListener('mousedown', function (e) {
+                if(e.targetid != "username") {
+                    userInputArrivedByTab = false
+                }
+            })
 
             userInputElement.addEventListener('mousedown', function () {
-                userInputMouseDown = true;
-            });
+                userInputMouseDown = true
+            })
             
             userInputElement.addEventListener('focusin', function () {
-                if(!userInputMouseDown) {
-                    openDrawer();
+                if(!userInputMouseDown && !drawerIsOpen()) {
+                    openDrawer()
+                    userInputArrivedByTab = true
                 }
-                userInputMouseDown = false;
-            });
+                userInputMouseDown = false
+            })
             
             userInputElement.addEventListener("blur", e => {
-                console.log(e);
-
-                document.querySelector(".user-name-display").innerHTML = e.target.value;
-            });
+                if(userInputArrivedByTab)
+                closeDrawer()
+                
+                userInputArrivedByTab = false
+                document.querySelector(".user-name-display").innerHTML = e.target.value
+            })
+            
+            document.querySelector('.drawer-handle').addEventListener("click", toggleDrawerFreeFLoat)
+            
             
             // --- send chat
             document.getElementById('form').addEventListener('submit', e => {
-                e.preventDefault();
+                e.preventDefault()
                 
-                let text = messageInputElement.value;
-                if(!text) return false;
-                let username = userInputElement.value || 'someone'; 
+                let text = messageInputElement.value
+                if(!text) return false
+                let username = userInputElement.value || 'someone'
                 
-                socket.emit('chat_message', { text, username });
+                socket.emit('chat_message', { text, username })
             })
 
             // --- receive chat
@@ -111,30 +122,39 @@
                 let user = userInputElement.value || 'someone'; 
                 let messageClass = user == msg.username && user != 'someone'
                     ? 'message-output is-current-user'
-                    : 'message-output';
+                    : 'message-output'
 
                 // add new message to UI
-                const markup = `<div class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`;
-                $(markup).appendTo("#messages");
-                messageInputElement.value = "";
-            });
+                const markup = `<div class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
+                $(markup).appendTo("#messages")
+                messageInputElement.value = ""
+            })
 
-            document.querySelector('.drawer-handle').addEventListener("click", toggleDrawer);
 
 
             /* ------------------ FUNCTIONS ------------------ */
 
-            function toggleDrawer() {
-                $("body").toggleClass("drawer-is-open");
+            function openDrawer() {
+                document.body.classList.add("drawer-is-open");
             }
 
-            function openDrawer() {
-                $("body").addClass("drawer-is-open");
+            function closeDrawer() {
+                document.body.classList.remove("drawer-is-open");
+            }
+
+            function toggleDrawerFreeFLoat() {
+                drawerIsOpen() ? closeDrawer() : openDrawer()
             }
 
             function closeDrawerFocusMessageInput() {
-                $("body").removeClass("drawer-is-open");
-                messageInputElement.focus();
+                closeDrawer();
+                messageInputElement.focus()
+            }
+
+            function drawerIsOpen() {
+                return document.body.classList.contains("drawer-is-open")
+                    ? true
+                    : false
             }
 
         </script>
