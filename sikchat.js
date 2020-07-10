@@ -4,7 +4,7 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const cookieParser = require('cookie-parser')
-const User = require('./classes.js').User
+const User = require('./util.js').User
 
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public/"));
@@ -41,14 +41,25 @@ app.get('/', function(req, res) {
 io.on('connection', (socket) => {
     console.log("user connected");
 
+    // { username, text }
     socket.on('chat_message', (msg) => {
-        io.emit('chat_message', msg);
+        io.emit('chat_message_response', msg);
         console.log(msg)
     })
 
-    socket.on('moniker_update', (msg) => {
-        io.emit('moniker_update', msg);
-        console.log(msg)
+    
+    socket.on('username_update', (username) => {
+        let foundDuplicate = false;
+
+        for(i = 0; i < usersRepo.length; i++) {
+            if(user.moniker == username) {
+                foundDuplicate = true;
+                break;
+            }
+        }
+
+        io.emit('username_update_response', {username, foundDuplicate});
+        console.log({username, foundDuplicate});
     })
 
     socket.on('disconnect', () => {

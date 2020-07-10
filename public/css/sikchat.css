@@ -119,9 +119,24 @@ body.drawer-is-open .user-name-display {
   flex-flow: column;
   padding: 0 10px;
 }
-.header .logo-column .drawer .drawer-contents .drawer-item label {
+.header .logo-column .drawer .drawer-contents .drawer-item .username {
   font-size: 12px;
   color: gray;
+}
+.header .logo-column .drawer .drawer-contents .drawer-item .username .bogus-username {
+  display: none;
+  color: red;
+}
+.header .logo-column .drawer .drawer-contents .drawer-item .username .in-use-username {
+  display: none;
+  color: red;
+}
+.header .logo-column .drawer .drawer-contents .drawer-item .username .checking-username {
+  display: none;
+}
+.header .logo-column .drawer .drawer-contents .drawer-item .username .username-lookup-success {
+  display: none;
+  color: green;
 }
 .header .logo-column .drawer .drawer-contents .drawer-item input {
   border: none;

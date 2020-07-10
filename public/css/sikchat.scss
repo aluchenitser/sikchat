@@ -143,9 +143,28 @@ h1, p {
                     flex-flow: column;
                     padding: 0 10px;
 
-                    label {
+                    .username {
                         font-size: 12px;
                         color: $label-text-color;
+
+                        .bogus-username {
+                            display: none;
+                            color: red;
+                        }
+
+                        .in-use-username {
+                            display: none;
+                            color: red;
+                        }
+
+                        .checking-username {
+                            display: none;
+                        }
+
+                        .username-lookup-success {
+                            display: none;
+                            color: green;
+                        }
                     }
                     
                     input {
