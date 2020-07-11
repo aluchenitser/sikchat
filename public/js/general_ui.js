@@ -58,6 +58,8 @@ userInputElement.addEventListener("keydown", e => {
     } 
 })
 
+let timer = null;
+
 // --- username validation and send to server
 userInputElement.addEventListener("keyup", e => {
     

@@ -4,9 +4,7 @@
   "description": "sikkk chat app",
   "main": "sikchat.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dork": "echo derppppp",
-    "build": "cp ~/sikchat/*.js ~/sikchat/build/ && cp ~/sikchat/*.json ~/sikchat/build/ && cp ~/sikchat/index.html ~/sikchat/build/ && terser ~/sikchat/public/js/general_ui.js -o ~/sikchat/build/public/js/general_ui.js -c -m && sass ~/sikchat/public/css/sikchat.scss ~/sikchat/build/public/css/sikchat.css"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
