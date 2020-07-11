@@ -13,6 +13,7 @@ var usersRepo = [];
 
 app.get('/', function(req, res) {
     repoDisplay("simple");
+    
     // load page
     res.sendFile(__dirname + '/index.html');
 
@@ -44,8 +45,6 @@ app.get('/', function(req, res) {
         if(found == false) usersRepo.push(data)
     }
 });
-
-
 
 io.on('connection', (socket) => {
     console.log("user connected");
@@ -83,7 +82,7 @@ io.on('connection', (socket) => {
         }
 
         socket.emit('username_update_response', {username: msg.username, foundDuplicate});
-        console.log({username: msg.username, foundDuplicate});
+        console.log(`username_update_response\n\t${msg.username} foundDuplicate: ${foundDuplicate}`);
     })
 
     socket.on('disconnect', () => {
@@ -93,8 +92,13 @@ io.on('connection', (socket) => {
 
 function repoDisplay(mode) 
 {
+    console.log("%cuserRepo", "color: green")
     switch(mode) {
         case "simple":
+            if(usersRepo.length == 0) {
+                console.log("%cempty", "color: green");
+                return;
+            }
             usersRepo.forEach(item => {
                 console.log("%c" + item.username + " " + item.guid, "color: green");
             })
@@ -104,22 +108,6 @@ function repoDisplay(mode)
             console.log(usersRepo);
     }
 }
-
-// io.sockets.on('connection', function(socket) {
-//     socket.on('username', function(username) {
-//         socket.username = username;
-//         io.emit('is_online', '🔵 <i>' + socket.username + ' join the chat..</i>');
-//     });
-
-//     socket.on('disconnect', function(username) {
-//         io.emit('is_online', '🔴 <i>' + socket.username + ' left the chat..</i>');
-//     })
-
-//     socket.on('chat_message', function(message) {
-//         io.emit('chat_message', '<strong>' + socket.username + '</strong>: ' + message);
-//     });
-
-// });
 
 // command line port selection or default to 3000
 let port = parseInt(process.argv[2]);
