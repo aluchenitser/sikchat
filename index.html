@@ -77,9 +77,11 @@
             catch(e) { } 
 
             if(cookieData) {
-                currentUserName = cookieData.moniker;
-                userInputElement.value = cookieData.moniker;
-                tinyHeaderUserNameElement.innerHTML = cookieData.moniker
+                
+
+                currentUserName = cookieData.username;
+                userInputElement.value = cookieData.username;
+                tinyHeaderUserNameElement.innerHTML = cookieData.username || "someone";
                 currentUserGUID = cookieData.guid;
             }
             else {
@@ -148,6 +150,7 @@
                 else {
                     // fun effect for successful lookup
                     currentUserName = msg.username
+                    tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
                     clearUsernameValidationDisplays();
                     usernameLookupSuccessElement.classList.remove("off")
                     setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
@@ -181,7 +184,7 @@
                 closeDrawer()
                 
                 userInputArrivedByTab = false
-                tinyHeaderUserNameElement.innerHTML = e.target.value
+                tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
             })
             
             drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
@@ -217,10 +220,13 @@
             // --- drawer functions
             function openDrawer() {
                 document.body.classList.add("drawer-is-open");
+                document.getElementById("username").value = currentUserName;
+                clearUsernameValidationDisplays();
             }
 
             function closeDrawer() {
                 document.body.classList.remove("drawer-is-open");
+                tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
             }
 
             function toggleDrawerFreeFLoat() {

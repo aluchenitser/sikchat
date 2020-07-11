@@ -85,19 +85,12 @@ h1, p {
             color: white;
             flex: 0 0 35px;
             background-color: #efefef;
-            transition: background-color 0.3s;
+            transition: background-color 0.1s;
 
             &:focus {
                 text-decoration: underline;
-                background-color: #dedede;
-                // animation: focusCycle 3s linear infinite;
+                background-color: #cecece;
             }
-        }
-
-        @keyframes focusCycle {
-            0%   {  background-color: #efefef; }
-            50%  {  background-color: #dedede; }
-            100% {  background-color: #efefef; }
         }
     }
 
@@ -176,7 +169,7 @@ h1, p {
                         border: none;
                         border-bottom: 1px solid darkgray;
                         outline: none;
-                        direction: rtl;
+                        text-align: right;
                         font-size: 20px;
                         width: 100%;
                     }

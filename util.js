@@ -1,6 +1,6 @@
 module.exports = {
     User: class User {
-        constructor(moniker = null, domain = null) {
+        constructor(username = null, domain = null) {
             // setup
             let d = new Date()
             let createdDate = JSON.stringify(d)
@@ -16,7 +16,7 @@ module.exports = {
             this.created = createdDate
             this.last = createdDate
             this.guid = Math.random()
-            this.moniker = moniker
+            this.username = username
         }
     }
 }

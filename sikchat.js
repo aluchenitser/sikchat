@@ -60,22 +60,22 @@ io.on('connection', (socket) => {
     socket.on('username_update', (msg) => {
         let foundDuplicate = false;
 
-        // look for duplicate moniker
+        // look for duplicate username
         let i = 0;
         while(i < usersRepo.length) {
-            if (usersRepo[i].moniker == msg.username) {
+            if (usersRepo[i].username == msg.username) {
                 foundDuplicate = true;
                 break;
             }
             i++;
         }
 
-        // if all is clear, update the user with the new moniker
+        // if all is clear, update the user with the new username
         let j = 0;
         if(!foundDuplicate) {
             while(j < usersRepo.length) {
                 if (usersRepo[j].guid == msg.guid) {
-                    usersRepo[j].moniker = msg.username;
+                    usersRepo[j].username = msg.username;
                     break;
                 }
                 j++;
@@ -91,9 +91,17 @@ io.on('connection', (socket) => {
     });
 });
 
-function isUserUnique(username) 
+function repoDisplay(mode) 
 {
+    switch(mode) {
+        case "all": 
+            console.log(usersRepo)
+            break;
+        case "repoObject": 
 
+
+
+    }
 }
 
 // io.sockets.on('connection', function(socket) {

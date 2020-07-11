@@ -64,22 +64,11 @@ body.drawer-is-open .tiny-header-user-name {
   color: white;
   flex: 0 0 35px;
   background-color: #efefef;
-  transition: background-color 0.3s;
+  transition: background-color 0.1s;
 }
 .header #form button#submit-button:focus {
   text-decoration: underline;
-  background-color: #dedede;
-}
-@keyframes focusCycle {
-  0% {
-    background-color: #efefef;
-  }
-  50% {
-    background-color: #dedede;
-  }
-  100% {
-    background-color: #efefef;
-  }
+  background-color: #cecece;
 }
 .header .spacer {
   background-color: #EE90EE;
@@ -145,7 +134,7 @@ body.drawer-is-open .tiny-header-user-name {
   border: none;
   border-bottom: 1px solid darkgray;
   outline: none;
-  direction: rtl;
+  text-align: right;
   font-size: 20px;
   width: 100%;
 }
