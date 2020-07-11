@@ -12,36 +12,36 @@ app.use(express.static(__dirname + "/public/"));
 var usersRepo = [];
 
 app.get('/', function(req, res) {
-    
+    console.log(usersRepo);
     // load page
     res.sendFile(__dirname + '/index.html');
-    // console.log("req.cookie--------", req.cookies);
 
-    // detect or create user
+    // --- detect or create user
+
+    // create user
     if(!req.cookies.userData) {
         let user = new User()
         usersRepo.push(user)
-        console.log(usersRepo);
         
         res.cookie("userData", JSON.stringify(user));
     }
+    // detect user
     else {
-        console.log("usersRepo")
-        console.log(usersRepo)
         let data = JSON.parse(req.cookies.userData)
 
         let i = 0;
+        let found = false;
         while(i < usersRepo.length) {
-            console.log(usersRepo[i].guid, data.guid)
-
             if (usersRepo[i].guid == data.guid) {
-                res.cookie("userData", JSON.stringify(usersRepo[i]));
+                found = true;
                 break;
             }
             i++;
         }
-
-        console.log("existing cookie found")
+        
+        // should repopulate a corrupt cookie?
+        res.cookie("userData", JSON.stringify(found ? usersRepo[i] : data))
+        if(found == false) usersRepo.push(data)
     }
 });
 

@@ -31,7 +31,7 @@ h1, p {
     margin: 0 0 12px 0;
 }
 
-.user-name-display {
+.tiny-header-user-name {
     position: absolute;
     color: white;
     font-size: 11px;
@@ -162,8 +162,13 @@ h1, p {
                         }
 
                         .username-lookup-success {
-                            display: none;
                             color: green;
+                            
+                            // this allows an instant appearance, but a slow disappearance
+                            &.off {
+                                transition: opacity .5s 2s;
+                                opacity: 0;
+                            }
                         }
                     }
                     
@@ -217,19 +222,12 @@ h1, p {
 .chat-body {
     display: flex;
     height: calc(100% - 47px);
-    // background-color: black;
-
-    // > * {
-    //     outline: 1px dotted pink;
-    // }
 
     #messages {
-        // width: 50%;
         padding: 0 15px;
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
-        // background-color: white;
 
         .message-output {
             margin-top: 11px;
@@ -287,27 +285,30 @@ h1, p {
 // large
 @media (max-width: 1199px) {
     .header, .chat-body {
-        #form, #messages {              flex: 1.5 1 0;        }
-        .spacer {                       flex: .2 1 auto;      }
-        .logo-column, .extra {          flex: .5 1 0;         }
+        #form, #messages {              flex: 1.5 1 0; }
+        .spacer {                       flex: .2 1 auto; }
+        .logo-column{                   flex: .5 1 0; }
+        .extra {                        flex: .7 1 0; }   
     }
 }
 
 // extra large
 @media (min-width: 1200px) {
     .header, .chat-body {
-        #form, #messages {            flex: 1.5 1 0;        }
-        .spacer {                     flex: .35 1 auto;      }
-        .logo-column, .extra {        flex: .5 1 0;         }
+        #form, #messages {            flex: 1.5 1 0; }
+        .spacer {                     flex: .35 1 auto; }
+        .logo-column {                flex: .5 1 0; }
+        .extra {                      flex: .85 1 0; }   
     }
 }
 
 // orca whale
 @media (min-width: 1500px) {
     .header, .chat-body {
-        #form, #messages {          flex: 1.5 1 0;        }
-        .spacer {                   flex: .5 1 auto;      }
-        .logo-column, .extra {      flex: .5 1 0;         }    
+        #form, #messages {          flex: 1.5 1 0; }
+        .spacer {                   flex: .5 1 auto; }
+        .logo-column {              flex: .5 1 0; } 
+        .extra {                    flex: 1 1 0; }   
     }
 
     // .chat-body {

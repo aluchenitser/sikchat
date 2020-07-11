@@ -18,7 +18,7 @@ h1, p {
   margin: 0 0 12px 0;
 }
 
-.user-name-display {
+.tiny-header-user-name {
   position: absolute;
   color: white;
   font-size: 11px;
@@ -27,7 +27,7 @@ h1, p {
   transition: opacity 0.5s;
   opacity: 1;
 }
-body.drawer-is-open .user-name-display {
+body.drawer-is-open .tiny-header-user-name {
   opacity: 0;
 }
 
@@ -135,8 +135,11 @@ body.drawer-is-open .user-name-display {
   display: none;
 }
 .header .logo-column .drawer .drawer-contents .drawer-item .username .username-lookup-success {
-  display: none;
   color: green;
+}
+.header .logo-column .drawer .drawer-contents .drawer-item .username .username-lookup-success.off {
+  transition: opacity 0.5s 2s;
+  opacity: 0;
 }
 .header .logo-column .drawer .drawer-contents .drawer-item input {
   border: none;
@@ -217,8 +220,11 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .spacer, .chat-body .spacer {
     flex: 0.2 1 auto;
   }
-  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
+  .header .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
+  }
+  .header .extra, .chat-body .extra {
+    flex: 0.7 1 0;
   }
 }
 @media (min-width: 1200px) {
@@ -228,8 +234,11 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .spacer, .chat-body .spacer {
     flex: 0.35 1 auto;
   }
-  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
+  .header .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
+  }
+  .header .extra, .chat-body .extra {
+    flex: 0.85 1 0;
   }
 }
 @media (min-width: 1500px) {
@@ -239,8 +248,11 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .spacer, .chat-body .spacer {
     flex: 0.5 1 auto;
   }
-  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
+  .header .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
+  }
+  .header .extra, .chat-body .extra {
+    flex: 1 1 0;
   }
 }
 
