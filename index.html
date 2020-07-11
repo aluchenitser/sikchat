@@ -94,16 +94,16 @@
 
             // --- username & drawer logic
             userInputElement.addEventListener("keydown", e => {
-                if(e.code == "Enter" || e.code == "NumpadEnter" || e.code == "Tab") {
+                if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == "Tab") {
                     e.preventDefault()
                     
-                    if(e.code == "Enter" || e.code == "NumpadEnter") {
+                    if(e.key == "Enter" || e.key == "NumpadEnter") {
                         closeDrawerFocusMessageInput()
                     }
-                    else if (e.shiftKey && e.code == "Tab") {
+                    else if (e.shiftKey && e.key == "Tab") {
                         submitButtonElement.focus() 
                     }
-                    else if (e.code == "Tab") {
+                    else if (e.key == "Tab") {
                         messageInputElement.focus()
                     }
                 } 
@@ -115,14 +115,15 @@
 
             // --- username validation and send to server
             userInputElement.addEventListener("keyup", e => {
-                if(e.code == "Tab") return;
-
+                const ignoreKeys = ["Tab", "ArrowLeft", "Left", "ArrowRight", "Right", "ArrowUp", "Up", "ArrowDown", "Down"]
+                
                 let username = e.target.value;
+                // if(ignoreKeys.indexOf(e.key) != -1 || username == currentUserName) return;
+                clearUsernameValidationDisplays()
                 if(username == currentUserName) return;
 
+                
                 if(validUserPattern.test(username)) {
-                    
-                    clearUsernameValidation()
                     checkingUsernameElement.style.display = "inline"
                     
                     // buffer for UX, lookup waits a second
@@ -132,7 +133,6 @@
                     }, 1000)
                 }
                 else {
-                    clearUsernameValidation()
                     bogusUsernameElement.style.display = "inline";
                 }
             })
@@ -142,12 +142,13 @@
                 console.log("username_update_response", msg)
 
                 if(msg.foundDuplicate) {
-                    clearUsernameValidation();
+                    clearUsernameValidationDisplays();
                     inUseUsernameElement.style.display = "inline"
                 }
                 else {
                     // fun effect for successful lookup
-                    clearUsernameValidation();
+                    currentUserName = msg.username
+                    clearUsernameValidationDisplays();
                     usernameLookupSuccessElement.classList.remove("off")
                     setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
                 }
@@ -239,7 +240,7 @@
 
             // --- username functions
 
-            function clearUsernameValidation() {
+            function clearUsernameValidationDisplays() {
                 inUseUsernameElement.style.display = "none"
                 bogusUsernameElement.style.display = "none"
                 checkingUsernameElement.style.display = "none"
