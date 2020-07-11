@@ -195,7 +195,7 @@
                 
                 let text = messageInputElement.value
                 if(!text) return false
-                let username = userInputElement.value || 'someone'
+                let username = currentUserName || 'someone';
                 
                 socket.emit('chat_message', { text, username })
             })
@@ -203,7 +203,7 @@
             // --- receive chat
             socket.on('chat_message_response', msg => { 
                 let user = userInputElement.value || 'someone'; 
-                let messageClass = user == msg.username && user != 'someone'
+                let messageClass = currentUserName == msg.username
                     ? 'message-output is-current-user'
                     : 'message-output'
 
@@ -220,7 +220,7 @@
             // --- drawer functions
             function openDrawer() {
                 document.body.classList.add("drawer-is-open");
-                document.getElementById("username").value = currentUserName;
+                document.getElementById("username").value = currentUserName || "";
                 clearUsernameValidationDisplays();
             }
 

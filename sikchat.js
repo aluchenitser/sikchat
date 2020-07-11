@@ -12,7 +12,7 @@ app.use(express.static(__dirname + "/public/"));
 var usersRepo = [];
 
 app.get('/', function(req, res) {
-    console.log(usersRepo);
+    repoDisplay("simple");
     // load page
     res.sendFile(__dirname + '/index.html');
 
@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
             }
         }
 
-        io.emit('username_update_response', {username: msg.username, foundDuplicate});
+        socket.emit('username_update_response', {username: msg.username, foundDuplicate});
         console.log({username: msg.username, foundDuplicate});
     })
 
@@ -94,13 +94,14 @@ io.on('connection', (socket) => {
 function repoDisplay(mode) 
 {
     switch(mode) {
-        case "all": 
-            console.log(usersRepo)
+        case "simple":
+            usersRepo.forEach(item => {
+                console.log("%c" + item.username + " " + item.guid, "color: green");
+            })
             break;
-        case "repoObject": 
-
-
-
+        // show whole object
+        default:
+            console.log(usersRepo);
     }
 }
 
