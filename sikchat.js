@@ -4,12 +4,22 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const cookieParser = require('cookie-parser')
-const User = require('./util.js').User
+const help = require('./help.js')
 
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public/"));
 
+/* ------------------- SETUP ------------------- */
+
 var usersRepo = [];
+
+// start game clock
+setInterval(() => {
+    io.emit("tick", Date.now());
+}, 2000)
+
+
+/* ------------------- ROUTER ------------------- */
 
 app.get('/', function(req, res) {
     repoDisplay("simple");
@@ -21,7 +31,7 @@ app.get('/', function(req, res) {
 
     // create user
     if(!req.cookies.userData) {
-        let user = new User()
+        let user = new help.User()
         usersRepo.push(user)
         
         res.cookie("userData", JSON.stringify(user));
@@ -46,17 +56,17 @@ app.get('/', function(req, res) {
     }
 });
 
+/* ------------------- SOCKETS ------------------- */
+
 io.on('connection', (socket) => {
     console.log("user connected");
 
-    // { username, text }
-    socket.on('chat_message', (msg) => {
+    socket.on('chat_message', (msg) => {            // { username, text }
         io.emit('chat_message_response', msg);
         console.log(msg)
     })
-
-    // { username, guid }
-    socket.on('username_update', (msg) => {
+    
+    socket.on('username_update', (msg) => {         // { username, guid }
         let foundDuplicate = false;
 
         // look for duplicate username
@@ -90,6 +100,24 @@ io.on('connection', (socket) => {
     });
 });
 
+
+
+/* ------------------- WEB SERVER ------------------- */
+
+// command line port selection or default to 3000
+let port = parseInt(process.argv[2]);
+port = port && port >= 1023 && port <= 65535
+    ? port
+    : 3000;
+
+http.listen(port, function() {
+    console.log(`listening on *:${port}`);
+});
+
+
+
+/* ------------------- FUNCTIONS ------------------- */
+
 function repoDisplay(mode) 
 {
     console.log("%cuserRepo", "color: green")
@@ -108,13 +136,3 @@ function repoDisplay(mode)
             console.log(usersRepo);
     }
 }
-
-// command line port selection or default to 3000
-let port = parseInt(process.argv[2]);
-port = port && port >= 1023 && port <= 65535
-    ? port
-    : 3000;
-
-const server = http.listen(port, function() {
-    console.log(`listening on *:${port}`);
-});

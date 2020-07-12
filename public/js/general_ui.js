@@ -60,9 +60,9 @@ userInputElement.addEventListener("keydown", e => {
     } 
 })
 
-let timer = null;
 
 // --- username validation and send to server
+let timer = null;
 userInputElement.addEventListener("keyup", e => {
     
     let username = e.target.value;
@@ -156,6 +156,10 @@ socket.on('chat_message_response', msg => {
     messageInputElement.value = ""
 })
 
+// --- receive server time
+socket.on('tick', time => {
+    console.log("server time: ", time);
+});
 
 /* ------------------ FUNCTIONS ------------------ */
 
