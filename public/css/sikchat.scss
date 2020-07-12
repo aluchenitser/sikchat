@@ -31,6 +31,8 @@ h1, p {
     margin: 0 0 12px 0;
 }
 
+/* ----------------- HEADER ----------------- */
+
 .tiny-header-user-name {
     position: absolute;
     color: white;
@@ -44,9 +46,6 @@ h1, p {
         opacity: 0;
     }
 }
-
-
-/* ----------------- HEADER ----------------- */
 
 .header {
     display: flex;
@@ -76,20 +75,25 @@ h1, p {
             border-radius: 0 0 0 7px;
             padding-left: 10px;
 
-            &:before {
-                content: 'fred'
+            &:focus, &:focus + #submit-button {
+                border-bottom: 1px solid #d875d8;
             }
         }
 
-        button#submit-button {
+        #submit-button {
             color: white;
             flex: 0 0 35px;
             background-color: #efefef;
             transition: background-color 0.1s;
+            border-radius: 0 31px 0 0;
 
             &:focus {
                 text-decoration: underline;
                 background-color: #cecece;
+            }
+
+            &:hover {
+                cursor: pointer;
             }
         }
     }
@@ -182,6 +186,7 @@ h1, p {
                 padding: 12px 15px 10px 0;
                 transition: transform .5s;
                 height: 47px;
+                z-index: 1;           // to lay on top of game window
                 
                 // prevents horizontal scroll bar
                 position: relative;
@@ -205,9 +210,6 @@ h1, p {
         }
     }
 }
-
-
-
 
 
 /* ----------------- BODY ----------------- */
@@ -245,8 +247,10 @@ h1, p {
 
     }
 
-    .extra {
-
+    #game-window {
+        display: flex;
+        justify-content: center;
+        align-content: center;
     }
 }
 
@@ -267,7 +271,7 @@ h1, p {
     .header, .chat-body {
         #form, #messages {              flex: 1.5 1 0;        }
         .spacer {                       flex: .1 1 auto;      }
-        .logo-column, .extra {          flex: .5 1 0;         }
+        .logo-column, #game-window {          flex: .5 1 0;         }
     }
 
     #username {
@@ -281,7 +285,7 @@ h1, p {
         #form, #messages {              flex: 1.5 1 0; }
         .spacer {                       flex: .2 1 auto; }
         .logo-column{                   flex: .5 1 0; }
-        .extra {                        flex: .7 1 0; }   
+        #game-window {                        flex: .7 1 0; }   
     }
 }
 
@@ -291,7 +295,7 @@ h1, p {
         #form, #messages {            flex: 1.5 1 0; }
         .spacer {                     flex: .35 1 auto; }
         .logo-column {                flex: .5 1 0; }
-        .extra {                      flex: .85 1 0; }   
+        #game-window {                      flex: .85 1 0; }   
     }
 }
 
@@ -301,12 +305,6 @@ h1, p {
         #form, #messages {          flex: 1.5 1 0; }
         .spacer {                   flex: .5 1 auto; }
         .logo-column {              flex: .5 1 0; } 
-        .extra {                    flex: 1 1 0; }   
+        #game-window {                    flex: 1 1 0; }   
     }
-
-    // .chat-body {
-    //     #messages {      }
-    //     .spacer {        }
-    //     .extra {         }
-    // }
 }

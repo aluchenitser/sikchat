@@ -18,6 +18,7 @@ h1, p {
   margin: 0 0 12px 0;
 }
 
+/* ----------------- HEADER ----------------- */
 .tiny-header-user-name {
   position: absolute;
   color: white;
@@ -31,7 +32,6 @@ body.drawer-is-open .tiny-header-user-name {
   opacity: 0;
 }
 
-/* ----------------- HEADER ----------------- */
 .header {
   display: flex;
   color: white;
@@ -57,18 +57,22 @@ body.drawer-is-open .tiny-header-user-name {
   border-radius: 0 0 0 7px;
   padding-left: 10px;
 }
-.header #form #message-input:before {
-  content: "fred";
+.header #form #message-input:focus, .header #form #message-input:focus + #submit-button {
+  border-bottom: 1px solid #d875d8;
 }
-.header #form button#submit-button {
+.header #form #submit-button {
   color: white;
   flex: 0 0 35px;
   background-color: #efefef;
   transition: background-color 0.1s;
+  border-radius: 0 31px 0 0;
 }
-.header #form button#submit-button:focus {
+.header #form #submit-button:focus {
   text-decoration: underline;
   background-color: #cecece;
+}
+.header #form #submit-button:hover {
+  cursor: pointer;
 }
 .header .spacer {
   background-color: #EE90EE;
@@ -144,6 +148,7 @@ body.drawer-is-open .tiny-header-user-name {
   padding: 12px 15px 10px 0;
   transition: transform 0.5s;
   height: 47px;
+  z-index: 1;
   position: relative;
   left: -1px;
 }
@@ -186,6 +191,12 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
 .chat-body #messages .message-output.is-current-user {
   text-align: right;
 }
+.chat-body #game-window {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
 /* ---------------- RESPONSIVE ----------------- */
 @media (max-width: 991px) {
   .header #form, .header #messages, .chat-body #form, .chat-body #messages {
@@ -194,7 +205,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .spacer, .chat-body .spacer {
     flex: 0.1 1 auto;
   }
-  .header .logo-column, .header .extra, .chat-body .logo-column, .chat-body .extra {
+  .header .logo-column, .header #game-window, .chat-body .logo-column, .chat-body #game-window {
     flex: 0.5 1 0;
   }
 
@@ -212,7 +223,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header .extra, .chat-body .extra {
+  .header #game-window, .chat-body #game-window {
     flex: 0.7 1 0;
   }
 }
@@ -226,7 +237,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header .extra, .chat-body .extra {
+  .header #game-window, .chat-body #game-window {
     flex: 0.85 1 0;
   }
 }
@@ -240,7 +251,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   .header .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header .extra, .chat-body .extra {
+  .header #game-window, .chat-body #game-window {
     flex: 1 1 0;
   }
 }

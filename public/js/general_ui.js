@@ -13,6 +13,8 @@ var checkingUsernameElement = document.querySelector('.checking-username')
 var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
 var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
 
+var messagesElement = document.getElementById("messages")
+
 // cookie data
 var currentUserName = "";
 var currentUserGUID = "";
@@ -49,9 +51,9 @@ userInputElement.addEventListener("keydown", e => {
         if(e.key == "Enter" || e.key == "NumpadEnter") {
             closeDrawerFocusMessageInput()
         }
-        else if (e.shiftKey && e.key == "Tab") {
-            submitButtonElement.focus() 
-        }
+        // else if (e.shiftKey && e.key == "Tab") {
+        //     submitButtonElement.focus() 
+        // }
         else if (e.key == "Tab") {
             messageInputElement.focus()
         }
@@ -133,7 +135,7 @@ drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
 // --- send chat
 document.getElementById('form').addEventListener('submit', e => {
     e.preventDefault()
-    
+    messageInputElement.focus()
     let text = messageInputElement.value
     if(!text) return false
     let username = currentUserName || 'someone';

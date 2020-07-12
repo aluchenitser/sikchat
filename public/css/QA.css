@@ -1,0 +1,52 @@
+#game-main {
+  align-self: center;
+  width: 100%;
+  height: 100%;
+}
+@keyframes raise {
+  0% {
+    top: 100px;
+    opacity: 0;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+  }
+}
+@keyframes slideFromLeft {
+  0% {
+    left: -500px;
+    opacity: 0;
+  }
+  50% {
+    left: -500px;
+    opacity: 0;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    left: 0;
+    opacity: 1;
+  }
+}
+#game-main h1, #game-main h2 {
+  position: relative;
+}
+#game-main h1 {
+  text-align: center;
+  margin: 30px 0 5px 0;
+  animation: raise 1s;
+}
+#game-main h2 {
+  margin-top: 0;
+  text-align: center;
+  font-style: italic;
+  animation: slideFromLeft 2s;
+  text-align: center;
+}
+
+/*# sourceMappingURL=QA.css.map */
