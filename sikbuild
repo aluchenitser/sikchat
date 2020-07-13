@@ -10,5 +10,5 @@ fi
 cp ~/sikchat/*.js ~/sikchat/build/ 
 cp ~/sikchat/*.json ~/sikchat/build/ 
 cp ~/sikchat/index.html ~/sikchat/build/ 
-terser ~/sikchat/public/js/general_ui.js -o ~/sikchat/build/public/js/general_ui.js -c -m
+terser ~/sikchat/public/js/ui.js -o ~/sikchat/build/public/js/ui.js -c -m
 sass ~/sikchat/public/css/sikchat.scss ~/sikchat/build/public/css/sikchat.css

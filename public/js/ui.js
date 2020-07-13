@@ -19,6 +19,7 @@ var messagesElement = document.getElementById("messages")
 var currentUserName = "";
 var currentUserGUID = "";
 var cookieData;
+var gameObject = {}
 
 try {
     cookieData = JSON.parse(getCookie("userData"));
@@ -26,8 +27,6 @@ try {
 catch(e) { } 
 
 if(cookieData) {
-    
-
     currentUserName = cookieData.username;
     userInputElement.value = cookieData.username;
     tinyHeaderUserNameElement.innerHTML = cookieData.username || "someone";
@@ -51,9 +50,6 @@ userInputElement.addEventListener("keydown", e => {
         if(e.key == "Enter" || e.key == "NumpadEnter") {
             closeDrawerFocusMessageInput()
         }
-        // else if (e.shiftKey && e.key == "Tab") {
-        //     submitButtonElement.focus() 
-        // }
         else if (e.key == "Tab") {
             messageInputElement.focus()
         }
@@ -69,7 +65,6 @@ userInputElement.addEventListener("keyup", e => {
     clearUsernameValidationDisplays()
     if(username == currentUserName) return;
 
-    
     if(validUserPattern.test(username)) {
         checkingUsernameElement.style.display = "inline"
         
@@ -156,10 +151,21 @@ socket.on('chat_message_response', msg => {
     messageInputElement.value = ""
 })
 
-// --- receive server time
+// --- receive server tick
 socket.on('tick', time => {
-    console.log("server time: ", time);
+    console.log(time);
 });
+
+socket.on('start_game', data => {
+    gameObject = new Games("game-window", "QA", "slang");
+    gameObject.startGame();
+});
+
+socket.on('end_game', data => {
+    gameObject.endGame();
+    gameObject = {};
+});
+
 
 /* ------------------ FUNCTIONS ------------------ */
 

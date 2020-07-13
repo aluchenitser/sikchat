@@ -26,7 +26,9 @@ class Games {
                 return null;
             }            
         }
-        
+    }
+
+    startGame() {
         this.loadTemplate()
             .then(() => {
                 this.populateTemplate();
@@ -34,6 +36,10 @@ class Games {
             },() => {
                 console.error("game file load failed");
             });
+    }
+
+    endGame() {
+        this.gameParentElement.innerHTML = "";
     }
 
     loadTemplate() {   
@@ -69,4 +75,6 @@ class Games {
     displayTemplate() {
         $(this.gameMarkup).appendTo(this.gameParentElement);
     }
+
+
 }

@@ -28,37 +28,40 @@ var gameState = {
 /* ----------------- GAME LOOP ----------------- */
 
 setInterval(() => {
-    // console.log("tick");
-    console.log(dayjs().format("[---tick\t]m[m ]s[s]"));
 
-    
-    // when the game first loads, and you're somewhere in the middle of a time slot, this calculates a proper start and end time
+    // interval log
+    let logString = gameState.isActive == false && gameState.starts != null
+        ? `${dayjs().format("[---tick\t]m[m ]s[s\t]")} next game in: ${gameState.starts.diff(dayjs(), "s")}s`
+        : dayjs().format("[---tick\t]m[m ]s[s]")
+
+    console.log("tick", logString)
+    io.emit("tick", logString)
+
+    // create new time window
     if(gameState.isActive == false && gameState.starts == null) { 
-
         createNewTimeWindow(gameState)
     }
     
+    // start game!
     if(dayjs().isSameOrAfter(gameState.starts) && gameState.isActive == false) {
         gameState.isActive = true
+        
         console.log("game started")
-        // io.emit("start_game", Date.now())
+        io.emit("start_game", Date.now())
     }
      
+    // end game!
     if(dayjs().isSameOrAfter(gameState.ends)) {
-        gameState.isActive = false
-        console.log("game ended");
 
-        // clear gameState
         gameState = {
             isActive: false,
             starts: null,
             ends: null
         }
-
-        // io.emit("end_game", Date.now())
+        
+        console.log("game ended");
+        io.emit("end_game", Date.now())
     }    
-
-    // io.emit("tick", Date.now());
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
@@ -189,7 +192,8 @@ function createNewTimeWindow(gameState) {
     ).second(0)
 
     gameState.ends = gameState.starts.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
-
+    
+    // debug
     console.log("NEW WINDOW CREATED")
     console.log(gameState.starts.format("[\tgameStart\t minutes: ]m [seconds: ]s"));
     console.log(gameState.ends.format("[\tgameEnd\t\t minutes: ]m [seconds: ]s"));
