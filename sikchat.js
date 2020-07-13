@@ -15,51 +15,86 @@ app.use(express.static(__dirname + "/public/"));
 
 /* ------------------- SETUP ------------------- */
 var usersRepo = [];
+
+const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
+const SECONDS_BETWEEN_GAMES = 20;
+
 var gameState = {
     isActive: false,
     starts: null,
-    secondsBetweenGames: 15,
-    minutesLengthOfGames: 5 
+    ends: null
 }
 
-// start game loop
+/* ----------------- GAME LOOP ----------------- */
+
 setInterval(() => {
+    // console.log("tick");
+    console.log(dayjs().format("[---now\t minutes: ]m [seconds: ]s"));
+
     
     // set time window for incoming game
-    if(gameState.isActive == false) { 
-        gameState.starts = dayjs().add(secondsBetweenGames, 's')
-        gameState.ends = dayjs().add(secondsBetweenGames, 's').add(minutesLengthOfGames, "m")
+    if(gameState.isActive == false && gameState.starts == null) { 
+
+        let now = dayjs()
+
+        // round up to next multiple of TIME_SLOT_MINUTES
+        let gameStart = dayjs().minute(
+            Math.ceil(
+                now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
+                ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
+                : now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT
+            ) * MINUTES_ALLOTED_FOR_TIME_SLOT
+        ).second(0)
+
+        let gameEnd = gameStart.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
+
+        let dNow = now.format()
+        let dStart = gameStart.format()
+        let dEnd = gameEnd.format()
+
+        
+        console.log(gameStart.format("[gameStart\t minutes: ]m [seconds: ]s"));
+        console.log(gameEnd.format("[gameEnd\t\t minutes: ]m [seconds: ]s"));
+
+
+        gameState.starts = gameStart;
+        gameState.ends = gameEnd
+    }
+    
+    if(dayjs().isSameOrAfter(gameState.starts) && gameState.isActive == false) {
         gameState.isActive = true
+        console.log("game started")
+        // io.emit("start_game", Date.now())
     }
-
-    if(dayjs().isSameOrAfter(gameState.starts)) {
-        io.emit("start_game", Date.now())
-
-
-    }
-        console.log("isSameOrAfter!")
+     
+    if(dayjs().isSameOrAfter(gameState.ends)) {
+        gameState.isActive = false
+        console.log("game ended");
+        // io.emit("end_game", Date.now())
+    }    
 
     // io.emit("tick", Date.now());
-}, 2000)
+}, 1000)
 
 /* ------------------- ROUTER ------------------- */
 
+// page request
 app.get('/', function(req, res) {
     repoDisplay("simple");
     
-    // load page
+    // send front end code
     res.sendFile(__dirname + '/index.html');
 
-    // --- detect or create user
+    // --- detect or create user cookie
 
-    // create user
+    // create user & cookie
     if(!req.cookies.userData) {
         let user = new help.User()
         usersRepo.push(user)
         
         res.cookie("userData", JSON.stringify(user));
     }
-    // detect user
+    // load existing user & cookie
     else {
         let data = JSON.parse(req.cookies.userData)
 
