@@ -29,36 +29,13 @@ var gameState = {
 
 setInterval(() => {
     // console.log("tick");
-    console.log(dayjs().format("[---now\t minutes: ]m [seconds: ]s"));
+    console.log(dayjs().format("[---tick\t]m[m ]s[s]"));
 
     
-    // set time window for incoming game
+    // when the game first loads, and you're somewhere in the middle of a time slot, this calculates a proper start and end time
     if(gameState.isActive == false && gameState.starts == null) { 
 
-        let now = dayjs()
-
-        // round up to next multiple of TIME_SLOT_MINUTES
-        let gameStart = dayjs().minute(
-            Math.ceil(
-                now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
-                ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
-                : now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT
-            ) * MINUTES_ALLOTED_FOR_TIME_SLOT
-        ).second(0)
-
-        let gameEnd = gameStart.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
-
-        let dNow = now.format()
-        let dStart = gameStart.format()
-        let dEnd = gameEnd.format()
-
-        
-        console.log(gameStart.format("[gameStart\t minutes: ]m [seconds: ]s"));
-        console.log(gameEnd.format("[gameEnd\t\t minutes: ]m [seconds: ]s"));
-
-
-        gameState.starts = gameStart;
-        gameState.ends = gameEnd
+        createNewTimeWindow(gameState)
     }
     
     if(dayjs().isSameOrAfter(gameState.starts) && gameState.isActive == false) {
@@ -70,6 +47,14 @@ setInterval(() => {
     if(dayjs().isSameOrAfter(gameState.ends)) {
         gameState.isActive = false
         console.log("game ended");
+
+        // clear gameState
+        gameState = {
+            isActive: false,
+            starts: null,
+            ends: null
+        }
+
         // io.emit("end_game", Date.now())
     }    
 
@@ -80,7 +65,7 @@ setInterval(() => {
 
 // page request
 app.get('/', function(req, res) {
-    repoDisplay("simple");
+    consoleUserRepo("simple");
     
     // send front end code
     res.sendFile(__dirname + '/index.html');
@@ -172,7 +157,7 @@ http.listen(port, function() {
 
 /* ------------------- FUNCTIONS ------------------- */
 
-function repoDisplay(mode) 
+function consoleUserRepo(mode) 
 {
     console.log("%cuserRepo", "color: green")
     switch(mode) {
@@ -189,4 +174,23 @@ function repoDisplay(mode)
         default:
             console.log(usersRepo);
     }
+}
+
+function createNewTimeWindow(gameState) {
+
+    let now = dayjs()
+
+    gameState.starts = dayjs().minute(
+        Math.ceil(
+            now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
+            ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
+            : now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT
+        ) * MINUTES_ALLOTED_FOR_TIME_SLOT
+    ).second(0)
+
+    gameState.ends = gameState.starts.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
+
+    console.log("NEW WINDOW CREATED")
+    console.log(gameState.starts.format("[\tgameStart\t minutes: ]m [seconds: ]s"));
+    console.log(gameState.ends.format("[\tgameEnd\t\t minutes: ]m [seconds: ]s"));
 }
