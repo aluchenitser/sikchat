@@ -1,7 +1,7 @@
 
 /* ------------------ SETUP -------------------- */
 
-// DOM objects
+// -- DOM objects
 var messageInputElement = document.getElementById('message-input')
 var submitButtonElement = document.getElementById('submit-button')
 var drawerHandleElement = document.querySelector('.drawer-handle')
@@ -15,7 +15,7 @@ var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
 
 var messagesElement = document.getElementById("messages")
 
-// cookie data
+// --- USER DATA
 var currentUserName = "";
 var currentUserGUID = "";
 var cookieData;
@@ -36,11 +36,14 @@ else {
     tinyHeaderUserNameElement.innerHTML = "someone"
 }
 
+// --- MISCELLANEOUS
+
 var networkPort = 3000
 var validUserPattern = /^[a-z0-9_-]{1,16}$/
 var socket = io()
 
-/* -------------------- UI --------------------- */
+
+/* -------------------- USERNAME DRAWER --------------------- */
 
 // --- username & drawer logic
 userInputElement.addEventListener("keydown", e => {
@@ -56,8 +59,7 @@ userInputElement.addEventListener("keydown", e => {
     } 
 })
 
-
-// --- username validation and send to server
+// --- change user name + validation
 let timer = null;
 userInputElement.addEventListener("keyup", e => {
     
@@ -76,23 +78,6 @@ userInputElement.addEventListener("keyup", e => {
     }
     else {
         bogusUsernameElement.style.display = "inline";
-    }
-})
-
-// { username, foundDuplicate }
-socket.on("username_update_response", msg => {
-
-    if(msg.foundDuplicate) {
-        clearUsernameValidationDisplays();
-        inUseUsernameElement.style.display = "inline"
-    }
-    else {
-        // fun effect for successful lookup
-        currentUserName = msg.username
-        tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-        clearUsernameValidationDisplays();
-        usernameLookupSuccessElement.classList.remove("off")
-        setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
     }
 })
 
@@ -127,7 +112,24 @@ userInputElement.addEventListener("blur", e => {
 
 drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
 
-// --- send chat
+socket.on("username_update_response", msg => {          // { username, foundDuplicate }
+
+    if(msg.foundDuplicate) {
+        clearUsernameValidationDisplays();
+        inUseUsernameElement.style.display = "inline"
+    }
+    else {
+        // fun effect for successful lookup
+        currentUserName = msg.username
+        tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
+        clearUsernameValidationDisplays();
+        usernameLookupSuccessElement.classList.remove("off")
+        setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
+    }
+})
+
+/* -------------------- CHAT --------------------- */
+
 document.getElementById('form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
@@ -151,21 +153,26 @@ socket.on('chat_message_response', msg => {
     messageInputElement.value = ""
 })
 
-// --- receive server tick
-socket.on('tick', time => {
-    console.log(time);
-});
+/*  --------- SYNC WITH SERVER GAME LOOP ---------- */
 
-socket.on('start_game', data => {
-    gameObject = new Games("game-window", "QA", "slang");
-    gameObject.startGame();
-});
+socket.on('tick', serverObject => {
+    let { startTime, endTime, nextGameIn, isStarted, logString, startGameFlag, endGameFlag } = serverObject
 
-socket.on('end_game', data => {
-    gameObject.endGame();
-    gameObject = {};
-});
+    switch(true) {
+        case startGameFlag == true:
+            gameObject = new Games("game-window", "QA", "slang")
+            gameObject.startGame()
+            break;
 
+        case endGameFlag == true:
+            gameObject.endGame()
+            break
+
+        default:
+    }
+
+    console.log(logString);
+});
 
 /* ------------------ FUNCTIONS ------------------ */
 

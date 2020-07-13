@@ -17,58 +17,80 @@ app.use(express.static(__dirname + "/public/"));
 var usersRepo = [];
 
 const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
-const SECONDS_BETWEEN_GAMES = 20;
+    const SECONDS_BETWEEN_GAMES = 20;
+        const SECONDS_FOR_INTRO = SECONDS_BETWEEN_GAMES / 2;
+
+var isDebug = true
 
 var gameState = {
-    isActive: false,
-    starts: null,
-    ends: null
+    // game state
+    startTime: null,
+    endTime: null,
+    nextGameIn: null,
+    isStarted: false,
+    
+    // flags
+    startGameFlag: false,
+    endGameFlag: false,
+
+    // logging
+    logString: null,
 }
+
 
 /* ----------------- GAME LOOP ----------------- */
 
 setInterval(() => {
+    
+    // clear flags
+    gameState.startGameFlag = false
+    gameState.endGameFlag = false
 
-    // interval log
-    let logString = gameState.isActive == false && gameState.starts != null
-        ? `${dayjs().format("[---tick\t]m[m ]s[s\t]")} next game in: ${gameState.starts.diff(dayjs(), "s")}s`
-        : dayjs().format("[---tick\t]m[m ]s[s]")
-
-    console.log("tick", logString)
-    io.emit("tick", logString)
-
-    // create new time window
-    if(gameState.isActive == false && gameState.starts == null) { 
-        createNewTimeWindow(gameState)
+    // init original time window
+    if(gameState.isStarted == false && gameState.startTime == null) { 
+        createInitTimeWindow(isDebug)
     }
     
-    // start game!
-    if(dayjs().isSameOrAfter(gameState.starts) && gameState.isActive == false) {
-        gameState.isActive = true
-        
-        console.log("game started")
-        io.emit("start_game", Date.now())
-    }
-     
-    // end game!
-    if(dayjs().isSameOrAfter(gameState.ends)) {
+    // start game
+    if(dayjs().isSameOrAfter(gameState.startTime) && gameState.isStarted == false) {
+        gameState.isStarted = true
+        // gameState.nextGameIn = null
 
-        gameState = {
-            isActive: false,
-            starts: null,
-            ends: null
-        }
+        gameState.startGameFlag = true;
+        console.log("\tgame started");
+    }
+    
+    // end game
+    if(dayjs().isSameOrAfter(gameState.endTime)) {
         
-        console.log("game ended");
-        io.emit("end_game", Date.now())
+        gameState.isStarted = false
+        gameState.startTime = null
+        gameState.endTime = null 
+
+        gameState.endGameFlag = true;
+        console.log("\tgame ended");
     }    
+    
+    // set up emit for client + logging
+    switch(true) {
+        case gameState.isStarted == false && gameState.startTime != null:
+            gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s")
+            gameState.logString = `${dayjs().format("[---tick\t]m[m ]s[s]")}, next game in: ${gameState.nextGameIn}s`
+            break;
+        default:
+            gameState.logString = dayjs().format("[---tick\t]m[m ]s[s]")
+    }
+
+
+    console.log(gameState.logString)
+    io.emit("tick", gameState)
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
 
 // page request
 app.get('/', function(req, res) {
-    consoleUserRepo("simple");
+    consoleLatestUserRepo("simple");
     
     // send front end code
     res.sendFile(__dirname + '/index.html');
@@ -160,7 +182,7 @@ http.listen(port, function() {
 
 /* ------------------- FUNCTIONS ------------------- */
 
-function consoleUserRepo(mode) 
+function consoleLatestUserRepo(mode) 
 {
     console.log("%cuserRepo", "color: green")
     switch(mode) {
@@ -179,11 +201,11 @@ function consoleUserRepo(mode)
     }
 }
 
-function createNewTimeWindow(gameState) {
+function createInitTimeWindow(isDebug) {
 
     let now = dayjs()
 
-    gameState.starts = dayjs().minute(
+    gameState.startTime = dayjs().minute(
         Math.ceil(
             now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
             ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
@@ -191,10 +213,15 @@ function createNewTimeWindow(gameState) {
         ) * MINUTES_ALLOTED_FOR_TIME_SLOT
     ).second(0)
 
-    gameState.ends = gameState.starts.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
+    gameState.endTime = gameState.startTime.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
     
-    // debug
-    console.log("NEW WINDOW CREATED")
-    console.log(gameState.starts.format("[\tgameStart\t minutes: ]m [seconds: ]s"));
-    console.log(gameState.ends.format("[\tgameEnd\t\t minutes: ]m [seconds: ]s"));
+    if(isDebug) {
+        console.log("new window")
+        console.log(gameState.startTime.format("[\tgameStart at\t]m[m] [s]s"));
+        console.log(gameState.endTime.format("[\tgameEnd at\t]m[m] [s]s"));
+    }
+}
+
+function mapGameStateForTransport(gameState) {
+
 }
