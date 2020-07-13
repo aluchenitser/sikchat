@@ -19,7 +19,7 @@ module.exports = {
             this.username = username
         }
     },
-    GameCreate: class GameCreate{
+    GameCreate: class GameCreate {
         constructor(name, startTime, questions = {}) {
             this.startTime  = startTime
             this.name = name

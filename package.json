@@ -18,9 +18,9 @@
   "homepage": "https://github.com/aluchenitser/sikchat#readme",
   "dependencies": {
     "cookie-parser": "^1.4.5",
+    "dayjs": "^1.8.29",
     "express": "^4.17.1",
     "socket.io": "^2.3.0"
   },
   "devDependencies": {}
 }
-

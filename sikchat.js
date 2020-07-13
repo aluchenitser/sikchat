@@ -6,18 +6,41 @@ const io = require('socket.io')(http)
 const cookieParser = require('cookie-parser')
 const help = require('./help.js')
 
+var dayjs = require('dayjs')
+var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+dayjs.extend(isSameOrAfter)
+
 app.use(cookieParser());
 app.use(express.static(__dirname + "/public/"));
 
 /* ------------------- SETUP ------------------- */
-
 var usersRepo = [];
+var gameState = {
+    isActive: false,
+    starts: null,
+    secondsBetweenGames: 15,
+    minutesLengthOfGames: 5 
+}
 
-// start game clock
+// start game loop
 setInterval(() => {
-    io.emit("tick", Date.now());
-}, 2000)
+    
+    // set time window for incoming game
+    if(gameState.isActive == false) { 
+        gameState.starts = dayjs().add(secondsBetweenGames, 's')
+        gameState.ends = dayjs().add(secondsBetweenGames, 's').add(minutesLengthOfGames, "m")
+        gameState.isActive = true
+    }
 
+    if(dayjs().isSameOrAfter(gameState.starts)) {
+        io.emit("start_game", Date.now())
+
+
+    }
+        console.log("isSameOrAfter!")
+
+    // io.emit("tick", Date.now());
+}, 2000)
 
 /* ------------------- ROUTER ------------------- */
 
@@ -100,8 +123,6 @@ io.on('connection', (socket) => {
     });
 });
 
-
-
 /* ------------------- WEB SERVER ------------------- */
 
 // command line port selection or default to 3000
@@ -113,8 +134,6 @@ port = port && port >= 1023 && port <= 65535
 http.listen(port, function() {
     console.log(`listening on *:${port}`);
 });
-
-
 
 /* ------------------- FUNCTIONS ------------------- */
 
