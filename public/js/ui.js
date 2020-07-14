@@ -164,8 +164,14 @@ gameState = {
 /*  --------- GAME LOOP ---------- */
 socket.on('tick', data => {
     let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag } = data
+    // console.log("nextGameIn", nextGameIn);
 
+    if(endGameFlag == true && gameObject) {
+        console.log("endGameFlag == true && gameObject")
+    }
+    
     switch(true) {                          // TODO: switch may not be ideal here since not all conditions are mutually exclusive
+
 
         // start and end games
         case startGameFlag == true:
@@ -173,12 +179,12 @@ socket.on('tick', data => {
             gameState.itsTheFinalCountDown = false;
 
             document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
-            gameObject = new Games("game-window", "QA", "slang")
-            // gameObject.startGame()
+
+            gameObject.startGame()
             break;
 
-        case endGameFlag == true:
-            // gameObject.endGame()    
+        case endGameFlag == true && Object.keys(gameObject).length != 0:
+            gameObject.endGame(5)    
             break;
 
         // update header countdown        
@@ -195,20 +201,21 @@ socket.on('tick', data => {
         default:
     }
     
-    // update game countdown 
-    if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false) {
-        gameState.itsTheFinalCountDown = true;
-        document.querySelector(".count-down").innerHTML = nextGameIn
-         // gameObject.initialize()
-        // gameObject.countdown(nextGameIn)
-    }
-             
+    // init game and start final countdown
+        
     if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true) {
-        document.querySelector(".count-down").innerHTML = nextGameIn
-        // gameObject.countdown(nextGameIn)
+        gameObject.count(nextGameIn)
     }
 
-    // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+    if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false) {
+        gameState.itsTheFinalCountDown = true;
+        
+        gameObject = new Games("game-window", "QA", "slang")
+        gameObject.startCountDown(nextGameIn)
+        // gameObject.count(nextGameIn)
+    }
+
+    console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
     
 });
 
@@ -239,6 +246,10 @@ function drawerIsOpen() {
     return document.body.classList.contains("drawer-is-open")
         ? true
         : false
+}
+
+function gameIsInProgress() {
+
 }
 
 // --- username functions

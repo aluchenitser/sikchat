@@ -1,15 +1,11 @@
 
 .clock {
-  width: 20rem;
-  height: 20rem;
-  border: 7px solid #545271;
+  width: 15rem;
+  height: 15rem;
   border-radius: 50%;
-  margin: 100px auto 50px auto;
+  margin: 42px auto 59px auto;
   position: relative;
-  padding: 2rem;
-  -webkit-box-shadow: 0 20px 30px rgba(104,75,106,0.65);
-  -moz-box-shadow: 0 20px 30px rgba(104,75,106,0.65);
-  box-shadow: 0 20px 30px rgba(104,75,106,0.65);
+  padding: 1.2rem;
   background: #545271;
 }
 
@@ -93,14 +89,13 @@
   width: 16px;
   height: 16px;
   border-radius: 18px;
-  margin-left: -9px;
-  margin-top: -6px;
   background: #4d4b63;
   z-index: 11;
+  transform: translate(-50%, -50%);
 }
 
 .hand {
-  width: 50%;
+  width: 40%;
   right: 50%;
   height: 6px;
   background: #61afff;
@@ -109,21 +104,17 @@
   border-radius: 6px;
   transform-origin: 100%;
   transform: rotate(90deg);
-  transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+  /* transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1); */
+
+  animation: spinHand 3s linear infinite;
 }
 
-.hand.hour-hand {
-  width: 20%;
-  z-index: 3;
-}
+@keyframes spinHand {
+  0% {
+    transform: rotate(90deg);
+  }
 
-.hand.min-hand {
-  height: 3px;
-  z-index: 10;
-  width: 35%;
-}
-
-.hand.second-hand {
-  background: #ff5e5e;
-  width: 40%;
+  100% {
+    transform: rotate(450deg);
+  }
 }

@@ -75,7 +75,7 @@ setInterval(() => {
     // set up emit for client + logging
     switch(true) {
         case gameState.isActive == false && gameState.startTime != null:
-            gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s");
+            gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s") || null
             gameState.logString = `${dayjs().format("[---tick\t]m[m ]s[s]")}, next game in: ${gameState.nextGameIn}s`
             break;
         default:

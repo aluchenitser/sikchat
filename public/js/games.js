@@ -10,10 +10,6 @@ class Games {
         this.gameName = gameName
         this.gameType = gameType
         
-        this.gameMarkup = null
-        this.countDown = null
-
-
         if(!this.gameParentElement) {
             console.error("can't find a suitable parent element with this id attribute")
             return null;
@@ -30,27 +26,52 @@ class Games {
         }
     }
 
-    init() {
-        
-        this.loadTemplate()
+    /* ------- MAJOR CONTROLS ------- */
+
+    startCountDown(nextGameIn) {
+        var self = this;
+
+        return this.loadTemplate()
             .then(() => {
-                this.populateTemplate();
-                this.displayTemplate();
+                self.populateTemplate();
+                $(self.gameMarkup).appendTo(self.gameParentElement)
+                self.gameMarkup.classList.add("intro")
+                self.count(nextGameIn)
+
+                return true;
             },() => {
                 console.error("game file load failed");
             });
     }
-
-    countDown(nextGameIn) {
-        document.querySelector(".game-main .intro .count-down").innerHTML = nextGameIn ? nextGameIn : "";
-    }
-
+    
     startGame() {
-        
+        this.gameMarkup.classList.remove("intro")
+        this.gameMarkup.classList.add("active")
     }
 
-    endGame() {
-        this.gameParentElement.innerHTML = "";
+    endGame(timeAlloted) {                              // how long is the outro in seconds
+        this.gameMarkup.classList.remove("active")
+        this.gameMarkup.classList.add("outro")        
+
+        // do custom outro stuff here
+
+
+        // fade then delete
+        setTimeout(() => {
+            this.gameMarkup.querySelector(".outro").style.opacity = 0;
+
+            setTimeout(()=> {
+                delete this.gameMarkup
+                this.gameParentElement.innerHTML = "";
+            }, 2000)
+        }, timeAlloted * 1000)
+
+    }
+
+
+
+    count(nextGameIn) {
+        this.gameMarkup.querySelector(".game-main .intro .count-down").innerHTML = nextGameIn ? nextGameIn : "";
     }
 
     loadTemplate() {   
@@ -81,11 +102,8 @@ class Games {
                 return false;;
         }
     }
-    
-    displayTemplate() {
-        $(this.gameMarkup).appendTo(this.gameParentElement);
+
+    getGameMarkup() {
+        return this.gameMarkup || "no game Markup"
     }
- 
-
-
 }

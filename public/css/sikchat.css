@@ -27,7 +27,7 @@ h1, p {
   top: 1px;
   transition: opacity 0.5s;
   opacity: 1;
-  z-index: 1;
+  z-index: 2;
 }
 body.drawer-is-open .tiny-header-user-name {
   opacity: 0;
@@ -38,6 +38,8 @@ body.drawer-is-open .tiny-header-user-name {
   color: white;
   justify-content: space-between;
   height: 47px;
+  position: relative;
+  z-index: 1;
 }
 .header #form {
   display: flex;
