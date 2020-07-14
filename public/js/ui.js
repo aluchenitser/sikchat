@@ -1,5 +1,5 @@
 
-/* ------------------ SETUP -------------------- */
+/* ------------------ UI SETUP -------------------- */
 
 // -- DOM objects
 var messageInputElement = document.getElementById('message-input')
@@ -153,29 +153,61 @@ socket.on('chat_message_response', msg => {
     messageInputElement.value = ""
 })
 
-/*  --------- SYNC WITH SERVER GAME LOOP ---------- */
 
-socket.on('tick', serverObject => {
-    let { startTime, endTime, nextGameIn, isStarted, logString, startGameFlag, endGameFlag } = serverObject
+/*  --------- GAME SETUP ---------- */
+
+gameState = {
+    isCountDown: false,
+    itsTheFinalCountDown: false,
+}
+
+/*  --------- GAME LOOP ---------- */
+socket.on('tick', data => {
+    let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag } = data
 
     switch(true) {
+
+        // start and end games
         case startGameFlag == true:
+            gameState.isCountDown = false;
+            document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
             gameObject = new Games("game-window", "QA", "slang")
             gameObject.startGame()
             break;
 
         case endGameFlag == true:
-            gameObject.endGame()
-            break
+            gameObject.endGame()    
+            break;
+
+        // update header countdown        
+        case nextGameIn && gameState.isCountDown == false:
+            gameState.isCountDown = true;
+            document.getElementById("next-game-in").innerHTML = nextGameIn
+            document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
+            break;
+
+        case nextGameIn && gameState.isCountDown == true:
+            document.getElementById("next-game-in").innerHTML = nextGameIn
+            break;          
+                
+        // update game countdown (the final, countdown)
+        // case nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false:
+        //     gameState.itsTheFinalCountDown = true;
+        //     gameObject.updateFinalCountdown(nextGameIn)
+        //     break;
+
+        // case nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true:
+        //     gameObject.updateFinalCountdown(nextGameIn)
+        //     break;
 
         default:
     }
 
-    console.log(logString);
+    console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+    
 });
 
 /* ------------------ FUNCTIONS ------------------ */
-
 
 // --- drawer functions
 function openDrawer() {

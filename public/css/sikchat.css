@@ -27,6 +27,7 @@ h1, p {
   top: 1px;
   transition: opacity 0.5s;
   opacity: 1;
+  z-index: 1;
 }
 body.drawer-is-open .tiny-header-user-name {
   opacity: 0;
@@ -40,6 +41,7 @@ body.drawer-is-open .tiny-header-user-name {
 }
 .header #form {
   display: flex;
+  position: relative;
   width: 100%;
   padding: 12px 0 10px 15px;
   border-radius: 0 0 0 21px;
@@ -73,6 +75,18 @@ body.drawer-is-open .tiny-header-user-name {
 }
 .header #form #submit-button:hover {
   cursor: pointer;
+}
+.header #form .next-game-in-wrapper {
+  visibility: hidden;
+  right: -96px;
+  position: absolute;
+  font-size: 13px;
+  bottom: 11px;
+  line-height: 1;
+  letter-spacing: -0.1px;
+}
+.header #form .next-game-in-wrapper > span {
+  color: white;
 }
 .header .spacer {
   background-color: #EE90EE;

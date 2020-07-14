@@ -17,17 +17,18 @@ app.use(express.static(__dirname + "/public/"));
 var usersRepo = [];
 
 const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
-    const SECONDS_BETWEEN_GAMES = 20;
-        const SECONDS_FOR_INTRO = SECONDS_BETWEEN_GAMES / 2;
+const SECONDS_BETWEEN_GAMES = 30;
+
 
 var isDebug = true
 
 var gameState = {
+
     // game state
     startTime: null,
     endTime: null,
     nextGameIn: null,
-    isStarted: false,
+    isActive: false,
     
     // flags
     startGameFlag: false,
@@ -47,13 +48,13 @@ setInterval(() => {
     gameState.endGameFlag = false
 
     // init original time window
-    if(gameState.isStarted == false && gameState.startTime == null) { 
+    if(gameState.isActive == false && gameState.startTime == null) { 
         createInitTimeWindow(isDebug)
     }
     
     // start game
-    if(dayjs().isSameOrAfter(gameState.startTime) && gameState.isStarted == false) {
-        gameState.isStarted = true
+    if(dayjs().isSameOrAfter(gameState.startTime) && gameState.isActive == false) {
+        gameState.isActive = true
         // gameState.nextGameIn = null
 
         gameState.startGameFlag = true;
@@ -63,7 +64,7 @@ setInterval(() => {
     // end game
     if(dayjs().isSameOrAfter(gameState.endTime)) {
         
-        gameState.isStarted = false
+        gameState.isActive = false
         gameState.startTime = null
         gameState.endTime = null 
 
@@ -73,8 +74,8 @@ setInterval(() => {
     
     // set up emit for client + logging
     switch(true) {
-        case gameState.isStarted == false && gameState.startTime != null:
-            gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s")
+        case gameState.isActive == false && gameState.startTime != null:
+            gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s");
             gameState.logString = `${dayjs().format("[---tick\t]m[m ]s[s]")}, next game in: ${gameState.nextGameIn}s`
             break;
         default:

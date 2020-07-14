@@ -75,6 +75,4 @@ class Games {
     displayTemplate() {
         $(this.gameMarkup).appendTo(this.gameParentElement);
     }
-
-
 }

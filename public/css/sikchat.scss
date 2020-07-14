@@ -41,6 +41,7 @@ h1, p {
     top: 1px;
     transition: opacity .5s;
     opacity: 1;
+    z-index: 1;
 
     @at-root body.drawer-is-open & {
         opacity: 0;
@@ -55,6 +56,7 @@ h1, p {
 
      #form  {
         display: flex;
+        position: relative;
 
         width: 100%;
         padding: 12px 0 10px 15px;
@@ -94,6 +96,22 @@ h1, p {
 
             &:hover {
                 cursor: pointer;
+            }
+        }
+
+        // #next-game-in
+        .next-game-in-wrapper {
+            visibility: hidden;
+            right: -96px;
+            position: absolute;
+            font-size: 13px;
+            bottom: 11px;
+            line-height: 1;
+            letter-spacing: -0.1px;
+
+            > span {
+                // font-size: 12px;
+                color: white;
             }
         }
     }
