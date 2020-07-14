@@ -6,10 +6,9 @@
     width: 100%;
     height: 100%;
 
-    > * {
-        top: -100px;
-        position: relative;
-    }
+
+
+
     
     h1, h2 {
         position: relative;
@@ -22,6 +21,8 @@
     .intro {
         display: none;
         animation: fadeIn .5s;
+        position: relative;
+        margin-top: 100px;
 
         
         .intro-h1 {
@@ -45,6 +46,7 @@
     }
 
     .active {
+        position: relative;
         display: none;
         animation: fadeIn .5s;
         padding: 0 45px;
@@ -56,6 +58,7 @@
     }
 
     .outro {
+        position: relative;
         display: none;
         animation: fadeIn .5s;
         transition: opacity 0.5s;
