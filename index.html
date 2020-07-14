@@ -16,8 +16,7 @@
             <form id="form">
                 <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button" tabindex="-1"></button>
                 <div class="next-game-in-wrapper">
-                    <span>next game:</span><br />
-                    <span id="next-game-in">10</span>s
+                    <span>next game:</span><br /><span class="next-game-in">10</span>s
                 </div>
             </form>
 
@@ -63,6 +62,7 @@
         
         <script>
             let game = new Games("game-window", "QA", "slang");
+            game.init();
         </script>
     </body>
 </html>

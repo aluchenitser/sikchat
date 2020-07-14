@@ -9,8 +9,10 @@ class Games {
         this.gameParentElement = document.getElementById(gameId)
         this.gameName = gameName
         this.gameType = gameType
-
+        
         this.gameMarkup = null
+        this.countDown = null
+
 
         if(!this.gameParentElement) {
             console.error("can't find a suitable parent element with this id attribute")
@@ -28,7 +30,8 @@ class Games {
         }
     }
 
-    startGame() {
+    init() {
+        
         this.loadTemplate()
             .then(() => {
                 this.populateTemplate();
@@ -36,6 +39,14 @@ class Games {
             },() => {
                 console.error("game file load failed");
             });
+    }
+
+    countDown(nextGameIn) {
+        document.querySelector(".game-main .intro .count-down").innerHTML = nextGameIn ? nextGameIn : "";
+    }
+
+    startGame() {
+        
     }
 
     endGame() {
@@ -56,15 +67,14 @@ class Games {
             data = data.trim(); 
             template.innerHTML = data;
             self.gameMarkup = template.content.firstChild;
-            window.z = template.content.firstChild;
         })
     }
     populateTemplate() {
 
         switch(this.gameName.toUpperCase()) {
             case 'SLANG':
-                this.gameMarkup.querySelector("#game-header").innerHTML = "Talk Street?";
-                this.gameMarkup.querySelector("#game-sub-header").innerHTML = "GET CRED";
+                this.gameMarkup.querySelector(".intro-h1").innerHTML = "Talk Street?";
+                this.gameMarkup.querySelector(".intro-h2").innerHTML = "GET CRED";
                 break;
             default:
                 console.error("no name for game")
@@ -75,4 +85,7 @@ class Games {
     displayTemplate() {
         $(this.gameMarkup).appendTo(this.gameParentElement);
     }
+ 
+
+
 }

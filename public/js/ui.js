@@ -165,45 +165,50 @@ gameState = {
 socket.on('tick', data => {
     let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag } = data
 
-    switch(true) {
+    switch(true) {                          // TODO: switch may not be ideal here since not all conditions are mutually exclusive
 
         // start and end games
         case startGameFlag == true:
             gameState.isCountDown = false;
+            gameState.itsTheFinalCountDown = false;
+
             document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
             gameObject = new Games("game-window", "QA", "slang")
-            gameObject.startGame()
+            // gameObject.startGame()
             break;
 
         case endGameFlag == true:
-            gameObject.endGame()    
+            // gameObject.endGame()    
             break;
 
         // update header countdown        
         case nextGameIn && gameState.isCountDown == false:
             gameState.isCountDown = true;
-            document.getElementById("next-game-in").innerHTML = nextGameIn
+            document.querySelector(".next-game-in").innerHTML = nextGameIn
             document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
             break;
 
         case nextGameIn && gameState.isCountDown == true:
-            document.getElementById("next-game-in").innerHTML = nextGameIn
+            document.querySelector(".next-game-in").innerHTML = nextGameIn
             break;          
-                
-        // update game countdown (the final, countdown)
-        // case nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false:
-        //     gameState.itsTheFinalCountDown = true;
-        //     gameObject.updateFinalCountdown(nextGameIn)
-        //     break;
-
-        // case nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true:
-        //     gameObject.updateFinalCountdown(nextGameIn)
-        //     break;
 
         default:
     }
+    
+    // update game countdown 
+    if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false) {
+        gameState.itsTheFinalCountDown = true;
+        document.querySelector(".count-down").innerHTML = nextGameIn
+         // gameObject.initialize()
+        // gameObject.countdown(nextGameIn)
+    }
+             
+    if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true) {
+        document.querySelector(".count-down").innerHTML = nextGameIn
+        // gameObject.countdown(nextGameIn)
+    }
 
-    console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+    // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
     
 });
 
