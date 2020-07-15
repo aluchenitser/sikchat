@@ -29,6 +29,10 @@ var gameState = {
     endTime: null,
     nextGameIn: null,
     isActive: false,
+
+    // questions
+    currentQuestion: null,
+    questionBank: null,
     
     // flags
     startGameFlag: false,

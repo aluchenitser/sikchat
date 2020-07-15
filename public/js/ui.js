@@ -279,8 +279,10 @@ function displayInProgressScreen(bool) {
     console.log("--- displayInProgressScreen ---");
     
     if(bool == false) {
-        let intermissionElement = document.querySelector(".game-in-progress")
-        inProgressElement.parentNode.removeChild(inProgressElement)
+        killTheGameInProgressLoop = true;           // TODO: find a way other than this global, which exists in gameinprogress.js
+        gameWindowElement.innerHTML = "";
+        console.log("removed inProgressElement, gameWindowElement.childElementCount is: ", gameWindowElement.childElementCount)
+        console.log(gameWindowElement);
     }
     else {
         templateElement = document.getElementById("game-in-progress-template");

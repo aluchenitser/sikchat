@@ -1,9 +1,11 @@
 .intermission {
     position: relative;
+    animation: fadeIn .5s;
     
     .intermission-h1 {
-        font-family: 'Modak', cursive;
-        color: rgba(0,0,0,.87);
+        // font-family: 'Modak', cursive;
+        font-family: 'Lobster', cursive;
+        color: black;
         font-size: 40px;
         font-weight: 400;
         line-height: 1.2;
@@ -54,6 +56,11 @@
         66% { background-color:  #90EEEE }
         100% { background-color: #EEEE90 }
     }    
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0 }
+    100% { opacity: 1 }
 }
 
 // #363B40
