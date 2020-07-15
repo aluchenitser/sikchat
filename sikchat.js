@@ -42,12 +42,15 @@ var gameState = {
     nextGameIn: null,
     isActive: false,
     isBankLoaded: false,
+    isBankLoading: false,
+    isBankLoadFailed: false,
     isQuestionLoaded: false,
 
     // questions bank
     bank: {},
     questions: [],
     currentQuestion: {},
+    questionsHistory: [],
 
     // flags
     startGameFlag: false,
@@ -61,12 +64,26 @@ var gameState = {
 /* ----------------- GAME LOOP ----------------- */
 
 setInterval(() => {
-    if(gameState.isBankLoaded == false) {
+    // clear flags
+    gameState.startGameFlag = false
+    gameState.endGameFlag = false
+    
+    
+    // load question bank
+    if(gameState.isBankLoaded == false && gameState.isBankLoading == false && gameState.isBankLoadFaled == false) {
         let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
         let fullName = `./questions/questions_${name}.json`;
         
+        gameState.isBankLoading = true;         // to prevent double load in case file takes longer than a game loop to load.
+
         fs.readFile(fullName, (err, raw) => {
-            if (err) throw err;
+            gameState.isBankLoading = false;
+
+            if (err) {
+                gameState.isBankLoadFailed = true;
+                console.log("------------ read bank file is fucked!! we're goin' down!! ------------")
+                throw err;
+            }
 
             // parse and assign
             let data = JSON.parse(raw)
@@ -74,28 +91,31 @@ setInterval(() => {
             gameState.questions = data.questions
 
             gameState.isBankLoaded = true
+
             console.log("bank loaded\n\t", gameState.questions.current)
         });
     }
 
-
-    
-    // clear flags
-    gameState.startGameFlag = false
-    gameState.endGameFlag = false
-
-    // init original time window
+    // init first game time window
     if(gameState.isActive == false && gameState.startTime == null) { 
         createInitTimeWindow(isDebug)
     }
+    
     
     // start game
     if(dayjs().isSameOrAfter(gameState.startTime) && gameState.isActive == false) {
         gameState.isActive = true
         // gameState.nextGameIn = null
-
+        
         gameState.startGameFlag = true;
         console.log("\tgame started");
+    }
+   
+    // load question
+    if(gameState.isActive == true && gameState.isBankLoaded == true && gameState.isQuestionLoaded == false) {
+        
+
+        let currentQuestion = gameState.questions
     }
     
     // end game
@@ -109,18 +129,19 @@ setInterval(() => {
         console.log("\tgame ended");
     }    
     
-    // set up emit for client + logging
+
+    // set up poll style emits and logging
     switch(true) {
         case gameState.isActive == false && gameState.startTime != null:
             gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s") || null
-            gameState.logString = `${dayjs().format("[---tick\t]m[m ]s[s]")}, next game in: ${gameState.nextGameIn}s`
+            gameState.logString = `${dayjs().format("m[m ]s[s]")}, next game in: ${gameState.nextGameIn}s`
             break;
         default:
-            gameState.logString = dayjs().format("[---tick\t]m[m ]s[s]")
+            gameState.logString = dayjs().format("m[m ]s[s]")
     }
 
+    console.log("---tick", gameState.logString)
 
-    console.log(gameState.logString)
     io.emit("tick", gameState)
 }, 1000)
 
