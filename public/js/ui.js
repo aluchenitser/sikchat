@@ -168,7 +168,8 @@ gameState = {
 /*  --------- GAME LOOP ---------- */
 socket.on('tick', data => {
     let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag } = data
-    console.log("gameObject.isActive", isActive, "gameState.isActive", gameState.isActive, "nextGameIn", nextGameIn);
+    console.log(data);
+    // console.log("gameObject.isActive", isActive, "gameState.isActive", gameState.isActive, "nextGameIn", nextGameIn);
 
 
     switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
@@ -281,8 +282,6 @@ function displayInProgressScreen(bool) {
     if(bool == false) {
         killTheGameInProgressLoop = true;           // TODO: find a way other than this global, which exists in gameinprogress.js
         gameWindowElement.innerHTML = "";
-        console.log("removed inProgressElement, gameWindowElement.childElementCount is: ", gameWindowElement.childElementCount)
-        console.log(gameWindowElement);
     }
     else {
         templateElement = document.getElementById("game-in-progress-template");

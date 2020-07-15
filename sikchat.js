@@ -50,7 +50,7 @@ var gameState = {
     bank: {},
     questions: [],
     currentQuestion: {},
-    questionsHistory: [],
+    questionsLeft: [],              // initialized with integers from 0 to questions.length, then gets spliced as questions are used
 
     // flags
     startGameFlag: false,
@@ -70,7 +70,7 @@ setInterval(() => {
     
     
     // load question bank
-    if(gameState.isBankLoaded == false && gameState.isBankLoading == false && gameState.isBankLoadFaled == false) {
+    if(gameState.isBankLoaded == false && gameState.isBankLoading == false && gameState.isBankLoadFailed == false) {
         let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
         let fullName = `./questions/questions_${name}.json`;
         
@@ -114,8 +114,23 @@ setInterval(() => {
     // load question
     if(gameState.isActive == true && gameState.isBankLoaded == true && gameState.isQuestionLoaded == false) {
         
+        /* 
+            gameState.questionsLeft is an incremental list of integers corresponding to questions that haven't been used yet,
+            gameState.questions is the loaded bank of questions and should never change
+        */
 
-        let currentQuestion = gameState.questions
+        // init questionsLeft
+        if(gameState.questionsLeft.length == 0) {
+            gameState.questionsLeft = Array.from(Array(gameState.questions.length).keys())
+        }
+
+        // choose question
+        let index = gameState.questionsLeft[Math.floor(Math.random() * gameState.questionsLeft.length)]
+        gameState.currentQuestion = gameState.questions[index];
+        gameState.isQuestionsLoaded = true;
+
+        // pluck from future questions
+        gameState.questionsLeft.slice(index, 1);
     }
     
     // end game
@@ -141,8 +156,9 @@ setInterval(() => {
     }
 
     console.log("---tick", gameState.logString)
+    let emit = mapGameStateForEmit()
 
-    io.emit("tick", gameState)
+    io.emit("tick", emit)
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
@@ -281,6 +297,16 @@ function createInitTimeWindow(isDebug) {
     }
 }
 
-function mapGameStateForTransport(gameState) {
+// snips the more repo esque properties to save bandwidth
+function mapGameStateForEmit() {
+    let emit = {}
+    let reject = ["bank", "questions", "questionsLeft", "isBankLoaded", "isBankLoading", "isBankLoadFailed"];
 
+    for(let [key, value] of Object.entries(gameState)) {
+        if(reject.indexOf(key) == -1) {
+            emit[key] = value;
+        }
+    }
+
+    return emit;
 }
