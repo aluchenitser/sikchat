@@ -1,26 +1,38 @@
 
+// standard requires
 const express = require('express')
 const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-const cookieParser = require('cookie-parser')
-const help = require('./help.js')
+const fs = require('fs');
 
+// requires with extra shit
 var dayjs = require('dayjs')
 var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
 
+const cookieParser = require('cookie-parser')
 app.use(cookieParser());
-app.use(express.static(__dirname + "/public/"));
+
+// requires that load my stuff
+const help = require('./help.js')
+
 
 /* ------------------- SETUP ------------------- */
+
+app.use(express.static(__dirname + "/public/"));
+
 var usersRepo = [];
+
+const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
+
 
 const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
 const SECONDS_BETWEEN_GAMES = 30;
 
-
 var isDebug = true
+
+
 
 var gameState = {
 
@@ -29,11 +41,14 @@ var gameState = {
     endTime: null,
     nextGameIn: null,
     isActive: false,
+    isBankLoaded: false,
+    isQuestionLoaded: false,
 
-    // questions
-    currentQuestion: null,
-    questionBank: null,
-    
+    // questions bank
+    bank: {},
+    questions: [],
+    currentQuestion: {},
+
     // flags
     startGameFlag: false,
     endGameFlag: false,
@@ -46,6 +61,24 @@ var gameState = {
 /* ----------------- GAME LOOP ----------------- */
 
 setInterval(() => {
+    if(gameState.isBankLoaded == false) {
+        let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
+        let fullName = `./questions/questions_${name}.json`;
+        
+        fs.readFile(fullName, (err, raw) => {
+            if (err) throw err;
+
+            // parse and assign
+            let data = JSON.parse(raw)
+            gameState.bank = data.bank
+            gameState.questions = data.questions
+
+            gameState.isBankLoaded = true
+            console.log("bank loaded\n\t", gameState.questions.current)
+        });
+    }
+
+
     
     // clear flags
     gameState.startGameFlag = false
