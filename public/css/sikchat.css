@@ -208,6 +208,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   text-align: right;
 }
 .chat-body #game-window {
+  position: relative;
   display: flex;
   justify-content: center;
   align-content: center;

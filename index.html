@@ -51,10 +51,19 @@
         </div>
         <div class="chat-body">
                 <div id="messages"></div>
-                <div id="game-window">
-
-                </div>
+                <div id="game-window"></div>
         </div>
+
+        <template id="game-in-progress-template">
+            <div class="game-in-progress">
+                <div class="balls">
+                    <div class="ball-border"><div class="ball"><span>game</span></div></div>
+                    <div class="ball-border"><div class="ball"><span>in</span></div></div>
+                    <div class="ball-border"><div class="ball"><span>progress</span></div></div>
+                </div>
+            </div>
+            <script src="js/gameinprogress.js"></script>
+        </template>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.29/dayjs.min.js" integrity="sha512-APVsMirhHF2o3YdCSwYonM7egfT589pTqyoy5hIzEbs9sAGJSbEI6ssXUwngHjaq4V/GmmmpgqrcLSvsO+gsJQ==" crossorigin="anonymous"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
@@ -62,9 +71,4 @@
        
         <script src="js/games.js"></script>
         <script src="js/ui.js"></script>
-        
-        <script>
-
-        </script>
-    </body>
 </html>

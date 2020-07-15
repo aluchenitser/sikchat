@@ -159,44 +159,57 @@ socket.on('chat_message_response', msg => {
 gameState = {
     isCountDown: false,
     itsTheFinalCountDown: false,
+    isActive: false,
+    isInProgress: false
 }
 
 /*  --------- GAME LOOP ---------- */
 socket.on('tick', data => {
     let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag } = data
-    // console.log("nextGameIn", nextGameIn);
-
-    if(endGameFlag == true && gameObject) {
-        console.log("endGameFlag == true && gameObject")
-    }
-    
-    switch(true) {                          // TODO: switch may not be ideal here since not all conditions are mutually exclusive
+    console.log("gameObject.isActive", isActive, "gameState.isActive", gameState.isActive, "nextGameIn", nextGameIn);
 
 
-        // start and end games
+    switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
+
+        // start game
         case startGameFlag == true:
             gameState.isCountDown = false;
             gameState.itsTheFinalCountDown = false;
 
             document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
-
             gameObject.startGame()
+            gameState.isActive = true;
             break;
 
+        // end game scenario where the user had logged in mid game. removes gameIsInProgress animation
+        case endGameFlag == true && gameState.isActive == false:
+            gameIsInProgress(false)
+            break;
+
+        // end game
         case endGameFlag == true && Object.keys(gameObject).length != 0:
             gameObject.endGame(5)    
+            gameState.isActive = false;
             break;
 
-        // update header countdown        
+        // start header countdown
         case nextGameIn && gameState.isCountDown == false:
             gameState.isCountDown = true;
             document.querySelector(".next-game-in").innerHTML = nextGameIn
             document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
             break;
 
+        // update header countdown
         case nextGameIn && gameState.isCountDown == true:
             document.querySelector(".next-game-in").innerHTML = nextGameIn
             break;          
+
+        // user logged in mid-game, show in progress screen
+        case nextGameIn == null && isActive == true && gameState.isActive == false && gameState.isInProgress == false:
+            console.log("logged in mid game")
+            gameState.isInProgress = true;
+            gameIsInProgress()
+            break;
 
         default:
     }
@@ -204,6 +217,7 @@ socket.on('tick', data => {
     // init game and start final countdown
         
     if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true) {
+        gameState.isInProgress == false;
         gameObject.count(nextGameIn)
     }
 
@@ -212,10 +226,9 @@ socket.on('tick', data => {
         
         gameObject = new Games("game-window", "QA", "slang")
         gameObject.startCountDown(nextGameIn)
-        // gameObject.count(nextGameIn)
     }
 
-    console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+    // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
     
 });
 
@@ -248,8 +261,18 @@ function drawerIsOpen() {
         : false
 }
 
-function gameIsInProgress() {
-
+function gameIsInProgress(bool) {
+    console.log("--- gameIsInProgress ---");
+    
+    if(bool == false) {
+        let inProgressElement = document.querySelector(".game-in-progress")
+        inProgressElement.parentNode.removeChild(inProgressElement)
+    }
+    else {
+        templateElement = document.getElementById("game-in-progress-template");
+        var clonedElement = templateElement.content.cloneNode(true);
+        document.getElementById("game-window").appendChild(clonedElement);
+    }
 }
 
 // --- username functions

@@ -1,19 +1,16 @@
-body {
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100%;
-}
-
-.game-already-in-progress {
+.game-in-progress {
     // background-color: lightblue;
     
     display: flex;
     flex-flow: column nowrap;
+    position: absolute;
+    width: 100%;
 
     .balls {
         display: flex;
         justify-content: space-around;
         width: 100%;
+        padding: 15px;
 
         .ball-border {
             position: relative;
