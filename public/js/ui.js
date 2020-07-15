@@ -12,6 +12,7 @@ var inUseUsernameElement = document.querySelector('.in-use-username')
 var checkingUsernameElement = document.querySelector('.checking-username')
 var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
 var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
+var gameWindowElement = document.getElementById("game-window")
 
 var messagesElement = document.getElementById("messages")
 
@@ -160,7 +161,8 @@ gameState = {
     isCountDown: false,
     itsTheFinalCountDown: false,
     isActive: false,
-    isInProgress: false
+    isInProgress: false,
+    isIntermission: false
 }
 
 /*  --------- GAME LOOP ---------- */
@@ -181,9 +183,9 @@ socket.on('tick', data => {
             gameState.isActive = true;
             break;
 
-        // end game scenario where the user had logged in mid game. removes gameIsInProgress animation
+        // end game scenario where the user had logged in mid game. removes displayInProgressScreen animation
         case endGameFlag == true && gameState.isActive == false:
-            gameIsInProgress(false)
+            displayInProgressScreen(false)
             break;
 
         // end game
@@ -199,16 +201,24 @@ socket.on('tick', data => {
             document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
             break;
 
-        // update header countdown
+        // update header countdown and possibly put up the intermission screen
         case nextGameIn && gameState.isCountDown == true:
+            
+            // header countdown
             document.querySelector(".next-game-in").innerHTML = nextGameIn
+
+            // intermission screen, awaits a clear window from the .endGame method of Games
+            if(gameState.itsTheFinalCountDown == false && gameState.isIntermission == false && gameWindowElement.childElementCount == 0){
+                gameState.isIntermission = true;
+                displayIntermissionScreen();
+            }
             break;          
 
         // user logged in mid-game, show in progress screen
         case nextGameIn == null && isActive == true && gameState.isActive == false && gameState.isInProgress == false:
             console.log("logged in mid game")
             gameState.isInProgress = true;
-            gameIsInProgress()
+            displayInProgressScreen()
             break;
 
         default:
@@ -223,6 +233,10 @@ socket.on('tick', data => {
 
     if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false) {
         gameState.itsTheFinalCountDown = true;
+        
+        // clear intermission screen
+        gameState.isIntermission = false;           
+        gameWindowElement.innerHTML = "";
         
         gameObject = new Games("game-window", "QA", "slang")
         gameObject.startCountDown(nextGameIn)
@@ -261,17 +275,32 @@ function drawerIsOpen() {
         : false
 }
 
-function gameIsInProgress(bool) {
-    console.log("--- gameIsInProgress ---");
+function displayInProgressScreen(bool) {
+    console.log("--- displayInProgressScreen ---");
     
     if(bool == false) {
-        let inProgressElement = document.querySelector(".game-in-progress")
+        let intermissionElement = document.querySelector(".game-in-progress")
         inProgressElement.parentNode.removeChild(inProgressElement)
     }
     else {
         templateElement = document.getElementById("game-in-progress-template");
         var clonedElement = templateElement.content.cloneNode(true);
-        document.getElementById("game-window").appendChild(clonedElement);
+        gameWindowElement.appendChild(clonedElement);
+    }
+}
+
+
+function displayIntermissionScreen(bool) {
+    console.log("--- displayIntermissionScreen ---");
+    
+    if(bool == false) {
+        let intermissionElement = document.querySelector(".intermission")
+        intermissionElement.parentNode.removeChild(intermissionElement)
+    }
+    else {
+        templateElement = document.getElementById("intermission-template");
+        var clonedElement = templateElement.content.cloneNode(true);
+        gameWindowElement.appendChild(clonedElement);
     }
 }
 
