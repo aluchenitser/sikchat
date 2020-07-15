@@ -53,9 +53,6 @@ class Games {
         this.gameMarkup.classList.remove("active")
         this.gameMarkup.classList.add("outro")        
 
-        // do custom outro stuff here
-
-
         // fade then delete
         setTimeout(() => {
             this.gameMarkup.querySelector(".outro").style.opacity = 0;
@@ -65,10 +62,7 @@ class Games {
                 this.gameParentElement.innerHTML = "";
             }, 2000)
         }, timeAlloted * 1000)
-
     }
-
-
 
     count(nextGameIn) {
         this.gameMarkup.querySelector(".game-main .intro .count-down").innerHTML = nextGameIn ? nextGameIn : "";
