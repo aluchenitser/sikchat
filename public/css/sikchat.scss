@@ -1,0 +1,332 @@
+// IMPORTANT NOTE: major flex values for the header and body are in the RESPONSIVE area further down the file
+
+/* ----------------- VARIABLES ----------------- */
+
+$header-background-color: #EE90EE;
+$label-text-color: gray;
+
+$font-size-message: 16px;
+
+$font-size-username: 22px;
+
+$font-size-logo: 20px;
+
+/* ----------------- GENERAL ----------------- */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: monospace, Arial;
+}
+
+h1, p {
+    margin: 0 0 12px 0;
+}
+
+/* ----------------- HEADER ----------------- */
+
+.tiny-header-user-name {
+    position: absolute;
+    color: white;
+    font-size: 11px;
+    padding-left: 15px;
+    top: 1px;
+    transition: opacity .5s;
+    opacity: 1;
+    z-index: 2;
+
+    @at-root body.drawer-is-open & {
+        opacity: 0;
+    }
+}
+
+.header {
+    display: flex;
+    color: white;
+    justify-content: space-between;
+    height: 47px;
+
+    position: relative;
+    z-index: 1;
+
+     #form  {
+        display: flex;
+        position: relative;
+
+        width: 100%;
+        padding: 12px 0 10px 15px;
+        border-radius: 0 0 0 21px;
+
+        background-color: $header-background-color;
+
+        #message-input, button {
+            font-size: $font-size-message;
+            outline: none;
+            border: none;
+            height: 100%;
+        }
+
+        #message-input {
+            padding: 0;
+            flex: 1 1 auto;
+            border-radius: 0 0 0 7px;
+            padding-left: 10px;
+
+            &:focus, &:focus + #submit-button {
+                border-bottom: 1px solid #d875d8;
+            }
+        }
+
+        #submit-button {
+            color: white;
+            flex: 0 0 35px;
+            background-color: #efefef;
+            transition: background-color 0.1s;
+            border-radius: 0 31px 0 0;
+
+            &:focus {
+                text-decoration: underline;
+                background-color: #cecece;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        // #next-game-in
+        .next-game-in-wrapper {
+            visibility: hidden;
+            right: -96px;
+            position: absolute;
+            font-size: 13px;
+            bottom: 11px;
+            line-height: 1;
+            letter-spacing: -0.1px;
+
+            > span {
+                // font-size: 12px;
+                color: white;
+            }
+        }
+    }
+
+    .spacer {
+        background-color: $header-background-color;
+    }
+
+    .logo-column {
+
+        position: relative;
+        font-size: 22px;
+        text-align: right;
+        font-style: italic;
+        text-decoration: underline;
+
+        .ghost-drawer {
+            padding: 12px 15px 10px 0;
+            visibility: hidden;
+            .ghost-logo {
+                padding: 0 15px;
+            }
+        }
+
+        .drawer {
+            display: flex;
+            flex-flow: column;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: height .5s;
+            transform-origin: left;
+
+            
+            .drawer-contents {
+                flex: 1 1 0;
+                overflow: hidden;
+                color: black;
+                font-style: normal;
+
+                .drawer-item {
+                    display: flex;
+                    flex-flow: column;
+                    padding: 0 10px;
+
+                    .username {
+                        font-size: 12px;
+                        color: $label-text-color;
+
+                        .bogus-username {
+                            display: none;
+                            color: red;
+                        }
+
+                        .in-use-username {
+                            display: none;
+                            color: red;
+                        }
+
+                        .checking-username {
+                            display: none;
+                        }
+
+                        .username-lookup-success {
+                            color: green;
+                            
+                            // this allows an instant appearance, but a slow disappearance
+                            &.off {
+                                transition: opacity .5s 2s;
+                                opacity: 0;
+                            }
+                        }
+                    }
+                    
+                    input {
+                        border: none;
+                        border-bottom: 1px solid darkgray;
+                        outline: none;
+                        text-align: right;
+                        font-size: 20px;
+                        width: 100%;
+                    }
+                }
+            }
+            
+            .drawer-handle {
+                flex: 0 1 auto;
+                background-color: $header-background-color;
+                padding: 12px 15px 10px 0;
+                transition: transform .5s;
+                height: 47px;
+                z-index: 1;           // to lay on top of game window
+                
+                // prevents horizontal scroll bar
+                position: relative;
+                left: -1px;
+
+                &:hover { cursor: pointer; }
+                
+                #logo {
+                    font-size: $font-size-logo;
+                    padding: 0 15px;
+                }
+            }
+            
+            // OPEN THE DRAWER
+            @at-root body.drawer-is-open & {
+                height: 250%;
+                .drawer-handle { 
+                    transform: rotate(4deg); 
+                }
+            }
+        }
+    }
+}
+
+
+/* ----------------- BODY ----------------- */
+
+.chat-body {
+    display: flex;
+    height: calc(100% - 47px);
+
+    #messages {
+        padding: 0 15px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+
+        .message-output {
+            margin-top: 11px;
+            letter-spacing: -1.5px;
+
+            .user-name {
+                font-size: 12px;
+                text-decoration: underline;
+            }
+
+            .output-text {
+                font-size: 18px;
+            }
+
+            &.is-current-user {
+                text-align: right;
+            }
+        }
+    }
+
+    .spacer {
+
+    }
+
+    #game-window {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+    }
+}
+
+/* ---------------- RESPONSIVE ----------------- */
+
+// extra small
+@media (max-width: 575px) {
+
+}
+
+// small
+@media (max-width: 767px) {
+    
+}
+
+// medium
+@media (max-width: 991px) {
+    .header, .chat-body {
+        #form, #messages {              flex: 1.5 1 0;        }
+        .spacer {                       flex: .1 1 auto;      }
+        .logo-column, #game-window {          flex: .5 1 0;         }
+    }
+
+    #username {
+        font-size: 16px;
+    }
+}
+
+// large
+@media (max-width: 1199px) {
+    .header, .chat-body {
+        #form, #messages {              flex: 1.5 1 0; }
+        .spacer {                       flex: .2 1 auto; }
+        .logo-column{                   flex: .5 1 0; }
+        #game-window {                        flex: .7 1 0; }   
+    }
+}
+
+// extra large
+@media (min-width: 1200px) {
+    .header, .chat-body {
+        #form, #messages {            flex: 1.5 1 0; }
+        .spacer {                     flex: .35 1 auto; }
+        .logo-column {                flex: .5 1 0; }
+        #game-window {                      flex: .85 1 0; }   
+    }
+}
+
+// orca whale
+@media (min-width: 1500px) {
+    .header, .chat-body {
+        #form, #messages {          flex: 1.5 1 0; }
+        .spacer {                   flex: .5 1 auto; }
+        .logo-column {              flex: .5 1 0; } 
+        #game-window {                    flex: 1 1 0; }   
+    }
+}

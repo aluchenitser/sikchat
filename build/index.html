@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>sikchat</title>
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/sikchat.css">
+    </head>
+    <body>
+        <div class="tiny-header-user-name"></div>
+        <div class="header">
+            <form id="form">
+                <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button">></button>
+            </form>
+
+            <div class="spacer"></div>
+
+            <div class="logo-column">
+                <div class="ghost-drawer"><div class="ghost-logo">sikchat</div></div>
+                <div class="drawer">
+                    <div class="drawer-contents">
+                        <div class="drawer-item">
+                            <div>
+                                <label class="username">
+                                    <span class="username-lookup-success off">success! </span>
+                                    <span class="in-use-username">(in use) </span>
+                                    <span class="bogus-username">(bogus) </span>
+                                    <span class="checking-username">checking.. </span> 
+                                    moniker
+                                </label> 
+                            </div>
+                            <div>
+                                <input id="username" name="username" autocomplete="off" spellcheck="false" maxlength="16" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="drawer-handle">
+                        <span id="logo">sikchat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-body">
+                <div id="messages"></div>
+                <div class="extra"></div>
+        </div>
+
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+       
+        <script src="js/general_ui.js"></script>
+    </body>
+</html>

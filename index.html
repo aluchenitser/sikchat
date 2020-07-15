@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>sikchat</title>
+
+        <!-- FONTS -->
+        <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/sikchat.css">
+        <link rel="stylesheet" type="text/css" href="css/clock.css">
+
+        <link rel="stylesheet" type="text/css" href="css/gamealreadyinprogress.css">
+        <link rel="stylesheet" type="text/css" href="css/intermission.css">
+        
+        <!-- GAMES-->
+        <link rel="stylesheet" type="text/css" href="css/qa.css">
+    </head>
+    <body>
+        <div class="tiny-header-user-name"></div>
+        <div class="header">
+            <form id="form">
+                <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button" tabindex="-1"></button>
+                <div class="next-game-in-wrapper">
+                    <span>next game:</span><br /><span class="next-game-in">10</span>s
+                </div>
+            </form>
+
+            <div class="spacer"></div>
+
+            <div class="logo-column">
+                <div class="ghost-drawer"><div class="ghost-logo">sikchat</div></div>
+                <div class="drawer">
+                    <div class="drawer-contents">
+                        <div class="drawer-item">
+                            <div>
+                                <label class="username">
+                                    <span class="username-lookup-success off">success! </span>
+                                    <span class="in-use-username">(in use) </span>
+                                    <span class="bogus-username">(bogus) </span>
+                                    <span class="checking-username">checking.. </span> 
+                                    moniker
+                                </label> 
+                            </div>
+                            <div>
+                                <input id="username" name="username" autocomplete="off" spellcheck="false" maxlength="16" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="drawer-handle">
+                        <span id="logo">sikchat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-body">
+                <div id="messages"></div>
+                <div id="game-window"></div>
+        </div>
+
+        <template id="game-in-progress-template">
+            <div class="game-in-progress">
+                <div class="balls">
+                    <div class="ball-border"><div class="ball"><span>game</span></div></div>
+                    <div class="ball-border"><div class="ball"><span>in</span></div></div>
+                    <div class="ball-border"><div class="ball"><span>progress</span></div></div>
+                </div>
+            </div>
+            <script src="js/gameinprogress.js"></script>
+        </template>
+
+        <template id="intermission-template">
+            <div class="intermission">
+                <div class="intermission-h1">intermission</div>
+                <div class="underline-2"></div>
+                <div class="underline-1"></div>
+                <div class="underline-3"></div>
+            </div>
+        </template>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.29/dayjs.min.js" integrity="sha512-APVsMirhHF2o3YdCSwYonM7egfT589pTqyoy5hIzEbs9sAGJSbEI6ssXUwngHjaq4V/GmmmpgqrcLSvsO+gsJQ==" crossorigin="anonymous"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+       
+        <script src="js/games.js"></script>
+        <script src="js/ui.js"></script>
+</html>
