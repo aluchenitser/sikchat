@@ -12,7 +12,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -21,7 +22,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -30,7 +32,7 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, "difficulty": ""
           }
        },
        {
@@ -39,7 +41,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -48,7 +51,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -57,7 +61,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -66,7 +71,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -75,7 +81,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -84,7 +91,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -93,7 +101,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        },
        {
@@ -102,7 +111,8 @@
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
-             "image": null
+             "image": null, 
+             "difficulty": ""
           }
        }
     ]
