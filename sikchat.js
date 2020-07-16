@@ -27,15 +27,16 @@ var usersRepo = [];
 const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
 
 // time window
+const timeConstants = {
+    // in minutes
+    TIME_LENGTH_WINDOW: 1,              // components must add up to the window
 
-// full window size in minutes
-const TIME_LENGTH_WINDOW = 1;              // components need to add up to the whole. (windows have to be in minutes)
-
-// window components in seconds
-const TIME_LENGTH_INTERMISSION = 20;
-const TIME_LENGTH_STARTING = 10;
-const TIME_LENGTH_STARTED = 20;
-const TIME_LENGTH_ENDING = 10;
+    // in seconds
+    TIME_LENGTH_INTERMISSION: 20,
+    TIME_LENGTH_STARTING: 10,
+    TIME_LENGTH_STARTED: 20,
+    TIME_LENGTH_ENDING: 10
+}
 
 // game state
 var gameState = {
@@ -50,15 +51,7 @@ var gameState = {
         current: ""
     },
 
-    // timeConstants is for emitting to the client
-    timeConstants: {
-        TIME_LENGTH_WINDOW: TIME_LENGTH_WINDOW,
-        TIME_LENGTH_INTERMISSION: TIME_LENGTH_INTERMISSION,
-        TIME_LENGTH_STARTING: TIME_LENGTH_STARTING,
-        TIME_LENGTH_STARTED: TIME_LENGTH_STARTED,
-        TIME_LENGTH_ENDING: TIME_LENGTH_ENDING
-    },
-
+    // game loop flags
     isPreLoad: true,            // first iteration
     isInit: false,              // purgatory before first real window
     isIntermission: false,      // start of time window
@@ -66,22 +59,25 @@ var gameState = {
     isStarted: false,           // game is in session
     isEnding: false,            // outro
 
-    // question bank, load flags and meta data
+    // question bank
     qBank: {
+
+        // flags
         isLoaded: false,
         isLoading: false,
         isLoadFailed: false,
-        loaded: {},
-        current: {}
+        
+        // from json
+        loaded: {
+            meta: {},
+            questions: []
+        },
+        
+        // dynamic
+        currentQuestion: {},
+        questionsLeft: []
     },
 
-    // question data
-    questions: [],
-    question: {},
-
-    // question helpers
-    isQuestionLoaded: false,
-    questionsLeft: [],              // initialized with integers from 0 to questions.length, then gets spliced as questions are used
 
     // logging
     logString: null,
@@ -114,18 +110,14 @@ setInterval(() => {
             updateTimeWindow()
             printTimeWindow()
         }
-    
         loadQuestionBank()
     
-        
-
         //flags
         gameState.isEnding 
             ? gameState.isEnding = false 
             : gameState.isInit = false
         gameState.time.current = "intermission";
         gameState.isIntermission = true;
-
     }
 
     // starting
@@ -139,7 +131,9 @@ setInterval(() => {
 
     // started
     if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
-        
+        console.log("started");
+        loadQuestion();
+
         // flags
         gameState.isStarting = false;
         gameState.time.current = "started";
@@ -154,38 +148,8 @@ setInterval(() => {
         gameState.time.current = "ending";
         gameState.isEnding = true;
     }    
-
-
-    
-    // // load question bank at beginning of intermission
-    // if(!gameState.isPlaying && !gameState.qBank.loaded && !gameState.qBank.loading && !gameState.qBank.loadFailed) {
-    //     loadQuestionBank() 
-    // }
-    
-    // // start game
-    // if(dayjs().isSameOrAfter(gameState.time.start) && gameState.isPlaying == false) {
-    //     gameState.isPlaying = true
-    //     console.log("\tgame started");
-    // }
-   
-    // // load question
-    // if(gameState.isPlaying == true && gameState.qBank.loaded == true && gameState.isQuestionLoaded == false) {
-    //     loadQuestion()
-    // }
-    
-    // // intermission
-    // if(dayjs().isSameOrAfter(gameState.time.intermission)) {
-        
-    //     gameState.isPlaying = false
-    //     gameState.time.start = null
-    //     gameState.time.intermission = null 
-
-    //     console.log("\tgame ended");
-    // }    
-    
     
     // let emit = mapGameStateForEmit()
-
     // io.emit("tick", emit)
 }, 1000)
 
@@ -287,17 +251,17 @@ io.on('connection', (socket) => {
 
 function checkWindowIntegrity(obj) {
 
-    let calculatedTotal = TIME_LENGTH_INTERMISSION + TIME_LENGTH_STARTING + TIME_LENGTH_STARTED + TIME_LENGTH_ENDING;
+    let calculatedTotal = timeConstants.TIME_LENGTH_INTERMISSION + timeConstants.TIME_LENGTH_STARTING + timeConstants.TIME_LENGTH_STARTED + timeConstants.TIME_LENGTH_ENDING;
 
-    if (calculatedTotal != TIME_LENGTH_WINDOW * 60) {
+    if (calculatedTotal != timeConstants.TIME_LENGTH_WINDOW * 60) {
         console.log("\n--- Bogus time window, cancelling game ---\n")
-        console.log(`TIME_LENGTH_INTERMISSION: ${TIME_LENGTH_INTERMISSION}`);
-        console.log(`TIME_LENGTH_STARTING: ${TIME_LENGTH_STARTING}`);
-        console.log(`TIME_LENGTH_STARTED: ${TIME_LENGTH_STARTED}`);
-        console.log(`TIME_LENGTH_ENDING: ${TIME_LENGTH_ENDING}\n`);
-        console.log(`${TIME_LENGTH_INTERMISSION} + ${TIME_LENGTH_STARTING} + ${TIME_LENGTH_STARTED} + ${TIME_LENGTH_ENDING} = ${calculatedTotal}`)
+        console.log(`TIME_LENGTH_INTERMISSION: ${timeConstants.TIME_LENGTH_INTERMISSION}`);
+        console.log(`TIME_LENGTH_STARTING: ${timeConstants.TIME_LENGTH_STARTING}`);
+        console.log(`TIME_LENGTH_STARTED: ${timeConstants.TIME_LENGTH_STARTED}`);
+        console.log(`TIME_LENGTH_ENDING: ${timeConstants.TIME_LENGTH_ENDING}\n`);
+        console.log(`${timeConstants.TIME_LENGTH_INTERMISSION} + ${timeConstants.TIME_LENGTH_STARTING} + ${timeConstants.TIME_LENGTH_STARTED} + ${timeConstants.TIME_LENGTH_ENDING} = ${calculatedTotal}`)
         console.log(`does not add up to\n`)
-        console.log(`TIME_LENGTH_WINDOW: ${TIME_LENGTH_WINDOW}\n`);
+        console.log(`TIME_LENGTH_WINDOW: ${timeConstants.TIME_LENGTH_WINDOW}\n`);
         throw "time window problem"
     }
 }                   
@@ -311,25 +275,25 @@ function initialTimeWindow() {
     // calculates time up to the next multiple
     gameState.time.intermission = dayjs().minute(
         Math.ceil(
-            now.minute() / TIME_LENGTH_WINDOW == now.minute() 
-            ? now.minute() + TIME_LENGTH_WINDOW 
-            : now.minute() / TIME_LENGTH_WINDOW
-        ) * TIME_LENGTH_WINDOW
+            now.minute() / timeConstants.TIME_LENGTH_WINDOW == now.minute() 
+            ? now.minute() + timeConstants.TIME_LENGTH_WINDOW 
+            : now.minute() / timeConstants.TIME_LENGTH_WINDOW
+        ) * timeConstants.TIME_LENGTH_WINDOW
     ).second(0)
 
-    gameState.time.starting = gameState.time.intermission.add(TIME_LENGTH_INTERMISSION, "s");
-    gameState.time.started = gameState.time.starting.add(TIME_LENGTH_STARTING, "s");
-    gameState.time.ending = gameState.time.started.add(TIME_LENGTH_STARTED, "s");
-    gameState.time.next = gameState.time.ending.add(TIME_LENGTH_ENDING, "s");
+    gameState.time.starting = gameState.time.intermission.add(timeConstants.TIME_LENGTH_INTERMISSION, "s");
+    gameState.time.started = gameState.time.starting.add(timeConstants.TIME_LENGTH_STARTING, "s");
+    gameState.time.ending = gameState.time.started.add(timeConstants.TIME_LENGTH_STARTED, "s");
+    gameState.time.next = gameState.time.ending.add(timeConstants.TIME_LENGTH_ENDING, "s");
 }
 
 function updateTimeWindow() {
     gameState.time.intermission = gameState.time.next;
 
-    gameState.time.starting = gameState.time.intermission.add(TIME_LENGTH_INTERMISSION, "s");
-    gameState.time.started = gameState.time.starting.add(TIME_LENGTH_STARTING, "s");
-    gameState.time.ending = gameState.time.started.add(TIME_LENGTH_STARTED, "s");
-    gameState.time.next = gameState.time.ending.add(TIME_LENGTH_ENDING, "s");
+    gameState.time.starting = gameState.time.intermission.add(timeConstants.TIME_LENGTH_INTERMISSION, "s");
+    gameState.time.started = gameState.time.starting.add(timeConstants.TIME_LENGTH_STARTING, "s");
+    gameState.time.ending = gameState.time.started.add(timeConstants.TIME_LENGTH_STARTED, "s");
+    gameState.time.next = gameState.time.ending.add(timeConstants.TIME_LENGTH_ENDING, "s");
 }
 
 function printTimeWindow() {
@@ -404,18 +368,20 @@ function loadQuestionBank() {
 }
 
 function loadQuestion() {
-    if (gameState.questions.length == 0 || gameState.questionsLeft.length == 0 && gameState.isPlaying) {
+    if (gameState.qBank.loaded.questions.length == 0 || gameState.questionsLeft.length == 0) {
         throw "no questions or out of questions"
     }
     
-    // choose question
+    // choose question index
     let index = gameState.questionsLeft[Math.floor(Math.random() * gameState.questionsLeft.length)]
-    gameState.question = gameState.questions[index];
-    gameState.isQuestionLoaded = true;
-    console.log("question loaded", gameState.question);
+    
+    // remove this index value from future questions
+    gameState.questionsLeft.splice(index, 1);
 
-    // pluck from future questions
-    gameState.questionsLeft.slice(index, 1);
+    // load question
+    gameState.qBank.currentQuestion = gameState.qBank.loaded.questions[index];
+
+    console.log(`question loaded\n\t${gameState.qBank.currentQuestion}`);
 }
 
 
