@@ -30,33 +30,33 @@ const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                 
 const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
 const SECONDS_BETWEEN_GAMES = 30;
 
-var isDebug = true
 
-
+// game state
 
 var gameState = {
 
-    // game state
-    startTime: null,
-    endTime: null,
-    nextGameIn: null,
-    isActive: false,
+    time: {
+        start: null,
+        intermission: null
+    },
 
-    isBankLoaded: false,
-    isBankLoading: false,
-    isBankLoadFailed: false,
+    isPlaying: false,           // game is in session
 
-    isQuestionLoaded: false,
+    // question bank, load & meta
+    bank: {
+        loaded: false,
+        loading: false,
+        loadFailed: false,
+        meta: {}
+    },
 
-    // questions bank
-    bank: {},
+    // question data
     questions: [],
-    currentQuestion: {},
-    questionsLeft: [],              // initialized with integers from 0 to questions.length, then gets spliced as questions are used
+    question: {},
 
-    // flags
-    startGameFlag: false,
-    endGameFlag: false,
+    // question helpers
+    isQuestionLoaded: false,
+    questionsLeft: [],              // initialized with integers from 0 to questions.length, then gets spliced as questions are used
 
     // logging
     logString: null,
@@ -66,98 +66,39 @@ var gameState = {
 /* ----------------- GAME LOOP ----------------- */
 
 setInterval(() => {
-    // clear flags
-    gameState.startGameFlag = false
-    gameState.endGameFlag = false
     
-    
-    // load question bank
-    if(gameState.isBankLoaded == false && gameState.isBankLoading == false && gameState.isBankLoadFailed == false) {
-        let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
-        let fullName = `./questions/questions_${name}.json`;
-        
-        gameState.isBankLoading = true;         // to prevent double load in case file takes longer than a game loop to load.
-
-        fs.readFile(fullName, (err, raw) => {
-            gameState.isBankLoading = false;
-
-            if (err) {
-                gameState.isBankLoadFailed = true;
-                console.log("------------ read bank file is fucked!! we're goin' down!! ------------")
-                throw err;
-            }
-
-            // parse and assign
-            let data = JSON.parse(raw)
-            gameState.bank = data.bank
-            gameState.questions = data.questions
-
-            gameState.isBankLoaded = true
-
-            console.log("bank loaded\n\t", gameState.questions.current)
-        });
-    }
-
-    // init first game time window
-    if(gameState.isActive == false && gameState.startTime == null) { 
-        createInitTimeWindow(isDebug)
+    // init time window. the window will be in the future
+    if(!gameState.isPlaying && gameState.time.start == null) { 
+        createTimeWindow()
     }
     
+    // load question bank at beginning of intermission
+    if(!gameState.isPlaying && !gameState.bank.loaded && !gameState.bank.loading && !gameState.bank.loadFailed) {
+        loadQuestionBank() 
+    }
     
     // start game
-    if(dayjs().isSameOrAfter(gameState.startTime) && gameState.isActive == false) {
-        gameState.isActive = true
-        // gameState.nextGameIn = null
-        
-        gameState.startGameFlag = true;
+    if(dayjs().isSameOrAfter(gameState.time.start) && gameState.isPlaying == false) {
+        gameState.isPlaying = true
         console.log("\tgame started");
     }
    
     // load question
-    if(gameState.isActive == true && gameState.isBankLoaded == true && gameState.isQuestionLoaded == false) {
-        
-        /* 
-            gameState.questionsLeft is an incremental list of integers corresponding to questions that haven't been used yet,
-            gameState.questions is the loaded bank of questions and should never change
-        */
-
-        // init questionsLeft
-        if(gameState.questionsLeft.length == 0) {
-            gameState.questionsLeft = Array.from(Array(gameState.questions.length).keys())
-        }
-
-        // choose question
-        let index = gameState.questionsLeft[Math.floor(Math.random() * gameState.questionsLeft.length)]
-        gameState.currentQuestion = gameState.questions[index];
-        gameState.isQuestionsLoaded = true;
-
-        // pluck from future questions
-        gameState.questionsLeft.slice(index, 1);
+    if(gameState.isPlaying == true && gameState.bank.loaded == true && gameState.isQuestionLoaded == false) {
+        loadQuestion()
     }
     
-    // end game
-    if(dayjs().isSameOrAfter(gameState.endTime)) {
+    // intermission
+    if(dayjs().isSameOrAfter(gameState.time.intermission)) {
         
-        gameState.isActive = false
-        gameState.startTime = null
-        gameState.endTime = null 
+        gameState.isPlaying = false
+        gameState.time.start = null
+        gameState.time.intermission = null 
 
-        gameState.endGameFlag = true;
         console.log("\tgame ended");
     }    
     
-
-    // set up poll style emits and logging
-    switch(true) {
-        case gameState.isActive == false && gameState.startTime != null:
-            gameState.nextGameIn = gameState.startTime.diff(dayjs(), "s") || null
-            gameState.logString = `${dayjs().format("m[m ]s[s]")}, next game in: ${gameState.nextGameIn}s`
-            break;
-        default:
-            gameState.logString = dayjs().format("m[m ]s[s]")
-    }
-
-    console.log("---tick", gameState.logString + " isActive: " + gameState.isActive)
+    console.log(`${dayjs().format("m[m ]s[s]")} isPlaying: ${gameState.isPlaying}`)
     let emit = mapGameStateForEmit()
 
     io.emit("tick", emit)
@@ -278,11 +219,12 @@ function consoleLatestUserRepo(mode)
     }
 }
 
-function createInitTimeWindow(isDebug) {
+function createTimeWindow() {
 
     let now = dayjs()
 
-    gameState.startTime = dayjs().minute(
+    // calculates number up to the next multiple
+    gameState.time.start = dayjs().minute(
         Math.ceil(
             now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
             ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
@@ -290,19 +232,17 @@ function createInitTimeWindow(isDebug) {
         ) * MINUTES_ALLOTED_FOR_TIME_SLOT
     ).second(0)
 
-    gameState.endTime = gameState.startTime.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
-    
-    if(isDebug) {
-        console.log("new window")
-        console.log(gameState.startTime.format("[\tgameStart at\t]m[m] [s]s"));
-        console.log(gameState.endTime.format("[\tgameEnd at\t]m[m] [s]s"));
-    }
+    gameState.time.intermission = gameState.time.start.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
+
+    console.log("new window")
+    console.log(gameState.time.start.format("[\tgameStart at\t]m[m] [s]s"));
+    console.log(gameState.time.intermission.format("[\tgameEnd at\t]m[m] [s]s"));
 }
 
 // snips the more repo esque properties to save bandwidth
 function mapGameStateForEmit() {
     let emit = {}
-    let reject = ["bank", "questions", "questionsLeft", "isBankLoaded", "isBankLoading", "isBankLoadFailed"];
+    let reject = ["bank", "questions", "questionsLeft"];
 
     for(let [key,value] of Object.entries(gameState)) {
         if(reject.indexOf(key) == -1) {
@@ -311,4 +251,52 @@ function mapGameStateForEmit() {
     }
 
     return emit;
+}
+
+function loadQuestionBank() {
+
+    let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
+    let path = `./questions/questions_${name}.json`;
+    
+    gameState.bank.loading = true;         // to prevent double load in case file takes longer than a game loop to load.
+
+    fs.readFile(path, (err, raw) => {
+        gameState.bank.loading = false;
+
+        if (err) {
+            gameState.bank.loadFailed = true;
+            console.log("failed bank load")
+            throw err;
+        }
+
+        // parse and assign
+        let data = JSON.parse(raw)
+        gameState.meta = data.meta
+        gameState.questions = data.questions
+
+        // gameState.questionsLeft stores index values to show which questions have already been used
+        gameState.questionsLeft = Array.from(Array(gameState.questions.length).keys())
+
+        gameState.bank.loaded = true
+        console.log(`${gameState.questions.length} question bank loaded`)
+    });
+}
+
+function loadQuestion() {
+    if (gameState.questions.length == 0 || gameState.questionsLeft.length == 0 && gameState.isPlaying) {
+        throw "no questions or out of questions"
+    }
+    
+    // choose question
+    let index = gameState.questionsLeft[Math.floor(Math.random() * gameState.questionsLeft.length)]
+    gameState.question = gameState.questions[index];
+    gameState.isQuestionLoaded = true;
+    console.log("question loaded", gameState.question);
+
+    // pluck from future questions
+    gameState.questionsLeft.slice(index, 1);
+}
+
+function clearTimeWindow() {
+    
 }

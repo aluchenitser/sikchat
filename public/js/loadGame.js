@@ -1,23 +1,23 @@
 // --- Games engine. Requires J-Query 
 
-class Games {
+class Game {
 
     // gameElement is id attribute of an html element
-    // gameName chooses which game
-    constructor(gameId, gameType, gameName) {
-        this.gameId = gameId
-        this.gameParentElement = document.getElementById(gameId)
-        this.gameName = gameName
-        this.gameType = gameType
+    // name chooses which game
+    constructor(id, template, name) {
+        this.id = id
+        this.parentElement = document.getElementById(id)
+        this.name = name
+        this.template = template
         
-        if(!this.gameParentElement) {
+        if(!this.parentElement) {
             console.error("can't find a suitable parent element with this id attribute")
             return null;
         }
 
-        switch(this.gameType) {
-            case "QA": 
-                this.displayFile = "QA.html"
+        switch(this.template) {
+            case "generic": 
+                this.displayFile = "generic.html"
                 break;
             default: {
                 console.error("no name for template");
@@ -34,7 +34,7 @@ class Games {
         return this.loadTemplate()
             .then(() => {
                 self.populateTemplate();
-                $(self.gameMarkup).appendTo(self.gameParentElement)
+                $(self.gameMarkup).appendTo(self.parentElement)
                 self.gameMarkup.classList.add("intro")
                 self.count(nextGameIn)
 
@@ -59,7 +59,7 @@ class Games {
 
             setTimeout(()=> {
                 delete this.gameMarkup
-                this.gameParentElement.innerHTML = "";
+                this.parentElement.innerHTML = "";
             }, 2000)
         }, timeAlloted * 1000)
     }
@@ -86,7 +86,7 @@ class Games {
     }
     populateTemplate() {
 
-        switch(this.gameName.toUpperCase()) {
+        switch(this.name.toUpperCase()) {
             case 'SLANG':
                 this.gameMarkup.querySelector(".intro-h1").innerHTML = "Talk Street?";
                 this.gameMarkup.querySelector(".intro-h2").innerHTML = "GET CRED";

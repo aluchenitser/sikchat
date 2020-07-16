@@ -20,7 +20,7 @@ var messagesElement = document.getElementById("messages")
 var currentUserName = "";
 var currentUserGUID = "";
 var cookieData;
-var gameObject = {}
+var game = {}
 
 try {
     cookieData = JSON.parse(getCookie("userData"));
@@ -157,7 +157,7 @@ socket.on('chat_message_response', msg => {
 
 /*  --------- GAME SETUP ---------- */
 
-gameState = {
+frontEnd = {
     isCountDown: false,
     itsTheFinalCountDown: false,
     isActive: false,
@@ -167,62 +167,68 @@ gameState = {
 }
 
 /*  --------- GAME LOOP ---------- */
-socket.on('tick', data => {
-    let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
-        isQuestionLoaded, currentQuestion } = data
+socket.on('tick', server => {
+    /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
+        isQuestionLoaded, currentQuestion } */
     
+    // console.log("game.isActive", isActive, "frontEnd.isActive", frontEnd.isActive, "server.nextGameIn", server.nextGameIn);
+
+    if(server.isActive) {
+
+        game.startGame()
+    }
+
+
     
-    console.log(data);
-    // console.log("gameObject.isActive", isActive, "gameState.isActive", gameState.isActive, "nextGameIn", nextGameIn);
 
 
     switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
 
         // start game
-        case startGameFlag == true:
-            gameState.isCountDown = false;
-            gameState.itsTheFinalCountDown = false;
+        case server.startGameFlag == true:
+            frontEnd.isCountDown = false;
+            frontEnd.itsTheFinalCountDown = false;
 
             document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
-            gameObject.startGame()
-            gameState.isActive = true;
+            game.startGame()
+            frontEnd.isActive = true;
             break;
 
         // end game scenario where the user had logged in mid game. removes displayInProgressScreen animation
-        case endGameFlag == true && gameState.isActive == false:
+        case server.endGameFlag == true && frontEnd.isActive == false:
             displayInProgressScreen(false)
             break;
 
         // end game
-        case endGameFlag == true && Object.keys(gameObject).length != 0:
-            gameObject.endGame(5)    
-            gameState.isActive = false;
+        case server.endGameFlag == true && Object.keys(game).length != 0:
+            game.endGame(5)    
+            frontEnd.isActive = false;
             break;
 
         // start header countdown
-        case nextGameIn && gameState.isCountDown == false:
-            gameState.isCountDown = true;
-            document.querySelector(".next-game-in").innerHTML = nextGameIn
+        case server.nextGameIn && frontEnd.isCountDown == false:
+            frontEnd.isCountDown = true;
+            document.querySelector(".next-game-in").innerHTML = server.nextGameIn
             document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
             break;
 
         // update header countdown and possibly put up the intermission screen
-        case nextGameIn && gameState.isCountDown == true:
+        case server.nextGameIn && frontEnd.isCountDown == true:
             
             // header countdown
-            document.querySelector(".next-game-in").innerHTML = nextGameIn
+            document.querySelector(".next-game-in").innerHTML = server.nextGameIn
 
             // intermission screen, awaits a clear window from the .endGame method of Games
-            if(gameState.itsTheFinalCountDown == false && gameState.isIntermission == false && gameWindowElement.childElementCount == 0){
-                gameState.isIntermission = true;
+            if(frontEnd.itsTheFinalCountDown == false && frontEnd.isIntermission == false && gameWindowElement.childElementCount == 0){
+                frontEnd.isIntermission = true;
                 displayIntermissionScreen();
             }
             break;          
 
         // user logged in mid-game, show in progress screen
-        case nextGameIn == null && isActive == true && gameState.isActive == false && gameState.isInProgress == false:
+        case server.nextGameIn == null && server.isActive == true && frontEnd.isActive == false && frontEnd.isInProgress == false:
             console.log("logged in mid game")
-            gameState.isInProgress = true;
+            frontEnd.isInProgress = true;
             displayInProgressScreen()
             break;
 
@@ -230,26 +236,26 @@ socket.on('tick', data => {
     }
     
     // init game and start final countdown
-    if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true) {
-        gameState.isInProgress == false;
-        gameObject.count(nextGameIn)
+    if (server.nextGameIn && server.nextGameIn <= 10 && frontEnd.itsTheFinalCountDown == true) {
+        frontEnd.isInProgress == false;
+        game.count(server.nextGameIn)
     }
 
 
-    if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false) {
-        gameState.itsTheFinalCountDown = true;
+    if (server.nextGameIn && server.nextGameIn <= 10 && frontEnd.itsTheFinalCountDown == false) {
+        frontEnd.itsTheFinalCountDown = true;
         
         // clear intermission screen
-        gameState.isIntermission = false;           
+        frontEnd.isIntermission = false;           
         gameWindowElement.innerHTML = "";
         
-        gameObject = new Games("game-window", "QA", "slang")
-        gameObject.startCountDown(nextGameIn)
+        game = new Games("game-window", "generic", "slang")
+        game.startCountDown(server.nextGameIn)
     }
 
     // load question
-    if (gameState.isActive == true) {
-        gameState.question = gameState.currentQuestion
+    if (frontEnd.isActive == true) {
+        frontEnd.question = frontEnd.currentQuestion
     }
 
     // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
