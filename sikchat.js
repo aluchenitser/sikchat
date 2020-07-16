@@ -29,15 +29,13 @@ const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
 const SECONDS_BETWEEN_GAMES = 30;
 
 // time window in seconds
-const TIME_LENGTH_WINDOW = 120;              // all other must add up to this value
-const TIME_LENGTH_INTERMISSION = 30;
+const TIME_LENGTH_WINDOW = 40;              // all other must add up to this value
+const TIME_LENGTH_INTERMISSION = 10;
 const TIME_LENGTH_STARTING = 10;
-const TIME_LENGTH_STARTED = 70;
+const TIME_LENGTH_STARTED = 10;
 const TIME_LENGTH_ENDING = 10;
 
-
 // game state
-
 var gameState = {
 
     // live time checkpoints
@@ -46,7 +44,8 @@ var gameState = {
         starting: null,
         start: null,
         ending: null,
-        next: null
+        next: null,
+        current: ""
     },
 
     // timeConstants is for emitting to the client
@@ -58,6 +57,7 @@ var gameState = {
         TIME_LENGTH_ENDING: TIME_LENGTH_ENDING
     },
 
+    isInit: false,              // load at boot
     isIntermission: false,      // start of time window
     isStarting: false,          // countdown
     isStarted: false,           // game is in session
@@ -92,40 +92,95 @@ printTimeWindow()
 // time window starts at intermission
 setInterval(() => {
     
-    if(!gameState.isStarted && gameState.time.start == null) { 
-        initialTimeWindow()
+    // update window
+    if(!gameState.isIntermission && dayjs().isSameOrAfter(gameState.time.next)) { 
+        updateTimeWindow()
+        printTimeWindow()
     }
     
-    // load question bank at beginning of intermission
-    if(!gameState.isPlaying && !gameState.bank.loaded && !gameState.bank.loading && !gameState.bank.loadFailed) {
-        loadQuestionBank() 
+    // --- detect portion of time window in play
+
+    // initial load
+    if(!gameState.isInit && !gameState.isIntermission && dayjs().isBefore(gameState.time.intermission)) {
+        gameState.isInit = true;
+
+        console.log("init");
+        gameState.time.current = "init";
     }
-    
-    // start game
-    if(dayjs().isSameOrAfter(gameState.time.start) && gameState.isPlaying == false) {
-        gameState.isPlaying = true
-        console.log("\tgame started");
-    }
-   
-    // load question
-    if(gameState.isPlaying == true && gameState.bank.loaded == true && gameState.isQuestionLoaded == false) {
-        loadQuestion()
-    }
-    
+
     // intermission
-    if(dayjs().isSameOrAfter(gameState.time.intermission)) {
+    if(dayjs().isSameOrAfter(gameState.time.intermission) && (gameState.isInit || gameState.isEnding)) {
+        gameState.isEnding = false;
+        gameState.isInit = false;
+
+        console.log("intermission");
+        gameState.time.current = "intermission";
+
+        gameState.isIntermission = true;
+    }
+
+    // starting
+    if(dayjs().isSameOrAfter(gameState.time.starting) && gameState.isIntermission) { 
+        gameState.isIntermission = false;
         
-        gameState.isPlaying = false
-        gameState.time.start = null
-        gameState.time.intermission = null 
+        console.log("starting");
+        gameState.time.current = "starting";
 
-        console.log("\tgame ended");
+        gameState.isStarting = true;
+    }
+
+    // started
+    if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
+        gameState.isStarting = false;
+        
+        console.log("started");
+        gameState.time.current = "started";
+
+        gameState.isStarted = true;
+    }
+
+    // ending
+    if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
+        gameState.isStarted = false;
+        
+        console.log("ending");
+        gameState.time.current = "ending";
+
+        gameState.isEnding = true;
     }    
-    
-    console.log(`${dayjs().format("m[m ]s[s]")} isPlaying: ${gameState.isPlaying}`)
-    let emit = mapGameStateForEmit()
 
-    io.emit("tick", emit)
+
+    
+    // // load question bank at beginning of intermission
+    // if(!gameState.isPlaying && !gameState.bank.loaded && !gameState.bank.loading && !gameState.bank.loadFailed) {
+    //     loadQuestionBank() 
+    // }
+    
+    // // start game
+    // if(dayjs().isSameOrAfter(gameState.time.start) && gameState.isPlaying == false) {
+    //     gameState.isPlaying = true
+    //     console.log("\tgame started");
+    // }
+   
+    // // load question
+    // if(gameState.isPlaying == true && gameState.bank.loaded == true && gameState.isQuestionLoaded == false) {
+    //     loadQuestion()
+    // }
+    
+    // // intermission
+    // if(dayjs().isSameOrAfter(gameState.time.intermission)) {
+        
+    //     gameState.isPlaying = false
+    //     gameState.time.start = null
+    //     gameState.time.intermission = null 
+
+    //     console.log("\tgame ended");
+    // }    
+    
+    console.log(`${dayjs().format("m[m ]s[s]")} window state: ${gameState.time.current}`)
+    // let emit = mapGameStateForEmit()
+
+    // io.emit("tick", emit)
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
