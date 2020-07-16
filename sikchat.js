@@ -29,13 +29,18 @@ const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                 
 // time window
 const timeConstants = {
     // in minutes
-    TIME_LENGTH_WINDOW: 1,              // components must add up to the window
+    WINDOW: 2,              // components in seconds must add up to this window in minutes
 
     // in seconds
-    TIME_LENGTH_INTERMISSION: 20,
-    TIME_LENGTH_STARTING: 10,
-    TIME_LENGTH_STARTED: 20,
-    TIME_LENGTH_ENDING: 10
+    INTERMISSION: 20,
+    STARTING: 10,
+    STARTED: 80,
+    ENDING: 10,
+
+    // question length
+    QUESTION_EASY: 10,
+    QUESTION_MEDIUM: 15,
+    QUESTION_HARD: 20,
 }
 
 // game state
@@ -75,7 +80,7 @@ var gameState = {
         
         // dynamic
         currentQuestion: {},
-        questionsLeft: []
+        questionStack: []
     },
 
 
@@ -139,6 +144,8 @@ setInterval(() => {
         gameState.time.current = "started";
         gameState.isStarted = true;
     }
+
+
 
     // ending
     if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
@@ -251,17 +258,17 @@ io.on('connection', (socket) => {
 
 function checkWindowIntegrity(obj) {
 
-    let calculatedTotal = timeConstants.TIME_LENGTH_INTERMISSION + timeConstants.TIME_LENGTH_STARTING + timeConstants.TIME_LENGTH_STARTED + timeConstants.TIME_LENGTH_ENDING;
+    let calculatedTotal = timeConstants.INTERMISSION + timeConstants.STARTING + timeConstants.STARTED + timeConstants.ENDING;
 
-    if (calculatedTotal != timeConstants.TIME_LENGTH_WINDOW * 60) {
+    if (calculatedTotal != timeConstants.WINDOW * 60) {
         console.log("\n--- Bogus time window, cancelling game ---\n")
-        console.log(`TIME_LENGTH_INTERMISSION: ${timeConstants.TIME_LENGTH_INTERMISSION}`);
-        console.log(`TIME_LENGTH_STARTING: ${timeConstants.TIME_LENGTH_STARTING}`);
-        console.log(`TIME_LENGTH_STARTED: ${timeConstants.TIME_LENGTH_STARTED}`);
-        console.log(`TIME_LENGTH_ENDING: ${timeConstants.TIME_LENGTH_ENDING}\n`);
-        console.log(`${timeConstants.TIME_LENGTH_INTERMISSION} + ${timeConstants.TIME_LENGTH_STARTING} + ${timeConstants.TIME_LENGTH_STARTED} + ${timeConstants.TIME_LENGTH_ENDING} = ${calculatedTotal}`)
+        console.log(`INTERMISSION: ${timeConstants.INTERMISSION}`);
+        console.log(`STARTING: ${timeConstants.STARTING}`);
+        console.log(`STARTED: ${timeConstants.STARTED}`);
+        console.log(`ENDING: ${timeConstants.ENDING}\n`);
+        console.log(`${timeConstants.INTERMISSION} + ${timeConstants.STARTING} + ${timeConstants.STARTED} + ${timeConstants.ENDING} = ${calculatedTotal}`)
         console.log(`does not add up to\n`)
-        console.log(`TIME_LENGTH_WINDOW: ${timeConstants.TIME_LENGTH_WINDOW}\n`);
+        console.log(`WINDOW: ${timeConstants.WINDOW}\n`);
         throw "time window problem"
     }
 }                   
@@ -275,25 +282,25 @@ function initialTimeWindow() {
     // calculates time up to the next multiple
     gameState.time.intermission = dayjs().minute(
         Math.ceil(
-            now.minute() / timeConstants.TIME_LENGTH_WINDOW == now.minute() 
-            ? now.minute() + timeConstants.TIME_LENGTH_WINDOW 
-            : now.minute() / timeConstants.TIME_LENGTH_WINDOW
-        ) * timeConstants.TIME_LENGTH_WINDOW
+            now.minute() / timeConstants.WINDOW == now.minute() 
+            ? now.minute() + timeConstants.WINDOW 
+            : now.minute() / timeConstants.WINDOW
+        ) * timeConstants.WINDOW
     ).second(0)
 
-    gameState.time.starting = gameState.time.intermission.add(timeConstants.TIME_LENGTH_INTERMISSION, "s");
-    gameState.time.started = gameState.time.starting.add(timeConstants.TIME_LENGTH_STARTING, "s");
-    gameState.time.ending = gameState.time.started.add(timeConstants.TIME_LENGTH_STARTED, "s");
-    gameState.time.next = gameState.time.ending.add(timeConstants.TIME_LENGTH_ENDING, "s");
+    gameState.time.starting = gameState.time.intermission.add(timeConstants.INTERMISSION, "s");
+    gameState.time.started = gameState.time.starting.add(timeConstants.STARTING, "s");
+    gameState.time.ending = gameState.time.started.add(timeConstants.STARTED, "s");
+    gameState.time.next = gameState.time.ending.add(timeConstants.ENDING, "s");
 }
 
 function updateTimeWindow() {
     gameState.time.intermission = gameState.time.next;
 
-    gameState.time.starting = gameState.time.intermission.add(timeConstants.TIME_LENGTH_INTERMISSION, "s");
-    gameState.time.started = gameState.time.starting.add(timeConstants.TIME_LENGTH_STARTING, "s");
-    gameState.time.ending = gameState.time.started.add(timeConstants.TIME_LENGTH_STARTED, "s");
-    gameState.time.next = gameState.time.ending.add(timeConstants.TIME_LENGTH_ENDING, "s");
+    gameState.time.starting = gameState.time.intermission.add(timeConstants.INTERMISSION, "s");
+    gameState.time.started = gameState.time.starting.add(timeConstants.STARTING, "s");
+    gameState.time.ending = gameState.time.started.add(timeConstants.STARTED, "s");
+    gameState.time.next = gameState.time.ending.add(timeConstants.ENDING, "s");
 }
 
 function printTimeWindow() {
@@ -359,7 +366,40 @@ function loadQuestionBank() {
         // parse and assign
         gameState.qBank.loaded = JSON.parse(raw)
 
+        // scrambles then builds questionStack
+        let timeLeft = timeConstants.WINDOW * 60
+        let shuffled = shuffle(gameState.qBank.loaded.questions)
+        
+        shuffled.forEach((question, index, arr) => {
+            let difficulty = parseInt(question.difficulty);
+
+            // assign difficulty in seconds
+            if(isNaN(difficulty)) {
+                switch(question.difficulty) {
+                    case "easy": 
+                        difficulty = timeConstants.QUESTION_EASY
+                        break;
+                    case "medium": 
+                        difficulty = timeConstants.QUESTION_MEDIUM
+                        break;
+                    case "hard": 
+                        difficulty = timeConstants.QUESTION_HARD
+                        break;
+                }
+            }
+
+            if(timeLeft - difficulty >= 0) {
+                gameState.qBank.questionStack.push(question)
+                timeLeft -= difficulty;
+            }
+            
+        })
+
+
         // gameState.questionsLeft stores index values to show which questions have already been used
+
+
+
         gameState.questionsLeft = Array.from(Array(gameState.qBank.loaded.questions).keys())
 
         gameState.qBank.isLoaded = true
@@ -384,6 +424,16 @@ function loadQuestion() {
     console.log(`question loaded\n\t${gameState.qBank.currentQuestion}`);
 }
 
+// shuffle array non destructive
+function shuffle(array) {
+    let a = [...array];
+
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
 
 function clearTimeWindow() {
 
