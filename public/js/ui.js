@@ -162,12 +162,16 @@ gameState = {
     itsTheFinalCountDown: false,
     isActive: false,
     isInProgress: false,
-    isIntermission: false
+    isIntermission: false,
+    question: {}
 }
 
 /*  --------- GAME LOOP ---------- */
 socket.on('tick', data => {
-    let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag } = data
+    let { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
+        isQuestionLoaded, currentQuestion } = data
+    
+    
     console.log(data);
     // console.log("gameObject.isActive", isActive, "gameState.isActive", gameState.isActive, "nextGameIn", nextGameIn);
 
@@ -226,11 +230,11 @@ socket.on('tick', data => {
     }
     
     // init game and start final countdown
-        
     if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == true) {
         gameState.isInProgress == false;
         gameObject.count(nextGameIn)
     }
+
 
     if (nextGameIn && nextGameIn <= 10 && gameState.itsTheFinalCountDown == false) {
         gameState.itsTheFinalCountDown = true;
@@ -241,6 +245,11 @@ socket.on('tick', data => {
         
         gameObject = new Games("game-window", "QA", "slang")
         gameObject.startCountDown(nextGameIn)
+    }
+
+    // load question
+    if (gameState.isActive == true) {
+        gameState.question = gameState.currentQuestion
     }
 
     // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
