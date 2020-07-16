@@ -57,7 +57,8 @@ var gameState = {
         TIME_LENGTH_ENDING: TIME_LENGTH_ENDING
     },
 
-    isInit: false,              // load at boot
+    isPreLoad: true,            // first iteration
+    isInit: false,              // purgatory before first real window
     isIntermission: false,      // start of time window
     isStarting: false,          // countdown
     isStarted: false,           // game is in session
@@ -92,24 +93,26 @@ printTimeWindow()
 // time window starts at intermission
 setInterval(() => {
     
-    // update window
-    if(!gameState.isIntermission && dayjs().isSameOrAfter(gameState.time.next)) { 
-        updateTimeWindow()
-        printTimeWindow()
-    }
-    
     // --- detect portion of time window in play
 
     // initial load
-    if(!gameState.isInit && !gameState.isIntermission && dayjs().isBefore(gameState.time.intermission)) {
-        gameState.isInit = true;
+    if(dayjs().isBefore(gameState.time.intermission) && gameState.isPreLoad) {
 
+        gameState.isPreLoad = false;
+        
         console.log("init");
         gameState.time.current = "init";
+
+        gameState.isInit = true;
     }
 
-    // intermission
-    if(dayjs().isSameOrAfter(gameState.time.intermission) && (gameState.isInit || gameState.isEnding)) {
+    // intermission & window update
+    if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
+        if(gameState.isEnding) {
+            updateTimeWindow()
+            printTimeWindow()
+        }
+
         gameState.isEnding = false;
         gameState.isInit = false;
 
@@ -268,14 +271,14 @@ io.on('connection', (socket) => {
 /* ------------------- WEB SERVER ------------------- */
 
 // command line port selection or default to 3000
-let port = parseInt(process.argv[2]);
-port = port && port >= 1023 && port <= 65535
-    ? port
-    : 3000;
+// let port = parseInt(process.argv[2]);
+// port = port && port >= 1023 && port <= 65535
+//     ? port
+//     : 3000;
 
-http.listen(port, function() {
-    console.log(`listening on *:${port}`);
-});
+// http.listen(port, function() {
+//     console.log(`listening on *:${port}`);
+// });
 
 /* ------------------- FUNCTIONS ------------------- */
 
