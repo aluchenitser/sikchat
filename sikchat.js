@@ -41,9 +41,11 @@ var gameState = {
     endTime: null,
     nextGameIn: null,
     isActive: false,
+
     isBankLoaded: false,
     isBankLoading: false,
     isBankLoadFailed: false,
+
     isQuestionLoaded: false,
 
     // questions bank
@@ -155,7 +157,7 @@ setInterval(() => {
             gameState.logString = dayjs().format("m[m ]s[s]")
     }
 
-    console.log("---tick", gameState.logString)
+    console.log("---tick", gameState.logString + " isActive: " + gameState.isActive)
     let emit = mapGameStateForEmit()
 
     io.emit("tick", emit)
@@ -302,7 +304,7 @@ function mapGameStateForEmit() {
     let emit = {}
     let reject = ["bank", "questions", "questionsLeft", "isBankLoaded", "isBankLoading", "isBankLoadFailed"];
 
-    for(let [key, value] of Object.entries(gameState)) {
+    for(let [key,value] of Object.entries(gameState)) {
         if(reject.indexOf(key) == -1) {
             emit[key] = value;
         }
