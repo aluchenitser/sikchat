@@ -67,11 +67,6 @@ var gameState = {
     // question bank
     qBank: {
 
-        // flags
-        isLoaded: false,
-        isLoading: false,
-        isLoadFailed: false,
-        
         // from json
         loaded: {
             meta: {},
@@ -83,11 +78,9 @@ var gameState = {
         questionStack: []
     },
 
-
     // logging
     logString: null,
 }
-
 
 /* ----------------- GAME LOOP ----------------- */
 checkWindowIntegrity();
@@ -332,7 +325,6 @@ function consoleLatestUserRepo(mode)
     }
 }
 
-
 // snips the more repo esque properties to save bandwidth
 function mapGameStateForEmit() {
     let emit = {}
@@ -351,59 +343,56 @@ function loadQuestionBank() {
 
     let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
     let path = `./questions/questions_${name}.json`;
-    
-    gameState.qBank.isLoading = true;         // to prevent double load in case file takes longer than a game loop to load.
 
     fs.readFile(path, (err, raw) => {
-        gameState.qBank.isLoading = false;
 
         if (err) {
-            gameState.qBank.isloadFailed = true;
             console.log("failed bank load")
             throw err;
         }
-
-        // parse and assign
         gameState.qBank.loaded = JSON.parse(raw)
 
-        // scrambles then builds questionStack
-        let timeLeft = timeConstants.WINDOW * 60
+        // --- scrambles then builds questionStack
+        let timeLeft = timeConstants.STARTED * 60
         let shuffled = shuffle(gameState.qBank.loaded.questions)
         
-        shuffled.forEach((question, index, arr) => {
-            let difficulty = parseInt(question.difficulty);
-
-            // assign difficulty in seconds
-            if(isNaN(difficulty)) {
-                switch(question.difficulty) {
-                    case "easy": 
-                        difficulty = timeConstants.QUESTION_EASY
-                        break;
-                    case "medium": 
-                        difficulty = timeConstants.QUESTION_MEDIUM
-                        break;
-                    case "hard": 
-                        difficulty = timeConstants.QUESTION_HARD
-                        break;
-                }
-            }
-
-            if(timeLeft - difficulty >= 0) {
-                gameState.qBank.questionStack.push(question)
-                timeLeft -= difficulty;
-            }
+        var i = 0;
+        while(timeLeft > 0 && i < shuffled.length) {
+            let questionSeconds;
+            let question = shuffled[i]
             
-        })
+            switch(question.difficulty) {
+                case "easy": 
+                    questionSeconds = timeConstants.QUESTION_EASY
+                    break;
+                case "medium": 
+                    questionSeconds = timeConstants.QUESTION_MEDIUM
+                    break;
+                case "hard": 
+                    questionSeconds = timeConstants.QUESTION_HARD
+                    break;
+            }
 
+            // maybe the next question will be small enough to fit
+            if(timeLeft - questionSeconds < 0) {
+                continue;
+            }
 
-        // gameState.questionsLeft stores index values to show which questions have already been used
+            timeLeft -= questionSeconds
+            question.timeAllowed = questionSeconds
+            gameState.qBank.questionStack.push(question)
+            i++
+        }
+        
+        // make up the rest by adding time to the final question
+        if(timeLeft > 0) {
+            let stack = gameState.qBank.questionStack
+            stack[stack.length - 1] += timeConstants.STARTED * 60 - timeLeft
+        }
 
+        // TODO:  algorithm may be complete but needs testing
+        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.loaded.questions.length} questions\n\t`)
 
-
-        gameState.questionsLeft = Array.from(Array(gameState.qBank.loaded.questions).keys())
-
-        gameState.qBank.isLoaded = true
-        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.loaded.questions.length} questions`)
     });
 }
 
