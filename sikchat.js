@@ -25,24 +25,45 @@ app.use(express.static(__dirname + "/public/"));
 var usersRepo = [];
 
 const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
-
-
 const MINUTES_ALLOTED_FOR_TIME_SLOT = 1;
 const SECONDS_BETWEEN_GAMES = 30;
+
+// time window in seconds
+const TIME_LENGTH_WINDOW = 120;              // all other must add up to this value
+const TIME_LENGTH_INTERMISSION = 30;
+const TIME_LENGTH_STARTING = 10;
+const TIME_LENGTH_STARTED = 70;
+const TIME_LENGTH_ENDING = 10;
 
 
 // game state
 
 var gameState = {
 
+    // live time checkpoints
     time: {
+        intermission: null,
+        starting: null,
         start: null,
-        intermission: null
+        ending: null,
+        next: null
     },
 
-    isPlaying: false,           // game is in session
+    // timeConstants is for emitting to the client
+    timeConstants: {
+        TIME_LENGTH_WINDOW: TIME_LENGTH_WINDOW,
+        TIME_LENGTH_INTERMISSION: TIME_LENGTH_INTERMISSION,
+        TIME_LENGTH_STARTING: TIME_LENGTH_STARTING,
+        TIME_LENGTH_STARTED: TIME_LENGTH_STARTED,
+        TIME_LENGTH_ENDING: TIME_LENGTH_ENDING
+    },
 
-    // question bank, load & meta
+    isIntermission: false,      // start of time window
+    isStarting: false,          // countdown
+    isStarted: false,           // game is in session
+    isEnding: false,            // outro
+
+    // question bank, load flags and meta data
     bank: {
         loaded: false,
         loading: false,
@@ -64,12 +85,15 @@ var gameState = {
 
 
 /* ----------------- GAME LOOP ----------------- */
+checkWindowIntegrity();
+initialTimeWindow()
+printTimeWindow()
 
+// time window starts at intermission
 setInterval(() => {
     
-    // init time window. the window will be in the future
-    if(!gameState.isPlaying && gameState.time.start == null) { 
-        createTimeWindow()
+    if(!gameState.isStarted && gameState.time.start == null) { 
+        initialTimeWindow()
     }
     
     // load question bank at beginning of intermission
@@ -200,6 +224,65 @@ http.listen(port, function() {
 
 /* ------------------- FUNCTIONS ------------------- */
 
+function checkWindowIntegrity(obj) {
+
+    let calculatedTotal = TIME_LENGTH_INTERMISSION + TIME_LENGTH_STARTING + TIME_LENGTH_STARTED + TIME_LENGTH_ENDING;
+
+    if (calculatedTotal != TIME_LENGTH_WINDOW) {
+        console.log("\n--- Bogus time window, cancelling game ---\n")
+        console.log(`TIME_LENGTH_INTERMISSION: ${TIME_LENGTH_INTERMISSION}`);
+        console.log(`TIME_LENGTH_STARTING: ${TIME_LENGTH_STARTING}`);
+        console.log(`TIME_LENGTH_STARTED: ${TIME_LENGTH_STARTED}`);
+        console.log(`TIME_LENGTH_ENDING: ${TIME_LENGTH_ENDING}\n`);
+        console.log(`${TIME_LENGTH_INTERMISSION} + ${TIME_LENGTH_STARTING} + ${TIME_LENGTH_STARTED} + ${TIME_LENGTH_ENDING} = ${calculatedTotal}`)
+        console.log(`does not add up to\n`)
+        console.log(`TIME_LENGTH_WINDOW: ${TIME_LENGTH_WINDOW}\n`);
+        throw "time window problem"
+    }
+}                   
+
+function initialTimeWindow() {
+    /* time window sequence is like so:
+        1. intermission 2. game starting (countdown) 3. game started 4. game ending (tally stats) 5. new time window  */
+
+    let now = dayjs()
+
+    // calculates time up to the next multiple
+    gameState.time.intermission = dayjs().minute(
+        Math.ceil(
+            now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
+            ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
+            : now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT
+        ) * MINUTES_ALLOTED_FOR_TIME_SLOT
+    ).second(0)
+
+    gameState.time.starting = gameState.time.intermission.add(TIME_LENGTH_INTERMISSION, "s");
+    gameState.time.started = gameState.time.starting.add(TIME_LENGTH_STARTING, "s");
+    gameState.time.ending = gameState.time.started.add(TIME_LENGTH_STARTED, "s");
+    gameState.time.next = gameState.time.ending.add(TIME_LENGTH_ENDING, "s");
+}
+
+function updateTimeWindow() {
+    gameState.time.intermission = gameState.time.next;
+
+    gameState.time.starting = gameState.time.intermission.add(TIME_LENGTH_INTERMISSION, "s");
+    gameState.time.started = gameState.time.starting.add(TIME_LENGTH_STARTING, "s");
+    gameState.time.ending = gameState.time.started.add(TIME_LENGTH_STARTED, "s");
+    gameState.time.next = gameState.time.ending.add(TIME_LENGTH_ENDING, "s");
+}
+
+function printTimeWindow() {
+    console.log("-- time window");
+    console.log(`\tintermission\t: ${gameState.time.intermission.format("m[m] s[s]")}`)
+    console.log(`\tstarting\t: ${gameState.time.starting.format("m[m] s[s]")}`)
+    console.log(`\tstarted\t\t: ${gameState.time.started.format("m[m] s[s]")}`)
+    console.log(`\tending\t\t: ${gameState.time.ending.format("m[m] s[s]")}`)
+    console.log(`\tnext\t\t: ${gameState.time.next.format("m[m] s[s]")}`)
+}
+
+
+
+
 function consoleLatestUserRepo(mode) 
 {
     console.log("%cuserRepo", "color: green")
@@ -219,25 +302,6 @@ function consoleLatestUserRepo(mode)
     }
 }
 
-function createTimeWindow() {
-
-    let now = dayjs()
-
-    // calculates number up to the next multiple
-    gameState.time.start = dayjs().minute(
-        Math.ceil(
-            now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT == now.minute() 
-            ? now.minute() + MINUTES_ALLOTED_FOR_TIME_SLOT 
-            : now.minute() / MINUTES_ALLOTED_FOR_TIME_SLOT
-        ) * MINUTES_ALLOTED_FOR_TIME_SLOT
-    ).second(0)
-
-    gameState.time.intermission = gameState.time.start.add(MINUTES_ALLOTED_FOR_TIME_SLOT, "m").subtract(SECONDS_BETWEEN_GAMES, "s");
-
-    console.log("new window")
-    console.log(gameState.time.start.format("[\tgameStart at\t]m[m] [s]s"));
-    console.log(gameState.time.intermission.format("[\tgameEnd at\t]m[m] [s]s"));
-}
 
 // snips the more repo esque properties to save bandwidth
 function mapGameStateForEmit() {
@@ -297,6 +361,7 @@ function loadQuestion() {
     gameState.questionsLeft.slice(index, 1);
 }
 
+
 function clearTimeWindow() {
-    
+
 }
