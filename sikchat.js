@@ -29,18 +29,18 @@ const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                 
 // time window
 const timeConstants = {
     // in minutes
-    WINDOW: 2,              // components in seconds must add up to this window in minutes
+    WINDOW: 1,              // components in seconds must add up to this window in minutes
 
     // in seconds
-    INTERMISSION: 20,
+    INTERMISSION: 10,
     STARTING: 10,
-    STARTED: 80,
+    STARTED: 30,
     ENDING: 10,
 
     // question length
-    QUESTION_EASY: 10,
-    QUESTION_MEDIUM: 15,
-    QUESTION_HARD: 20,
+    QUESTION_EASY: 5,
+    QUESTION_MEDIUM: 10,
+    QUESTION_HARD: 15,
 }
 
 // game state
@@ -75,6 +75,7 @@ var gameState = {
         
         // dynamic
         currentQuestion: {},
+        timeUntilNextQuestion: null,
         questionStack: []
     },
 
@@ -89,7 +90,8 @@ printTimeWindow()
 
 // time window starts at intermission
 setInterval(() => {
-    // before first game window has started
+
+    // acknowledge limbo period (init) before the first game window has started
     if(dayjs().isBefore(gameState.time.intermission) && gameState.isPreLoad) {
 
         // flags
@@ -98,9 +100,9 @@ setInterval(() => {
         gameState.isInit = true;
     }
 
-    console.log(`${dayjs().format("m[m ]s[s]")} window state: ${gameState.time.current}`)
+    console.log(`${dayjs().format("h[h ]m[m ]s[s]")} window state: ${gameState.time.current}`)
 
-    // intermission & window update
+    // make intermission, also window update
     if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
         // update window
         if(gameState.isEnding) {
@@ -117,7 +119,7 @@ setInterval(() => {
         gameState.isIntermission = true;
     }
 
-    // starting
+    // make starting
     if(dayjs().isSameOrAfter(gameState.time.starting) && gameState.isIntermission) { 
 
         // flags
@@ -126,18 +128,29 @@ setInterval(() => {
         gameState.isStarting = true;
     }
 
-    // started
+    
+    // make started
     if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
         console.log("started");
-        loadQuestion();
-
+        
         // flags
         gameState.isStarting = false;
         gameState.time.current = "started";
         gameState.isStarted = true;
     }
+    
+    // detect question, then select new ones as old ones expire
+    if(gameState.qBank.questionStack.length > 0 && gameState.isStarted) {
+        let currentQuestion = gameState.qBank.currentQuestion
+        
+        console.log("current question timeLeft: ", currentQuestion.timeLeft)
 
-    // ending
+        currentQuestion.timeLeft > 0
+            ? currentQuestion.timeLeft--
+            : loadQuestion()
+    }
+
+    // make ending
     if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
     
         // flag
@@ -290,11 +303,11 @@ function updateTimeWindow() {
 
 function printTimeWindow() {
     console.log("-- time window");
-    console.log(`\tintermission\t: ${gameState.time.intermission.format("m[m] s[s]")}`)
-    console.log(`\tstarting\t: ${gameState.time.starting.format("m[m] s[s]")}`)
-    console.log(`\tstarted\t\t: ${gameState.time.started.format("m[m] s[s]")}`)
-    console.log(`\tending\t\t: ${gameState.time.ending.format("m[m] s[s]")}`)
-    console.log(`\tnext\t\t: ${gameState.time.next.format("m[m] s[s]")}`)
+    console.log(`\tintermission\t: ${gameState.time.intermission.format("h[h] m[m] s[s]")}`)
+    console.log(`\tstarting\t: ${gameState.time.starting.format("h[h] m[m] s[s]")}`)
+    console.log(`\tstarted\t\t: ${gameState.time.started.format("h[h] m[m] s[s]")}`)
+    console.log(`\tending\t\t: ${gameState.time.ending.format("h[h] m[m] s[s]")}`)
+    console.log(`\tnext\t\t: ${gameState.time.next.format("h[h] m[m] s[s]")}`)
 }
 
 
@@ -332,6 +345,8 @@ function mapGameStateForEmit() {
 }
 
 function loadQuestionBank() {
+    console.log("loading question bank...")
+
 
     let name = QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * QUESTIONS_BANK_FILES_ARRAY.length)];
     let path = `./questions/questions_${name}.json`;
@@ -345,7 +360,7 @@ function loadQuestionBank() {
         gameState.qBank.loaded = JSON.parse(raw)
 
         // --- scrambles then builds questionStack
-        let timeLeft = timeConstants.STARTED
+        let timeLeft = timeConstants.STARTED  // 30
         let shuffled = shuffle(gameState.qBank.loaded.questions)
         
         var i = 0;
@@ -365,46 +380,41 @@ function loadQuestionBank() {
                     break;
             }
 
+            i++
+            // doesn't fit
             if(timeLeft - questionSeconds < 0) {
+                console.log("continuing!");
                 continue;           // maybe the next question will be small enough to fit
             }
 
+            // does fit
             timeLeft -= questionSeconds
-            question.timeAllowed = questionSeconds
+            question.timeAllotted = questionSeconds
             gameState.qBank.questionStack.push(question)
-            i++
         }
         
         // make up the rest by adding time to the final question
         if(timeLeft > 0) {
             let stack = gameState.qBank.questionStack
-            stack[stack.length - 1].timeAllowed += timeConstants.STARTED - timeLeft
+            stack[stack.length - 1].timeAllotted += timeConstants.STARTED - timeLeft
         }
 
         // TODO:  algorithm may be complete but needs testing
         console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
 
         console.log(gameState.qBank.questionStack)
-        let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllowed}, 0)
+        let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllotted}, 0)
         console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a STARTED of ${timeConstants.STARTED}s`)
     });
 }
 
 function loadQuestion() {
-    if (gameState.qBank.loaded.questions.length == 0 || gameState.qBank.questionStack.length == 0) {
-        throw "no questions or out of questions"
-    }
-    
-    // choose question index
-    let index = gameState.questionsLeft[Math.floor(Math.random() * gameState.questionsLeft.length)]
-    
-    // remove this index value from future questions
-    gameState.questionsLeft.splice(index, 1);
+  // load question
+    gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
+    gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
+    gameState.qBank.currentQuestion.timeLeft--
 
-    // load question
-    gameState.qBank.currentQuestion = gameState.qBank.loaded.questions[index];
-
-    console.log(`question loaded\n\t${gameState.qBank.currentQuestion}`);
+    console.log(`question chosen\n\t${gameState.qBank.currentQuestion}`);
 }
 
 // shuffle array non destructive
