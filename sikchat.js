@@ -89,7 +89,6 @@ printTimeWindow()
 
 // time window starts at intermission
 setInterval(() => {
-    
     // before first game window has started
     if(dayjs().isBefore(gameState.time.intermission) && gameState.isPreLoad) {
 
@@ -137,8 +136,6 @@ setInterval(() => {
         gameState.time.current = "started";
         gameState.isStarted = true;
     }
-
-
 
     // ending
     if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
@@ -254,15 +251,10 @@ function checkWindowIntegrity(obj) {
     let calculatedTotal = timeConstants.INTERMISSION + timeConstants.STARTING + timeConstants.STARTED + timeConstants.ENDING;
 
     if (calculatedTotal != timeConstants.WINDOW * 60) {
-        console.log("\n--- Bogus time window, cancelling game ---\n")
-        console.log(`INTERMISSION: ${timeConstants.INTERMISSION}`);
-        console.log(`STARTING: ${timeConstants.STARTING}`);
-        console.log(`STARTED: ${timeConstants.STARTED}`);
-        console.log(`ENDING: ${timeConstants.ENDING}\n`);
+        console.log("window components don't add up to window")
         console.log(`${timeConstants.INTERMISSION} + ${timeConstants.STARTING} + ${timeConstants.STARTED} + ${timeConstants.ENDING} = ${calculatedTotal}`)
-        console.log(`does not add up to\n`)
-        console.log(`WINDOW: ${timeConstants.WINDOW}\n`);
-        throw "time window problem"
+        console.log(`WINDOW: ${timeConstants.WINDOW * 60}`);
+        process.exit(1)
     }
 }                   
 
@@ -271,16 +263,16 @@ function initialTimeWindow() {
         1. intermission 2. game starting (countdown) 3. game started 4. game ending (tally stats) 5. new time window  */
 
     let now = dayjs()
-
+    
     // calculates time up to the next multiple
-    gameState.time.intermission = dayjs().minute(
-        Math.ceil(
-            now.minute() / timeConstants.WINDOW == now.minute() 
-            ? now.minute() + timeConstants.WINDOW 
-            : now.minute() / timeConstants.WINDOW
-        ) * timeConstants.WINDOW
-    ).second(0)
+    gameState.time.intermission = dayjs().minute(Math.ceil(now.minute() / timeConstants.WINDOW) * timeConstants.WINDOW).second(0)    // rounds up to next multiple of WINDOW
 
+    // adds a WINDOW length if it's the same minute
+    if(now.minute() == gameState.time.intermission.minute()) {
+        gameState.time.intermission = gameState.time.intermission.add(timeConstants.WINDOW, "m")
+    }
+
+    // setup window sub components
     gameState.time.starting = gameState.time.intermission.add(timeConstants.INTERMISSION, "s");
     gameState.time.started = gameState.time.starting.add(timeConstants.STARTING, "s");
     gameState.time.ending = gameState.time.started.add(timeConstants.STARTED, "s");
@@ -373,9 +365,8 @@ function loadQuestionBank() {
                     break;
             }
 
-            // maybe the next question will be small enough to fit
             if(timeLeft - questionSeconds < 0) {
-                continue;
+                continue;           // maybe the next question will be small enough to fit
             }
 
             timeLeft -= questionSeconds
@@ -391,8 +382,10 @@ function loadQuestionBank() {
         }
 
         // TODO:  algorithm may be complete but needs testing
-        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.loaded.questions.length} questions\n\t`)
+        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
 
+        let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllowed}, 0)
+        console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a WINDOW of ${timeConstants.WINDOW * 60}s`)
     });
 }
 
@@ -422,8 +415,4 @@ function shuffle(array) {
         [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
-}
-
-function clearTimeWindow() {
-
 }
