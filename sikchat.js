@@ -158,8 +158,7 @@ setInterval(() => {
     }    
     console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
     
-    // let emit = mapGameStateForEmit()
-    // io.emit("tick", emit)
+    io.emit("tick", mapGameStateForEmit())
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
@@ -256,7 +255,7 @@ http.listen(port, function() {
     console.log(`listening on *:${port}`);
 });
 
-/* ------------------- FUNCTIONS ------------------- */
+/* ------------------- WINDOW FUNCTIONS ------------------- */
 
 function checkWindowIntegrity(obj) {
 
@@ -309,39 +308,7 @@ function printTimeWindow() {
     console.log(`\tnext\t\t: ${gameState.time.next.format("h[h] m[m] s[s]")}`)
 }
 
-
-function consoleLatestUserRepo(mode) 
-{
-    console.log("%cuserRepo", "color: green")
-    switch(mode) {
-        case "simple":
-            if(usersRepo.length == 0) {
-                console.log("%cempty", "color: green");
-                return;
-            }
-            usersRepo.forEach(item => {
-                console.log("%c" + item.username + " " + item.guid, "color: green");
-            })
-            break;
-        // show whole object
-        default:
-            console.log(usersRepo);
-    }
-}
-
-// snips the more repo esque properties to save bandwidth
-function mapGameStateForEmit() {
-    let emit = {}
-    let reject = ["bank", "questions", "questionsLeft"];
-
-    for(let [key,value] of Object.entries(gameState)) {
-        if(reject.indexOf(key) == -1) {
-            emit[key] = value;
-        }
-    }
-
-    return emit;
-}
+/* ------------------- QBANK FUNCTIONS ------------------- */
 
 function loadQuestionBank() {
     console.log("loading question bank...")
@@ -413,6 +380,38 @@ function loadQuestion() {
     gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
 
     console.log("question chosen\n", gameState.qBank.currentQuestion);
+}
+
+/* ------------------ USER FUNCTIONS ------------------- */
+
+function consoleLatestUserRepo(mode) 
+{
+    console.log("%cuserRepo", "color: green")
+    switch(mode) {
+        case "simple":
+            if(usersRepo.length == 0) {
+                console.log("%cempty", "color: green");
+                return;
+            }
+            usersRepo.forEach(item => {
+                console.log("%c" + item.username + " " + item.guid, "color: green");
+            })
+            break;
+        // show whole object
+        default:
+            console.log(usersRepo);
+    }
+}
+
+/* ------------------ UTILITY FUNCTIONS ------------------- */
+
+// snips the more repo esque properties to save bandwidth
+function mapGameStateForEmit() {
+    let clone = JSON.parse(JSON.stringify(gameState))
+    delete clone.qBank.loaded
+    delete clone.qBank.questionStack
+
+    return clone;
 }
 
 // shuffle array non destructive
