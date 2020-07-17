@@ -345,7 +345,7 @@ function loadQuestionBank() {
         gameState.qBank.loaded = JSON.parse(raw)
 
         // --- scrambles then builds questionStack
-        let timeLeft = timeConstants.STARTED * 60
+        let timeLeft = timeConstants.STARTED
         let shuffled = shuffle(gameState.qBank.loaded.questions)
         
         var i = 0;
@@ -378,19 +378,20 @@ function loadQuestionBank() {
         // make up the rest by adding time to the final question
         if(timeLeft > 0) {
             let stack = gameState.qBank.questionStack
-            stack[stack.length - 1] += timeConstants.STARTED * 60 - timeLeft
+            stack[stack.length - 1].timeAllowed += timeConstants.STARTED - timeLeft
         }
 
         // TODO:  algorithm may be complete but needs testing
         console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
 
+        console.log(gameState.qBank.questionStack)
         let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllowed}, 0)
-        console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a WINDOW of ${timeConstants.WINDOW * 60}s`)
+        console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a STARTED of ${timeConstants.STARTED}s`)
     });
 }
 
 function loadQuestion() {
-    if (gameState.qBank.loaded.questions.length == 0 || gameState.questionsLeft.length == 0) {
+    if (gameState.qBank.loaded.questions.length == 0 || gameState.qBank.questionStack.length == 0) {
         throw "no questions or out of questions"
     }
     
