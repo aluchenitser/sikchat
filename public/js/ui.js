@@ -1,7 +1,7 @@
 
-/* ------------------ UI SETUP -------------------- */
+/* ------------------ SETUP -------------------- */
 
-// -- DOM objects
+// DOM objects
 var messageInputElement = document.getElementById('message-input')
 var submitButtonElement = document.getElementById('submit-button')
 var drawerHandleElement = document.querySelector('.drawer-handle')
@@ -16,157 +16,59 @@ var gameWindowElement = document.getElementById("game-window")
 
 var messagesElement = document.getElementById("messages")
 
-// --- USER DATA
-var currentUserName = "";
-var currentUserGUID = "";
-var cookieData;
-var game = {}
-
+// cookies
+var user;
 try {
-    cookieData = JSON.parse(getCookie("userData"));
+    user = JSON.parse(getCookie("userData"))
 }
-catch(e) { } 
+catch(e) { throw "fail load: browser may have cookies disabled" }
 
-if(cookieData) {
-    currentUserName = cookieData.username;
-    userInputElement.value = cookieData.username;
-    tinyHeaderUserNameElement.innerHTML = cookieData.username || "someone";
-    currentUserGUID = cookieData.guid;
-}
-else {
-    tinyHeaderUserNameElement.innerHTML = "someone"
-}
+user.username = user.username || "someone"
+userInputElement.value = user.username
+tinyHeaderUserNameElement.innerHTML = user.username
 
-// --- MISCELLANEOUS
+// game state
+var fameState = {
 
-var networkPort = 3000
-var validUserPattern = /^[a-z0-9_-]{1,16}$/
-var socket = io()
+    // live time checkpoints
+    time: {
+        intermission: null,
+        starting: null,
+        start: null,
+        ending: null,
+        next: null,
+        current: ""
+    },
 
+    // game loop flags
+    isPreLoad: true,            // first iteration
+    isInit: false,              // purgatory before first real window
+    isIntermission: false,      // start of time window
+    isStarting: false,          // countdown
+    isStarted: false,           // game is in session
+    isEnding: false,            // outro
 
-/* -------------------- USERNAME DRAWER --------------------- */
+    // question bank
+    qBank: {
 
-// --- username & drawer logic
-userInputElement.addEventListener("keydown", e => {
-    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == "Tab") {
-        e.preventDefault()
+        // from json
+        loaded: {
+            meta: {},
+            questions: []
+        },
         
-        if(e.key == "Enter" || e.key == "NumpadEnter") {
-            closeDrawerFocusMessageInput()
-        }
-        else if (e.key == "Tab") {
-            messageInputElement.focus()
-        }
-    } 
-})
+        // dynamic
+        currentQuestion: {},
+        questionStack: []
+    },
 
-// --- change user name + validation
-let timer = null;
-userInputElement.addEventListener("keyup", e => {
-    
-    let username = e.target.value;
-    clearUsernameValidationDisplays()
-    if(username == currentUserName) return;
-
-    if(validUserPattern.test(username)) {
-        checkingUsernameElement.style.display = "inline"
-        
-        // buffer for UX, lookup waits a second
-        clearTimeout(timer)
-        timer = setTimeout(()=> {
-            socket.emit('username_update', {username, guid: currentUserGUID})
-        }, 1000)
-    }
-    else {
-        bogusUsernameElement.style.display = "inline";
-    }
-})
-
-var userInputMouseDown = false
-var userInputArrivedByTab = false
-
-document.body.addEventListener('mousedown', function (e) {
-    if(e.targetid != "username") {
-        userInputArrivedByTab = false
-    }
-})
-
-userInputElement.addEventListener('mousedown', function () {
-    userInputMouseDown = true
-})
-
-userInputElement.addEventListener('focusin', function () {
-    if(!userInputMouseDown && !drawerIsOpen()) {
-        openDrawer()
-        userInputArrivedByTab = true
-    }
-    userInputMouseDown = false
-})
-
-userInputElement.addEventListener("blur", e => {
-    if(userInputArrivedByTab)
-    closeDrawer()
-    
-    userInputArrivedByTab = false
-    tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-})
-
-drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
-
-socket.on("username_update_response", msg => {          // { username, foundDuplicate }
-
-    if(msg.foundDuplicate) {
-        clearUsernameValidationDisplays();
-        inUseUsernameElement.style.display = "inline"
-    }
-    else {
-        // fun effect for successful lookup
-        currentUserName = msg.username
-        tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-        clearUsernameValidationDisplays();
-        usernameLookupSuccessElement.classList.remove("off")
-        setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
-    }
-})
-
-/* -------------------- CHAT --------------------- */
-
-document.getElementById('form').addEventListener('submit', e => {
-    e.preventDefault()
-    messageInputElement.focus()
-    let text = messageInputElement.value
-    if(!text) return false
-    let username = currentUserName || 'someone';
-    
-    socket.emit('chat_message', { text, username })
-})
-
-// --- receive chat
-socket.on('chat_message_response', msg => { 
-    let user = userInputElement.value || 'someone'; 
-    let messageClass = currentUserName == msg.username
-        ? 'message-output is-current-user'
-        : 'message-output'
-
-    // add new message to UI
-    const markup = `<div class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
-    $(markup).appendTo("#messages")
-    messageInputElement.value = ""
-})
-
-
-/*  --------- GAME SETUP ---------- */
-
-frontEnd = {
-    isCountDown: false,
-    itsTheFinalCountDown: false,
-    isActive: false,
-    isInProgress: false,
-    isIntermission: false,
-    question: {}
+    // logging
+    logString: null,
 }
 
 /*  --------- GAME LOOP ---------- */
+
+var socket = io()
 socket.on('tick', server => {
     /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
         isQuestionLoaded, currentQuestion } */
@@ -177,8 +79,6 @@ socket.on('tick', server => {
 
         game.startGame()
     }
-
-
     
 
 
@@ -262,34 +162,149 @@ socket.on('tick', server => {
     
 });
 
+
+/* -------------------- CHAT --------------------- */
+
+document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault()
+    messageInputElement.focus()
+    let text = messageInputElement.value
+    if(!text) return false
+    let username = currentUserName || 'someone';
+    
+    socket.emit('chat_message', { text, username })
+})
+
+// --- receive chat
+socket.on('chat_message_response', msg => { 
+    let user = userInputElement.value || 'someone'; 
+    let messageClass = currentUserName == msg.username
+        ? 'message-output is-current-user'
+        : 'message-output'
+
+    // add new message to UI
+    const markup = `<div class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
+    $(markup).appendTo("#messages")
+    messageInputElement.value = ""
+})
+
+
+
+
+/* -------------------- USERNAME DRAWER --------------------- */
+var validUserPattern = /^[a-z0-9_-]{1,16}$/
+
+// // --- username & drawer logic
+// userInputElement.addEventListener("keydown", e => {
+//     if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == "Tab") {
+//         e.preventDefault()
+        
+//         if(e.key == "Enter" || e.key == "NumpadEnter") {
+//             closeDrawerFocusMessageInput()
+//         }
+//         else if (e.key == "Tab") {
+//             messageInputElement.focus()
+//         }
+//     } 
+// })
+
+// // --- change user name + validation
+// let timer = null;
+// userInputElement.addEventListener("keyup", e => {
+    
+//     let username = e.target.value;
+//     clearUsernameValidationDisplays()
+//     if(username == currentUserName) return;
+
+//     if(validUserPattern.test(username)) {
+//         checkingUsernameElement.style.display = "inline"
+        
+//         // buffer for UX, lookup waits a second
+//         clearTimeout(timer)
+//         timer = setTimeout(()=> {
+//             socket.emit('username_update', {username, guid: currentUserGUID})
+//         }, 1000)
+//     }
+//     else {
+//         bogusUsernameElement.style.display = "inline";
+//     }
+// })
+
+// var userInputMouseDown = false
+// var userInputArrivedByTab = false
+
+// document.body.addEventListener('mousedown', function (e) {
+//     if(e.targetid != "username") {
+//         userInputArrivedByTab = false
+//     }
+// })
+
+// userInputElement.addEventListener('mousedown', function () {
+//     userInputMouseDown = true
+// })
+
+// userInputElement.addEventListener('focusin', function () {
+//     if(!userInputMouseDown && !drawerIsOpen()) {
+//         openDrawer()
+//         userInputArrivedByTab = true
+//     }
+//     userInputMouseDown = false
+// })
+
+// userInputElement.addEventListener("blur", e => {
+//     if(userInputArrivedByTab)
+//     closeDrawer()
+    
+//     userInputArrivedByTab = false
+//     tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
+// })
+
+// drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
+
+// socket.on("username_update_response", msg => {          // { username, foundDuplicate }
+
+//     if(msg.foundDuplicate) {
+//         clearUsernameValidationDisplays();
+//         inUseUsernameElement.style.display = "inline"
+//     }
+//     else {
+//         // fun effect for successful lookup
+//         currentUserName = msg.username
+//         tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
+//         clearUsernameValidationDisplays();
+//         usernameLookupSuccessElement.classList.remove("off")
+//         setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
+//     }
+// })
+
 /* ------------------ FUNCTIONS ------------------ */
 
 // --- drawer functions
-function openDrawer() {
-    document.body.classList.add("drawer-is-open");
-    document.getElementById("username").value = currentUserName || "";
-    clearUsernameValidationDisplays();
-}
+// function openDrawer() {
+//     document.body.classList.add("drawer-is-open");
+//     document.getElementById("username").value = currentUserName || "";
+//     clearUsernameValidationDisplays();
+// }
 
-function closeDrawer() {
-    document.body.classList.remove("drawer-is-open");
-    tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-}
+// function closeDrawer() {
+//     document.body.classList.remove("drawer-is-open");
+//     tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
+// }
 
-function toggleDrawerFreeFLoat() {
-    drawerIsOpen() ? closeDrawer() : openDrawer()
-}
+// function toggleDrawerFreeFLoat() {
+//     drawerIsOpen() ? closeDrawer() : openDrawer()
+// }
 
-function closeDrawerFocusMessageInput() {
-    closeDrawer();
-    messageInputElement.focus()
-}
+// function closeDrawerFocusMessageInput() {
+//     closeDrawer();
+//     messageInputElement.focus()
+// }
 
-function drawerIsOpen() {
-    return document.body.classList.contains("drawer-is-open")
-        ? true
-        : false
-}
+// function drawerIsOpen() {
+//     return document.body.classList.contains("drawer-is-open")
+//         ? true
+//         : false
+// }
 
 function displayInProgressScreen(bool) {
     console.log("--- displayInProgressScreen ---");

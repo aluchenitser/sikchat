@@ -15,7 +15,7 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser());
 
 // requires that load my stuff
-const help = require('./help.js')
+const User = require('./user.js').User
 
 
 /* ------------------- SETUP ------------------- */
@@ -75,7 +75,6 @@ var gameState = {
         
         // dynamic
         currentQuestion: {},
-        timeUntilNextQuestion: null,
         questionStack: []
     },
 
@@ -176,7 +175,7 @@ app.get('/', function(req, res) {
 
     // create user & cookie
     if(!req.cookies.userData) {
-        let user = new help.User()
+        let user = new User()
         usersRepo.push(user)
         
         res.cookie("userData", JSON.stringify(user));
@@ -248,14 +247,14 @@ io.on('connection', (socket) => {
 /* ------------------- WEB SERVER ------------------- */
 
 // command line port selection or default to 3000
-// let port = parseInt(process.argv[2]);
-// port = port && port >= 1023 && port <= 65535
-//     ? port
-//     : 3000;
+let port = parseInt(process.argv[2]);
+port = port && port >= 1023 && port <= 65535
+    ? port
+    : 3000;
 
-// http.listen(port, function() {
-//     console.log(`listening on *:${port}`);
-// });
+http.listen(port, function() {
+    console.log(`listening on *:${port}`);
+});
 
 /* ------------------- FUNCTIONS ------------------- */
 
