@@ -90,6 +90,7 @@ printTimeWindow()
 
 // time window starts at intermission
 setInterval(() => {
+    let topWindowState = gameState.time.current
 
     // acknowledge limbo period (init) before the first game window has started
     if(dayjs().isBefore(gameState.time.intermission) && gameState.isPreLoad) {
@@ -99,8 +100,6 @@ setInterval(() => {
         gameState.time.current = "init";
         gameState.isInit = true;
     }
-
-    console.log(`${dayjs().format("h[h ]m[m ]s[s]")} window state: ${gameState.time.current}`)
 
     // proceed to intermission, also window update
     if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
@@ -141,12 +140,13 @@ setInterval(() => {
     
     // detect question, then select new ones as old ones expire
     if(gameState.qBank.questionStack.length > 0 && gameState.isStarted) {
-        if(currentQuestion.timeLeft == 0 && gameState.qBank.questionStack.length > 0 || gameState.qBank.questionStack.length == gameState.qBank.questionStack.originalLength) 
+        if(gameState.qBank.currentQuestion.timeLeft == 0 && gameState.qBank.questionStack.length > 0 || gameState.qBank.questionStack.length == gameState.qBank.questionStack.originalLength) 
         {
             loadQuestion();
         }
+        gameState.qBank.currentQuestion.timeLeft--
        
-        console.log("current question timeLeft: ", currentQuestion.timeLeft)
+        console.log("current question timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
     // proceed to ending
@@ -157,6 +157,7 @@ setInterval(() => {
         gameState.time.current = "ending";
         gameState.isEnding = true;
     }    
+    console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
     
     // let emit = mapGameStateForEmit()
     // io.emit("tick", emit)
@@ -411,9 +412,8 @@ function loadQuestion() {
   // load question
     gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
     gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
-    gameState.qBank.currentQuestion.timeLeft--
 
-    console.log(`question chosen\n\t${gameState.qBank.currentQuestion}`);
+    console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
 
 // shuffle array non destructive
