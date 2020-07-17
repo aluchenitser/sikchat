@@ -102,7 +102,7 @@ setInterval(() => {
 
     console.log(`${dayjs().format("h[h ]m[m ]s[s]")} window state: ${gameState.time.current}`)
 
-    // make intermission, also window update
+    // proceed to intermission, also window update
     if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
         // update window
         if(gameState.isEnding) {
@@ -119,7 +119,7 @@ setInterval(() => {
         gameState.isIntermission = true;
     }
 
-    // make starting
+    // proceed to starting
     if(dayjs().isSameOrAfter(gameState.time.starting) && gameState.isIntermission) { 
 
         // flags
@@ -129,7 +129,7 @@ setInterval(() => {
     }
 
     
-    // make started
+    // proceed to started
     if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
         console.log("started");
         
@@ -141,16 +141,15 @@ setInterval(() => {
     
     // detect question, then select new ones as old ones expire
     if(gameState.qBank.questionStack.length > 0 && gameState.isStarted) {
-        let currentQuestion = gameState.qBank.currentQuestion
-        
+        if(currentQuestion.timeLeft == 0 && gameState.qBank.questionStack.length > 0 || gameState.qBank.questionStack.length == gameState.qBank.questionStack.originalLength) 
+        {
+            loadQuestion();
+        }
+       
         console.log("current question timeLeft: ", currentQuestion.timeLeft)
-
-        currentQuestion.timeLeft > 0
-            ? currentQuestion.timeLeft--
-            : loadQuestion()
     }
 
-    // make ending
+    // proceed to ending
     if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
     
         // flag
@@ -395,13 +394,13 @@ function loadQuestionBank() {
         
         // make up the rest by adding time to the final question
         if(timeLeft > 0) {
-            let stack = gameState.qBank.questionStack
-            stack[stack.length - 1].timeAllotted += timeConstants.STARTED - timeLeft
+            gameState.qBank.questionStack[gameState.qBank.questionStack.length - 1].timeAllotted += timeConstants.STARTED - timeLeft
         }
 
-        // TODO:  algorithm may be complete but needs testing
-        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
+        gameState.qBank.questionStack.originalLength = gameState.qBank.questionStack.length
 
+        // logging
+        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
         console.log(gameState.qBank.questionStack)
         let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllotted}, 0)
         console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a STARTED of ${timeConstants.STARTED}s`)
