@@ -62,8 +62,6 @@ socket.on('tick', server => {
 
         Screen.load("intermission").then(() => {
             Screen.display("game-window")
-            // console.log(Screen.vm)
-            // console.log(Screen.markup)
         })
 
 
@@ -77,7 +75,9 @@ socket.on('tick', server => {
     if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
         console.log("starting")
 
-
+        Screen.load("starting").then(() => {
+            Screen.display("game-window")
+        })
         // flags
         fameState.noFlag = false;
 
@@ -88,7 +88,9 @@ socket.on('tick', server => {
     if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
         console.log("started")
 
-
+        Screen.load("started").then(() => {
+            Screen.display("game-window")
+        })
         // flags
         fameState.noFlag = false;
 
@@ -99,7 +101,9 @@ socket.on('tick', server => {
     if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
         console.log("ending")
 
-
+        Screen.load("ending").then(() => {
+            Screen.display("game-window")
+        })
         // flags
         fameState.noFlag = false;
 

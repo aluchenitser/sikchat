@@ -37,7 +37,9 @@ var Screen = {
     display(id) {
         if(this.markup) {
             console.log(this.markup)
-            document.getElementById(id).appendChild(this.markup)
+            let windowElement = document.getElementById(id)
+            windowElement.textContent = ''
+            windowElement.appendChild(this.markup)
         } else { throw "nothing to display"}
     },
 

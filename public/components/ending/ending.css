@@ -8,15 +8,6 @@
 .wrap h1, .wrap h2 {
   position: relative;
 }
-.wrap .started {
-  position: relative;
-  display: none;
-  animation: fadeIn 0.5s;
-  padding: 0 45px;
-}
-.wrap .started li {
-  padding-bottom: 12px;
-}
 .wrap .ending {
   position: relative;
   display: none;
@@ -24,4 +15,4 @@
   transition: opacity 0.5s;
 }
 
-/*# sourceMappingURL=started.css.map */
+/*# sourceMappingURL=ending.css.map */
