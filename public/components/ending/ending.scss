@@ -1,0 +1,19 @@
+.wrap {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    h1, h2 {
+        position: relative;
+    }
+
+    .ending {
+        position: relative;
+        display: none;
+        animation: fadeIn .5s;
+        transition: opacity 0.5s;
+    }
+}

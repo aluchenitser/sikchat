@@ -110,11 +110,11 @@ setInterval(() => {
         loadQuestionBank()
     
         //flags
-        gameState.isEnding 
-            ? gameState.isEnding = false 
-            : gameState.isInit = false
-        gameState.time.current = "intermission";
-        gameState.isIntermission = true;
+        gameState.isInit = false
+
+        gameState.isEnding = false
+        gameState.time.current = "intermission"
+        gameState.isIntermission = true
     }
 
     // proceed to starting
@@ -145,7 +145,7 @@ setInterval(() => {
         }
         gameState.qBank.currentQuestion.timeLeft--
        
-        console.log("current question timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
+        // console.log("current question timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
     // proceed to ending
@@ -158,7 +158,8 @@ setInterval(() => {
     }    
     console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
     
-    io.emit("tick", mapGameStateForEmit())
+    let gameStateLite = mapGameStateForEmit()
+    io.emit("tick", gameStateLite)
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
@@ -349,7 +350,7 @@ function loadQuestionBank() {
             i++
             // doesn't fit
             if(timeLeft - questionSeconds < 0) {
-                console.log("continuing!");
+                // console.log("continuing!");
                 continue;           // maybe the next question will be small enough to fit
             }
 
@@ -367,10 +368,10 @@ function loadQuestionBank() {
         gameState.qBank.questionStack.originalLength = gameState.qBank.questionStack.length
 
         // logging
-        console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
-        console.log(gameState.qBank.questionStack)
-        let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllotted}, 0)
-        console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a STARTED of ${timeConstants.STARTED}s`)
+        // console.log(`question bank "${gameState.qBank.loaded.meta.name}" loaded ${gameState.qBank.questionStack.length} questions`)
+        // console.log(gameState.qBank.questionStack)
+        // let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllotted}, 0)
+        // console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a STARTED of ${timeConstants.STARTED}s`)
     });
 }
 
@@ -379,7 +380,7 @@ function loadQuestion() {
     gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
     gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
 
-    console.log("question chosen\n", gameState.qBank.currentQuestion);
+    // console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
 
 /* ------------------ USER FUNCTIONS ------------------- */

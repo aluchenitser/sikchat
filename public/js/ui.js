@@ -41,28 +41,82 @@ var fameState = {
     },
 
     // game loop flags
-    isPreLoad: true,            // first iteration
-    isInit: false,              // purgatory before first real window
     isIntermission: false,      // start of time window
     isStarting: false,          // countdown
     isStarted: false,           // game is in session
     isEnding: false,            // outro
-
-    // question bank
-    qBank: {
-      
-        // dynamic
-        currentQuestion: {},
-    },
-
-    // logging
-    logString: null,
+    noFlag: true                // similar to isInit on the backend, but doesn't explicitly receive a signal
 }
 
 /*  --------- GAME LOOP ---------- */
+// client states are "intermission", "starting", "started", and "ending"
+// server also has "init"
 
 var socket = io()
+var states = ["init", ]
 socket.on('tick', server => {
+    let state = server.time.current
+
+    if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
+        console.log("intermission")
+
+        Screen.load("intermission").then(() => {
+            Screen.display("game-window")
+            // console.log(Screen.vm)
+            // console.log(Screen.markup)
+        })
+
+
+        // flags
+        fameState.noFlag = false;
+        
+        fameState.isEnding = false;
+        fameState.isIntermission = true;
+    }
+
+    if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
+        console.log("starting")
+
+
+        // flags
+        fameState.noFlag = false;
+
+        fameState.isIntermission = false;
+        fameState.isStarting = true;        
+    }
+
+    if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
+        console.log("started")
+
+
+        // flags
+        fameState.noFlag = false;
+
+        fameState.isStarting = false;
+        fameState.isStarted = true;        
+    }
+
+    if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
+        console.log("ending")
+
+
+        // flags
+        fameState.noFlag = false;
+
+        fameState.isStarted = false;
+        fameState.isEnding = true;
+    }
+
+
+
+
+
+
+
+    return;
+
+
+
     console.log(server);
     /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
         isQuestionLoaded, currentQuestion } */
@@ -182,10 +236,11 @@ socket.on('chat_message_response', msg => {
     messageInputElement.value = ""
 })
 
+/* -------------------- SESSION --------------------- */
 
 
 
-/* -------------------- USERNAME DRAWER --------------------- */
+/* -------------------- DRAWER --------------------- */
 var validUserPattern = /^[a-z0-9_-]{1,16}$/
 
 // // --- username & drawer logic
@@ -338,6 +393,7 @@ function clearUsernameValidationDisplays() {
 }
 
 // --- cookie functions
+
 function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"

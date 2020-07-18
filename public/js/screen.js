@@ -4,15 +4,16 @@ var Screen = {
     load(type, name) {
         let self = this;
 
-        if (this._models[type] == undefined) {
-            throw "bogus load type"
-        }
+        this.vm = this._models[type]
+        if (this.vm == undefined) throw "bogus type"
 
-        return $.get(file, data => {
+        return $.get(this.vm.path, data => {
             if(!data) {
-                console.error("bogus load file")
+                console.error("bogus file")
                 return false;
             }
+
+            // console.log(data);
 
             // load current view model
             this.vm = this._models[type]
@@ -30,34 +31,35 @@ var Screen = {
             document.querySelectorAll(`[sik=${property}]`).forEach((markup)=> {
                 markup.textContent = value
             })
-        } else { throw "bogus viewmodel property" }
+        } else { throw "bogus model property" }
     },
 
     display(id) {
         if(this.markup) {
-            document.getElementById(id).innerHTML = this.markup
+            console.log(this.markup)
+            document.getElementById(id).appendChild(this.markup)
         } else { throw "nothing to display"}
     },
 
     // read only: properties here match [sik] attributes in view files
     _models: {
-        init: {
-
-        },
         intermission: {
-    
+            path: "../components/intermission/intermission.html"
+            
         },
         starting: {
+            path: "../components/starting/starting.html"
 
         },
         started: {
+            path: "../components/started/started.html"
 
         },
-        ends: {
-
-        },
-        wait: {
+        ending: {
+            path: "../components/ending/ending.html"
 
         }
     }
 }
+
+console.log("Screen.js loaded")
