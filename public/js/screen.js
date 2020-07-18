@@ -1,7 +1,7 @@
 var Screen = {
     markup: null,
     vm: {},
-    load(type, name) {
+    load(type, name, display = true) {
         let self = this;
 
         this.vm = this._models[type]
@@ -23,6 +23,10 @@ var Screen = {
             data = data.trim(); 
             template.innerHTML = data;
             this.markup = template.content.firstChild;
+
+            if(display == true) {
+                this.display()
+            }
         })
     },
 
@@ -33,11 +37,12 @@ var Screen = {
             })
         } else { throw "bogus model property" }
     },
-
-    display(id) {
+    
+    display(id) {       // id optional
         if(this.markup) {
             console.log(this.markup)
-            let windowElement = document.getElementById(id)
+            
+            let windowElement = document.getElementById(id ? id : "game-window")
             windowElement.textContent = ''
             windowElement.appendChild(this.markup)
         } else { throw "nothing to display"}

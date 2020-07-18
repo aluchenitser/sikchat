@@ -17,6 +17,14 @@ app.use(cookieParser());
 // requires that load my stuff
 const User = require('./user.js').User
 
+/* ------------------- DEBUG MODES ------------------- */
+
+if(process.argv[2] == "--host" || process.argv[2] == "-h") {
+    require('./debug.js').host()
+    return;
+}
+
+
 
 /* ------------------- SETUP ------------------- */
 
@@ -177,8 +185,10 @@ app.get('/', function(req, res) {
     if(!req.cookies.userData) {
         let user = new User()
         usersRepo.push(user)
-        
-        res.cookie("userData", JSON.stringify(user));
+
+        // TODO: figure our "domain" cookie attribute
+        res.cookie("debug", "false", {path: "/"});
+        res.cookie("userData", JSON.stringify(user), {path: "/", expires: dayjs().add(1,"y").toDate()});
     }
     // load existing user & cookie
     else {

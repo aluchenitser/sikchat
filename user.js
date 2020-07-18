@@ -3,11 +3,6 @@ module.exports = {
         constructor(username = null, domain = null) {
             // setup
             let date = new dayjs()
-
-            // cookie
-            this.path = "/"
-            this.expires = date.add(50,"y").format()
-            if(domain) this.domain = domain
             
             // user
             this.created = date.format()

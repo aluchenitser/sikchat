@@ -17,15 +17,18 @@ var gameWindowElement = document.getElementById("game-window")
 var messagesElement = document.getElementById("messages")
 
 // cookies
-var user;
-try {
-    user = JSON.parse(getCookie("userData"))
-}
-catch(e) { throw "fail load: browser may have cookies disabled" }
+    var user;
+    try {
+        user = JSON.parse(getCookie("userData"))
+    }
+    catch(e) { throw "fail load: browser may have cookies disabled" }
 
-user.username = user.username || "someone"
-userInputElement.value = user.username
-tinyHeaderUserNameElement.innerHTML = user.username
+    let debug = getCookie("debug")
+
+    user.username = user.username || "someone"
+    userInputElement.value = user.username
+    tinyHeaderUserNameElement.innerHTML = user.username
+
 
 // game state
 var fameState = {
@@ -51,178 +54,173 @@ var fameState = {
 /*  --------- GAME LOOP ---------- */
 // client states are "intermission", "starting", "started", and "ending"
 // server also has "init"
+var socket = io() 
+if(debug == "host") {
+    socket.close()
+}
 
-var socket = io()
-var states = ["init", ]
-socket.on('tick', server => {
-    let state = server.time.current
+    var states = ["init", ]
+    socket.on('tick', server => {
+        let state = server.time.current
 
-    if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
-        console.log("intermission")
+        if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
+            console.log("intermission")
+            Screen.load("intermission")
 
-        Screen.load("intermission").then(() => {
-            Screen.display("game-window")
-        })
-
-
-        // flags
-        fameState.noFlag = false;
-        
-        fameState.isEnding = false;
-        fameState.isIntermission = true;
-    }
-
-    if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
-        console.log("starting")
-
-        Screen.load("starting").then(() => {
-            Screen.display("game-window")
-        })
-        // flags
-        fameState.noFlag = false;
-
-        fameState.isIntermission = false;
-        fameState.isStarting = true;        
-    }
-
-    if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
-        console.log("started")
-
-        Screen.load("started").then(() => {
-            Screen.display("game-window")
-        })
-        // flags
-        fameState.noFlag = false;
-
-        fameState.isStarting = false;
-        fameState.isStarted = true;        
-    }
-
-    if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
-        console.log("ending")
-
-        Screen.load("ending").then(() => {
-            Screen.display("game-window")
-        })
-        // flags
-        fameState.noFlag = false;
-
-        fameState.isStarted = false;
-        fameState.isEnding = true;
-    }
-
-
-
-
-
-
-
-    return;
-
-
-
-    console.log(server);
-    /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
-        isQuestionLoaded, currentQuestion } */
-    
-    // console.log("game.isActive", isActive, "fameState.isActive", fameState.isActive, "server.nextGameIn", server.nextGameIn);
-
-    if(server.isActive) {
-
-        game.startGame()
-    }
-    
-
-
-    switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
-
-        // start game
-        case server.startGameFlag == true:
-            fameState.isCountDown = false;
-            fameState.itsTheFinalCountDown = false;
-
-            document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
-            game.startGame()
-            fameState.isActive = true;
-            break;
-
-        // end game scenario where the user had logged in mid game. removes displayInProgressScreen animation
-        case server.endGameFlag == true && fameState.isActive == false:
-            displayInProgressScreen(false)
-            break;
-
-        // end game
-        case server.endGameFlag == true && Object.keys(game).length != 0:
-            game.endGame(5)    
-            fameState.isActive = false;
-            break;
-
-        // start header countdown
-        case server.nextGameIn && fameState.isCountDown == false:
-            fameState.isCountDown = true;
-            document.querySelector(".next-game-in").innerHTML = server.nextGameIn
-            document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
-            break;
-
-        // update header countdown and possibly put up the intermission screen
-        case server.nextGameIn && fameState.isCountDown == true:
+            // flags
+            fameState.noFlag = false;
             
-            // header countdown
-            document.querySelector(".next-game-in").innerHTML = server.nextGameIn
+            fameState.isEnding = false;
+            fameState.isIntermission = true;
+        }
 
-            // intermission screen, awaits a clear window from the .endGame method of Games
-            if(fameState.itsTheFinalCountDown == false && fameState.isIntermission == false && gameWindowElement.childElementCount == 0){
-                fameState.isIntermission = true;
-                displayIntermissionScreen();
-            }
-            break;          
+        if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
+            console.log("starting")
+            Screen.load("starting")
 
-        // user logged in mid-game, show in progress screen
-        case server.nextGameIn == null && server.isActive == true && fameState.isActive == false && fameState.isInProgress == false:
-            console.log("logged in mid game")
-            fameState.isInProgress = true;
-            displayInProgressScreen()
-            break;
+            // flags
+            fameState.noFlag = false;
 
-        default:
-    }
-    
-    // init game and start final countdown
-    if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == true) {
-        fameState.isInProgress == false;
-        game.count(server.nextGameIn)
-    }
+            fameState.isIntermission = false;
+            fameState.isStarting = true;        
+        }
+
+        if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
+            console.log("started")
+            Screen.load("started")
+
+            // flags
+            fameState.noFlag = false;
+
+            fameState.isStarting = false;
+            fameState.isStarted = true;        
+        }
+
+        if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
+            console.log("ending")
+            Screen.load("ending")
+
+            // flags
+            fameState.noFlag = false;
+
+            fameState.isStarted = false;
+            fameState.isEnding = true;
+        }
 
 
-    if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == false) {
-        fameState.itsTheFinalCountDown = true;
+
+
+
+
+
+        return;
+
+
+
+        console.log(server);
+        /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
+            isQuestionLoaded, currentQuestion } */
         
-        // clear intermission screen
-        fameState.isIntermission = false;           
-        gameWindowElement.innerHTML = "";
+        // console.log("game.isActive", isActive, "fameState.isActive", fameState.isActive, "server.nextGameIn", server.nextGameIn);
+
+        if(server.isActive) {
+
+            game.startGame()
+        }
         
-        game = new Games("game-window", "generic", "slang")
-        game.startCountDown(server.nextGameIn)
-    }
 
-    // load question
-    if (fameState.isActive == true) {
-        fameState.question = fameState.currentQuestion
-    }
 
-    // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
-    
-});
+        switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
+
+            // start game
+            case server.startGameFlag == true:
+                fameState.isCountDown = false;
+                fameState.itsTheFinalCountDown = false;
+
+                document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
+                game.startGame()
+                fameState.isActive = true;
+                break;
+
+            // end game scenario where the user had logged in mid game. removes displayInProgressScreen animation
+            case server.endGameFlag == true && fameState.isActive == false:
+                displayInProgressScreen(false)
+                break;
+
+            // end game
+            case server.endGameFlag == true && Object.keys(game).length != 0:
+                game.endGame(5)    
+                fameState.isActive = false;
+                break;
+
+            // start header countdown
+            case server.nextGameIn && fameState.isCountDown == false:
+                fameState.isCountDown = true;
+                document.querySelector(".next-game-in").innerHTML = server.nextGameIn
+                document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
+                break;
+
+            // update header countdown and possibly put up the intermission screen
+            case server.nextGameIn && fameState.isCountDown == true:
+                
+                // header countdown
+                document.querySelector(".next-game-in").innerHTML = server.nextGameIn
+
+                // intermission screen, awaits a clear window from the .endGame method of Games
+                if(fameState.itsTheFinalCountDown == false && fameState.isIntermission == false && gameWindowElement.childElementCount == 0){
+                    fameState.isIntermission = true;
+                    displayIntermissionScreen();
+                }
+                break;          
+
+            // user logged in mid-game, show in progress screen
+            case server.nextGameIn == null && server.isActive == true && fameState.isActive == false && fameState.isInProgress == false:
+                console.log("logged in mid game")
+                fameState.isInProgress = true;
+                displayInProgressScreen()
+                break;
+
+            default:
+        }
+        
+        // init game and start final countdown
+        if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == true) {
+            fameState.isInProgress == false;
+            game.count(server.nextGameIn)
+        }
+
+
+        if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == false) {
+            fameState.itsTheFinalCountDown = true;
+            
+            // clear intermission screen
+            fameState.isIntermission = false;           
+            gameWindowElement.innerHTML = "";
+            
+            game = new Games("game-window", "generic", "slang")
+            game.startCountDown(server.nextGameIn)
+        }
+
+        // load question
+        if (fameState.isActive == true) {
+            fameState.question = fameState.currentQuestion
+        }
+
+        // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+        
+    });
+
 
 
 /* -------------------- CHAT --------------------- */
+
 
 document.getElementById('form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
     let text = messageInputElement.value
     if(!text) return false
-    let username = currentUserName || 'someone';
+    let username = user.username || 'someone';
     
     socket.emit('chat_message', { text, username })
 })
@@ -230,7 +228,7 @@ document.getElementById('form').addEventListener('submit', e => {
 // --- receive chat
 socket.on('chat_message_response', msg => { 
     let user = userInputElement.value || 'someone'; 
-    let messageClass = currentUserName == msg.username
+    let messageClass = user.username == msg.username
         ? 'message-output is-current-user'
         : 'message-output'
 
