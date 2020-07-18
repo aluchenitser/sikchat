@@ -1,5 +1,6 @@
 var Screen = {
     markup: null,
+    tick: 0,
     vm: {},
     load(type, name, display = true) {
         let self = this;

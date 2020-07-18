@@ -58,7 +58,7 @@ if(debug == "host") {
 
 var states = ["init", ]
 socket.on('tick', server => {
-    console.log("t")
+
     fameState.time = server.time
     console.log(fameState.time)
 
@@ -68,26 +68,26 @@ socket.on('tick', server => {
 
         // flags
         fameState.noFlag = false;
-        
         fameState.isEnding = false;
         fameState.isIntermission = true;
     }
 
     if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
         console.log("starting")
-        Screen.load("starting")
+        Screen.load("starting").done(() => {
+            Screen.populate("count-down", fameState.time.ticks - fameState.time.tick)
+        })
 
-        Screen.populate("count-down", fameState.time.ticks - fameState.time.tick)
 
         // flags
         fameState.noFlag = false;
-
         fameState.isIntermission = false;
         fameState.isStarting = true;        
     }
 
-    // TODO figure out counting algorithm
-    if(server.time.current == "starting" && )
+    if(server.time.current == "starting" && fameState.isStarting == true && fameState.time.tick > 1) {
+        Screen.populate("count-down", fameState.time.ticks - fameState.time.tick)
+    }
 
     if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
         console.log("started")
@@ -95,7 +95,6 @@ socket.on('tick', server => {
 
         // flags
         fameState.noFlag = false;
-
         fameState.isStarting = false;
         fameState.isStarted = true;        
     }
@@ -106,7 +105,6 @@ socket.on('tick', server => {
 
         // flags
         fameState.noFlag = false;
-
         fameState.isStarted = false;
         fameState.isEnding = true;
     }
