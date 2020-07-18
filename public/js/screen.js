@@ -43,7 +43,7 @@ var Screen = {
     
     display(id) {       // id optional
         if(this.markup) {
-            console.log(this.markup)
+            // console.log(this.markup)
             
             let windowElement = document.getElementById(id ? id : "game-window")
             windowElement.textContent = ''
@@ -63,7 +63,10 @@ var Screen = {
 
         },
         started: {
-            "path": "../components/started/started.html"
+            "path": "../components/started/started.html",
+            "topic": null,
+            "question": null,
+            "answer": null
 
         },
         ending: {

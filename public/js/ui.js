@@ -60,7 +60,9 @@ var states = ["init", ]
 socket.on('tick', server => {
 
     fameState.time = server.time
-    console.log(fameState.time)
+    fameState.qBank = server.qBank
+    // console.log(fameState.time)
+    // console.log(fameState.qBank)
 
     if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
         console.log("intermission")
@@ -91,12 +93,28 @@ socket.on('tick', server => {
 
     if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
         console.log("started")
-        Screen.load("started")
+        Screen.load("started").done(() => {
+            Screen.populate("topic", fameState.qBank.topic)
+            Screen.populate("question", fameState.qBank.currentQuestion.question)
+            Screen.populate("answer", fameState.qBank.currentQuestion.answer)
+        
+            console.log("alloted: ", fameState.qBank.currentQuestion.timeAllotted, "left: ", fameState.qBank.currentQuestion.timeLeft)
+        })
 
         // flags
         fameState.noFlag = false;
         fameState.isStarting = false;
         fameState.isStarted = true;        
+    }
+
+    if(server.time.current == "started" && fameState.isStarted == true && fameState.time.tick > 1) {
+        // console.log(Screen.vm)
+        
+        Screen.populate("topic", fameState.qBank.topic)
+        Screen.populate("question", fameState.qBank.currentQuestion.question)
+        Screen.populate("answer", fameState.qBank.currentQuestion.answer)
+
+        console.log("alloted: ", fameState.qBank.currentQuestion.timeAllotted, "left: ", fameState.qBank.currentQuestion.timeLeft)
     }
 
     if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {

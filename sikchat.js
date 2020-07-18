@@ -429,8 +429,11 @@ function consoleLatestUserRepo(mode)
 /* ------------------ UTILITY FUNCTIONS ------------------- */
 
 // snips the more repo esque properties to save bandwidth
+// look at a questions_xyz.json file to see what the object looks like
 function mapGameStateForEmit() {
     let clone = JSON.parse(JSON.stringify(gameState))
+    clone.qBank.topic = gameState.qBank.loaded.meta.topic
+
     delete clone.qBank.loaded
     delete clone.qBank.questionStack
     delete clone.time.questionStack
