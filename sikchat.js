@@ -37,18 +37,18 @@ const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                 
 // time window
 const timeConstants = {
     // in minutes
-    WINDOW: 1,              // components in seconds must add up to this window in minutes
+    WINDOW: 2,              // components in seconds must add up to this window in minutes
 
     // in seconds
     INTERMISSION: 10,
     STARTING: 10,
-    STARTED: 30,
+    STARTED: 90,
     ENDING: 10,
 
     // question length
-    QUESTION_EASY: 5,
-    QUESTION_MEDIUM: 10,
-    QUESTION_HARD: 15,
+    QUESTION_EASY: 10,
+    QUESTION_MEDIUM: 15,
+    QUESTION_HARD: 20,
 }
 
 // game state
@@ -84,7 +84,11 @@ var gameState = {
         },
         
         // dynamic
-        currentQuestion: {},
+        currentQuestion: {
+            question: "",
+            answer: "",
+            difficulty: ""
+        },
         questionStack: []
     },
 
@@ -92,11 +96,12 @@ var gameState = {
     logString: null,
 }
 
+var userRepo = [];
+
 /* ----------------- GAME LOOP ----------------- */
 checkWindowIntegrity();
 initialTimeWindow()
 printTimeWindow()
-var userRepo = [];
 
 // time window starts at intermission
 setInterval(() => {
@@ -199,16 +204,16 @@ app.get('/', function(req, res) {
     // create or detect user & cookie
     if(!req.cookies.userData) {
         console.log("new cookie")
-        let user = new User()
-        userRepo.push(user)
 
-        // TODO: figure our "domain" cookie attribute
-        res.cookie("userData", JSON.stringify(user), {path: "/", expires: dayjs().add(1,"y").toDate()});
+        // add the user to the server
+        createUserSendCookie()
     }
     else {
         console.log("old cookie")
+        // read cookie
         let data = JSON.parse(req.cookies.userData)
 
+        // find a match in the userRepo
         let i = 0;
         let found = false;
         while(i < userRepo.length) {
@@ -219,12 +224,20 @@ app.get('/', function(req, res) {
             i++;
         }
         
-        // should repopulate a corrupt cookie?
-        res.cookie("userData", JSON.stringify(found ? userRepo[i] : data))
+        // cookie doesn't match with anything in the userRepo
         if(found == false) {
-            console.log("not found")
-            userRepo.push(data)
+            console.log("bogus user cookie, sending a new one")
+            createUserSendCookie()
         }
+
+    }
+    function createUserSendCookie() {
+            // add the user to the server
+            var user = new User()
+            userRepo.push(user)
+
+            // add the user to the client
+            res.cookie("userData", JSON.stringify(user), {path: "/", expires: dayjs().add(1,"y").toDate()});
     }
 });
 
@@ -236,6 +249,14 @@ io.on('connection', (socket) => {
     socket.on('chat_message', (msg) => {            // { username, text }
         io.emit('chat_message_response', msg);
         console.log(msg)
+        if(gameState.time.current == "started") {
+            if(gameState.qBank.currentQuestion.question.indexOf(msg.text) >= 0) {
+                console.log("correct!!")
+            }
+            else {
+                console.log("wrong!!")
+            }
+        }
     })
     
     socket.on('username_update', (msg) => {         // { username, guid }

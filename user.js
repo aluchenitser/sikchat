@@ -1,3 +1,5 @@
+var dayjs = require('dayjs')
+
 module.exports = {
     User: class User {
         constructor(username = null, domain = null) {
