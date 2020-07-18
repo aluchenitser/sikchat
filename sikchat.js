@@ -30,7 +30,7 @@ if(process.argv[2] == "--host" || process.argv[2] == "-h") {
 
 app.use(express.static(__dirname + "/public/"));
 
-var usersRepo = [];
+
 
 const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
 
@@ -96,6 +96,7 @@ var gameState = {
 checkWindowIntegrity();
 initialTimeWindow()
 printTimeWindow()
+var userRepo = [];
 
 // time window starts at intermission
 setInterval(() => {
@@ -197,19 +198,21 @@ app.get('/', function(req, res) {
     
     // create or detect user & cookie
     if(!req.cookies.userData) {
+        console.log("new cookie")
         let user = new User()
-        usersRepo.push(user)
+        userRepo.push(user)
 
         // TODO: figure our "domain" cookie attribute
         res.cookie("userData", JSON.stringify(user), {path: "/", expires: dayjs().add(1,"y").toDate()});
     }
     else {
+        console.log("old cookie")
         let data = JSON.parse(req.cookies.userData)
 
         let i = 0;
         let found = false;
-        while(i < usersRepo.length) {
-            if (usersRepo[i].guid == data.guid) {
+        while(i < userRepo.length) {
+            if (userRepo[i].guid == data.guid) {
                 found = true;
                 break;
             }
@@ -217,8 +220,11 @@ app.get('/', function(req, res) {
         }
         
         // should repopulate a corrupt cookie?
-        res.cookie("userData", JSON.stringify(found ? usersRepo[i] : data))
-        if(found == false) usersRepo.push(data)
+        res.cookie("userData", JSON.stringify(found ? userRepo[i] : data))
+        if(found == false) {
+            console.log("not found")
+            userRepo.push(data)
+        }
     }
 });
 
@@ -237,8 +243,8 @@ io.on('connection', (socket) => {
 
         // look for duplicate username
         let i = 0;
-        while(i < usersRepo.length) {
-            if (usersRepo[i].username == msg.username) {
+        while(i < userRepo.length) {
+            if (userRepo[i].username == msg.username) {
                 foundDuplicate = true;
                 break;
             }
@@ -248,9 +254,9 @@ io.on('connection', (socket) => {
         // if all is clear, update the user with the new username
         let j = 0;
         if(!foundDuplicate) {
-            while(j < usersRepo.length) {
-                if (usersRepo[j].guid == msg.guid) {
-                    usersRepo[j].username = msg.username;
+            while(j < userRepo.length) {
+                if (userRepo[j].guid == msg.guid) {
+                    userRepo[j].username = msg.username;
                     break;
                 }
                 j++;
@@ -412,17 +418,17 @@ function consoleLatestUserRepo(mode)
     console.log("%cuserRepo", "color: green")
     switch(mode) {
         case "simple":
-            if(usersRepo.length == 0) {
+            if(userRepo.length == 0) {
                 console.log("%cempty", "color: green");
                 return;
             }
-            usersRepo.forEach(item => {
+            userRepo.forEach(item => {
                 console.log("%c" + item.username + " " + item.guid, "color: green");
             })
             break;
         // show whole object
         default:
-            console.log(usersRepo);
+            console.log(userRepo);
     }
 }
 
