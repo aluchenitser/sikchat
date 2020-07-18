@@ -31,7 +31,9 @@ var Screen = {
     },
 
     populate(property, value) {
-        if(vm[property]) {
+        if(this.vm.hasOwnProperty(property)) {
+            this.vm[property] = value
+           
             document.querySelectorAll(`[sik=${property}]`).forEach((markup)=> {
                 markup.textContent = value
             })
@@ -51,19 +53,20 @@ var Screen = {
     // read only: properties here match [sik] attributes in view files
     _models: {
         intermission: {
-            path: "../components/intermission/intermission.html"
+            "path": "../components/intermission/intermission.html"
             
         },
         starting: {
-            path: "../components/starting/starting.html"
+            "path": "../components/starting/starting.html",
+            "count-down": null
 
         },
         started: {
-            path: "../components/started/started.html"
+            "path": "../components/started/started.html"
 
         },
         ending: {
-            path: "../components/ending/ending.html"
+            "path": "../components/ending/ending.html"
 
         }
     }

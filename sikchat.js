@@ -58,10 +58,12 @@ var gameState = {
     time: {
         intermission: null,
         starting: null,
-        start: null,
+        started: null,
         ending: null,
         next: null,
-        current: ""
+        current: "",
+        tick: null,
+        ticks: null
     },
 
     // game loop flags
@@ -120,6 +122,8 @@ setInterval(() => {
         //flags
         gameState.isInit = false
 
+        gameState.time.tick = 0
+        gameState.time.ticks = timeConstants.INTERMISSION
         gameState.isEnding = false
         gameState.time.current = "intermission"
         gameState.isIntermission = true
@@ -127,8 +131,12 @@ setInterval(() => {
 
     // proceed to starting
     if(dayjs().isSameOrAfter(gameState.time.starting) && gameState.isIntermission) { 
+        
+
 
         // flags
+        gameState.time.tick = 0
+        gameState.time.ticks = timeConstants.STARTING
         gameState.isIntermission = false;
         gameState.time.current = "starting";
         gameState.isStarting = true;
@@ -140,6 +148,8 @@ setInterval(() => {
         console.log("started");
         
         // flags
+        gameState.time.tick = 0
+        gameState.time.ticks = timeConstants.STARTED
         gameState.isStarting = false;
         gameState.time.current = "started";
         gameState.isStarted = true;
@@ -159,15 +169,18 @@ setInterval(() => {
     // proceed to ending
     if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
     
-        // flag
+        // flags
+        gameState.time.tick = 0
+        gameState.time.ticks = timeConstants.ENDING
         gameState.isStarted = false;
         gameState.time.current = "ending";
         gameState.isEnding = true;
     }    
     console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
-    
-    let gameStateLite = mapGameStateForEmit()
-    io.emit("tick", gameStateLite)
+    gameState.time.tick++               // used to help client know where in window we are
+
+    let gameStateEmit = mapGameStateForEmit()
+    io.emit("tick", gameStateEmit)
 }, 1000)
 
 /* ------------------- ROUTER ------------------- */
@@ -179,18 +192,17 @@ app.get('/', function(req, res) {
     // send front end code
     res.sendFile(__dirname + '/index.html');
 
-    // --- detect or create user cookie
-
-    // create user & cookie
+    // disable debug mode
+    res.cookie("debug", "false", {path: "/"});
+    
+    // create or detect user & cookie
     if(!req.cookies.userData) {
         let user = new User()
         usersRepo.push(user)
 
         // TODO: figure our "domain" cookie attribute
-        res.cookie("debug", "false", {path: "/"});
         res.cookie("userData", JSON.stringify(user), {path: "/", expires: dayjs().add(1,"y").toDate()});
     }
-    // load existing user & cookie
     else {
         let data = JSON.parse(req.cookies.userData)
 
@@ -421,6 +433,13 @@ function mapGameStateForEmit() {
     let clone = JSON.parse(JSON.stringify(gameState))
     delete clone.qBank.loaded
     delete clone.qBank.questionStack
+    delete clone.time.questionStack
+
+    delete clone.time.intermission
+    delete clone.time.starting
+    delete clone.time.started
+    delete clone.time.ending
+    delete clone.time.next
 
     return clone;
 }

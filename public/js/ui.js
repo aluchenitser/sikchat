@@ -35,12 +35,9 @@ var fameState = {
 
     // live time checkpoints
     time: {
-        intermission: null,
-        starting: null,
-        start: null,
-        ending: null,
-        next: null,
-        current: ""
+        current: "",
+        tick: null,
+        ticks: null
     },
 
     // game loop flags
@@ -59,156 +56,163 @@ if(debug == "host") {
     socket.close()
 }
 
-    var states = ["init", ]
-    socket.on('tick', server => {
-        let state = server.time.current
+var states = ["init", ]
+socket.on('tick', server => {
+    console.log("t")
+    fameState.time = server.time
+    console.log(fameState.time)
 
-        if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
-            console.log("intermission")
-            Screen.load("intermission")
+    if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
+        console.log("intermission")
+        Screen.load("intermission")
 
-            // flags
-            fameState.noFlag = false;
-            
-            fameState.isEnding = false;
-            fameState.isIntermission = true;
-        }
-
-        if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
-            console.log("starting")
-            Screen.load("starting")
-
-            // flags
-            fameState.noFlag = false;
-
-            fameState.isIntermission = false;
-            fameState.isStarting = true;        
-        }
-
-        if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
-            console.log("started")
-            Screen.load("started")
-
-            // flags
-            fameState.noFlag = false;
-
-            fameState.isStarting = false;
-            fameState.isStarted = true;        
-        }
-
-        if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
-            console.log("ending")
-            Screen.load("ending")
-
-            // flags
-            fameState.noFlag = false;
-
-            fameState.isStarted = false;
-            fameState.isEnding = true;
-        }
-
-
-
-
-
-
-
-        return;
-
-
-
-        console.log(server);
-        /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
-            isQuestionLoaded, currentQuestion } */
+        // flags
+        fameState.noFlag = false;
         
-        // console.log("game.isActive", isActive, "fameState.isActive", fameState.isActive, "server.nextGameIn", server.nextGameIn);
+        fameState.isEnding = false;
+        fameState.isIntermission = true;
+    }
 
-        if(server.isActive) {
+    if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
+        console.log("starting")
+        Screen.load("starting")
 
+        Screen.populate("count-down", fameState.time.ticks - fameState.time.tick)
+
+        // flags
+        fameState.noFlag = false;
+
+        fameState.isIntermission = false;
+        fameState.isStarting = true;        
+    }
+
+    // TODO figure out counting algorithm
+    if(server.time.current == "starting" && )
+
+    if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
+        console.log("started")
+        Screen.load("started")
+
+        // flags
+        fameState.noFlag = false;
+
+        fameState.isStarting = false;
+        fameState.isStarted = true;        
+    }
+
+    if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
+        console.log("ending")
+        Screen.load("ending")
+
+        // flags
+        fameState.noFlag = false;
+
+        fameState.isStarted = false;
+        fameState.isEnding = true;
+    }
+
+
+
+
+
+
+
+    return;
+
+
+
+    console.log(server);
+    /* { startTime, endTime, nextGameIn, isActive, logString, startGameFlag, endGameFlag,
+        isQuestionLoaded, currentQuestion } */
+    
+    // console.log("game.isActive", isActive, "fameState.isActive", fameState.isActive, "server.nextGameIn", server.nextGameIn);
+
+    if(server.isActive) {
+
+        game.startGame()
+    }
+    
+
+
+    switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
+
+        // start game
+        case server.startGameFlag == true:
+            fameState.isCountDown = false;
+            fameState.itsTheFinalCountDown = false;
+
+            document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
             game.startGame()
-        }
-        
+            fameState.isActive = true;
+            break;
 
+        // end game scenario where the user had logged in mid game. removes displayInProgressScreen animation
+        case server.endGameFlag == true && fameState.isActive == false:
+            displayInProgressScreen(false)
+            break;
 
-        switch(true) {                          // TODO: switch may not be ideal here since not all scenarios are mutually exclusive
+        // end game
+        case server.endGameFlag == true && Object.keys(game).length != 0:
+            game.endGame(5)    
+            fameState.isActive = false;
+            break;
 
-            // start game
-            case server.startGameFlag == true:
-                fameState.isCountDown = false;
-                fameState.itsTheFinalCountDown = false;
+        // start header countdown
+        case server.nextGameIn && fameState.isCountDown == false:
+            fameState.isCountDown = true;
+            document.querySelector(".next-game-in").innerHTML = server.nextGameIn
+            document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
+            break;
 
-                document.querySelector(".next-game-in-wrapper").style.visibility = "hidden"
-                game.startGame()
-                fameState.isActive = true;
-                break;
-
-            // end game scenario where the user had logged in mid game. removes displayInProgressScreen animation
-            case server.endGameFlag == true && fameState.isActive == false:
-                displayInProgressScreen(false)
-                break;
-
-            // end game
-            case server.endGameFlag == true && Object.keys(game).length != 0:
-                game.endGame(5)    
-                fameState.isActive = false;
-                break;
-
-            // start header countdown
-            case server.nextGameIn && fameState.isCountDown == false:
-                fameState.isCountDown = true;
-                document.querySelector(".next-game-in").innerHTML = server.nextGameIn
-                document.querySelector(".next-game-in-wrapper").style.visibility = "visible"
-                break;
-
-            // update header countdown and possibly put up the intermission screen
-            case server.nextGameIn && fameState.isCountDown == true:
-                
-                // header countdown
-                document.querySelector(".next-game-in").innerHTML = server.nextGameIn
-
-                // intermission screen, awaits a clear window from the .endGame method of Games
-                if(fameState.itsTheFinalCountDown == false && fameState.isIntermission == false && gameWindowElement.childElementCount == 0){
-                    fameState.isIntermission = true;
-                    displayIntermissionScreen();
-                }
-                break;          
-
-            // user logged in mid-game, show in progress screen
-            case server.nextGameIn == null && server.isActive == true && fameState.isActive == false && fameState.isInProgress == false:
-                console.log("logged in mid game")
-                fameState.isInProgress = true;
-                displayInProgressScreen()
-                break;
-
-            default:
-        }
-        
-        // init game and start final countdown
-        if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == true) {
-            fameState.isInProgress == false;
-            game.count(server.nextGameIn)
-        }
-
-
-        if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == false) {
-            fameState.itsTheFinalCountDown = true;
+        // update header countdown and possibly put up the intermission screen
+        case server.nextGameIn && fameState.isCountDown == true:
             
-            // clear intermission screen
-            fameState.isIntermission = false;           
-            gameWindowElement.innerHTML = "";
-            
-            game = new Games("game-window", "generic", "slang")
-            game.startCountDown(server.nextGameIn)
-        }
+            // header countdown
+            document.querySelector(".next-game-in").innerHTML = server.nextGameIn
 
-        // load question
-        if (fameState.isActive == true) {
-            fameState.question = fameState.currentQuestion
-        }
+            // intermission screen, awaits a clear window from the .endGame method of Games
+            if(fameState.itsTheFinalCountDown == false && fameState.isIntermission == false && gameWindowElement.childElementCount == 0){
+                fameState.isIntermission = true;
+                displayIntermissionScreen();
+            }
+            break;          
 
-        // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+        // user logged in mid-game, show in progress screen
+        case server.nextGameIn == null && server.isActive == true && fameState.isActive == false && fameState.isInProgress == false:
+            console.log("logged in mid game")
+            fameState.isInProgress = true;
+            displayInProgressScreen()
+            break;
+
+        default:
+    }
+    
+    // init game and start final countdown
+    if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == true) {
+        fameState.isInProgress == false;
+        game.count(server.nextGameIn)
+    }
+
+
+    if (server.nextGameIn && server.nextGameIn <= 10 && fameState.itsTheFinalCountDown == false) {
+        fameState.itsTheFinalCountDown = true;
         
-    });
+        // clear intermission screen
+        fameState.isIntermission = false;           
+        gameWindowElement.innerHTML = "";
+        
+        game = new Games("game-window", "generic", "slang")
+        game.startCountDown(server.nextGameIn)
+    }
+
+    // load question
+    if (fameState.isActive == true) {
+        fameState.question = fameState.currentQuestion
+    }
+
+    // console.log("startGameFlag:", startGameFlag, "endGameFlag:", endGameFlag)
+    
+});
 
 
 
