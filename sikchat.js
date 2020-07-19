@@ -54,9 +54,9 @@ const timeConstants = {
 }
 
 const scoreConstants = {
-    EASY: 4,
-    MEDIUM: 9,
-    HARD: 15
+    "easy": 4,
+    "medium": 9,
+    "hard": 15
 }
 
 // game state
@@ -269,6 +269,12 @@ io.on('connection', (socket) => {
             if(gameState.qBank.currentQuestion.answer.indexOf(chatMessage.text) >= 0 && socket.user.lastQuestionAnswered != questionCount) {
 
                 socket.user.lastQuestionAnswered = questionCount
+
+                socket.user.answered++
+                socket.user.totalAnswered++
+                
+                socket.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
+                socket.user.totalPoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
 
                 let successMessage = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
