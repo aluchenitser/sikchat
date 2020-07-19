@@ -23,17 +23,12 @@
         <link rel="stylesheet" type="text/css" href="components/ending/ending.css">
     </head>
     <body>
-        <div class="tiny-header-user-name"></div>
+        <!-- <div class="tiny-header-user-name"></div> -->
         <div class="header">
-            <form id="form">
-                <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button" tabindex="-1"></button>
-                <div class="next-game-in-wrapper">
-                    <span>next game:</span><br /><span class="next-game-in">10</span>s
-                </div>
-            </form>
+            <div class="form-column">
 
-            <div class="spacer"></div>
-
+            </div>
+            <div class="spacer-column"></div>
             <div class="logo-column">
                 <div class="ghost-drawer"><div class="ghost-logo">sikchat</div></div>
                 <div class="drawer">
@@ -60,6 +55,19 @@
                 </div>
             </div>
         </div>
+       
+        <div class="chat-bar">
+            <form id="chat-form" class="form-column">
+                <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button" tabindex="-1"></button>
+                <div class="next-game-in-wrapper">
+                    <span>next game:</span><br /><span class="next-game-in">10</span>s
+                </div>
+            </form>
+
+            <div class="spacer-column"></div>
+            <div class="logo-column"> sikchat </div>
+        </div>
+
         <div class="chat-body">
                 <div id="messages"></div>
                 <div id="game-window"></div>

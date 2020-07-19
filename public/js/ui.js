@@ -11,7 +11,7 @@ var bogusUsernameElement = document.querySelector('.bogus-username')
 var inUseUsernameElement = document.querySelector('.in-use-username')
 var checkingUsernameElement = document.querySelector('.checking-username')
 var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
-var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
+// var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
 var gameWindowElement = document.getElementById("game-window")
 
 var messagesElement = document.getElementById("messages")
@@ -27,7 +27,7 @@ var messagesElement = document.getElementById("messages")
 
     user.username = user.username || "someone"
     userInputElement.value = user.username
-    tinyHeaderUserNameElement.innerHTML = user.username
+    // tinyHeaderUserNameElement.innerHTML = user.username
 
 
 // game state
@@ -133,7 +133,7 @@ socket.on('tick', server => {
 
 /* -------------------- CHAT --------------------- */
 
-document.getElementById('form').addEventListener('submit', e => {
+document.getElementById('chat-form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
     let text = messageInputElement.value
@@ -152,7 +152,7 @@ socket.on('chat_message_response', msg => {       // { username, text }
 
     // add new message to UI
     const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
-    $(markup).appendTo("#messages")
+    $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })
 

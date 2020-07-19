@@ -34,14 +34,14 @@ body.drawer-is-open .tiny-header-user-name {
 }
 
 .header {
+  position: relative;
   display: flex;
   color: white;
   justify-content: space-between;
   height: 47px;
-  position: relative;
   z-index: 1;
 }
-.header #form {
+.header .form-column {
   display: flex;
   position: relative;
   width: 100%;
@@ -49,36 +49,7 @@ body.drawer-is-open .tiny-header-user-name {
   border-radius: 0 0 0 21px;
   background-color: #EE90EE;
 }
-.header #form #message-input, .header #form button {
-  font-size: 16px;
-  outline: none;
-  border: none;
-  height: 100%;
-}
-.header #form #message-input {
-  padding: 0;
-  flex: 1 1 auto;
-  border-radius: 0 0 0 7px;
-  padding-left: 10px;
-}
-.header #form #message-input:focus, .header #form #message-input:focus + #submit-button {
-  border-bottom: 1px solid #d875d8;
-}
-.header #form #submit-button {
-  color: white;
-  flex: 0 0 35px;
-  background-color: #efefef;
-  transition: background-color 0.1s;
-  border-radius: 0 31px 0 0;
-}
-.header #form #submit-button:focus {
-  text-decoration: underline;
-  background-color: #cecece;
-}
-.header #form #submit-button:hover {
-  cursor: pointer;
-}
-.header #form .next-game-in-wrapper {
+.header .form-column .next-game-in-wrapper {
   visibility: hidden;
   right: -96px;
   position: absolute;
@@ -87,10 +58,10 @@ body.drawer-is-open .tiny-header-user-name {
   line-height: 1;
   letter-spacing: -0.1px;
 }
-.header #form .next-game-in-wrapper > span {
+.header .form-column .next-game-in-wrapper > span {
   color: white;
 }
-.header .spacer {
+.header .spacer-column {
   background-color: #EE90EE;
 }
 .header .logo-column {
@@ -171,7 +142,7 @@ body.drawer-is-open .tiny-header-user-name {
 .header .logo-column .drawer .drawer-handle:hover {
   cursor: pointer;
 }
-.header .logo-column .drawer .drawer-handle #logo {
+.header .logo-column .drawer .drawer-handle .logo {
   font-size: 20px;
   padding: 0 15px;
 }
@@ -180,6 +151,81 @@ body.drawer-is-open .header .logo-column .drawer {
 }
 body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   transform: rotate(4deg);
+}
+
+.chat-bar {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 47px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+.chat-bar .form-column {
+  display: flex;
+  position: relative;
+  width: 100%;
+  padding: 12px 0 10px 15px;
+  border-radius: 21px 0 0 0;
+  background-color: #EE90EE;
+}
+.chat-bar .form-column #message-input, .chat-bar .form-column button {
+  font-size: 16px;
+  outline: none;
+  border: none;
+  height: 100%;
+}
+.chat-bar .form-column #message-input {
+  padding: 0;
+  flex: 1 1 auto;
+  border-radius: 7px 0 0 0;
+  padding-left: 10px;
+}
+.chat-bar .form-column #message-input:focus, .chat-bar .form-column #message-input:focus + #submit-button {
+  border-bottom: 1px solid #d875d8;
+}
+.chat-bar .form-column #submit-button {
+  color: white;
+  flex: 0 0 35px;
+  background-color: #efefef;
+  transition: background-color 0.1s;
+  border-radius: 0 31px 0 0;
+}
+.chat-bar .form-column #submit-button:focus {
+  text-decoration: underline;
+  background-color: #cecece;
+}
+.chat-bar .form-column #submit-button:hover {
+  cursor: pointer;
+}
+.chat-bar .form-column .next-game-in-wrapper {
+  visibility: hidden;
+  right: -96px;
+  position: absolute;
+  font-size: 13px;
+  bottom: 11px;
+  line-height: 1;
+  letter-spacing: -0.1px;
+}
+.chat-bar .form-column .next-game-in-wrapper > span {
+  color: white;
+}
+.chat-bar .spacer-column {
+  background-color: #EE90EE;
+}
+.chat-bar .logo-column {
+  flex: 0 1 auto;
+  background-color: #EE90EE;
+  padding: 12px 15px 10px 0;
+  transition: transform 0.5s;
+  height: 47px;
+  z-index: 1;
+  position: relative;
+  position: relative;
+  font-size: 22px;
+  text-align: right;
+  font-style: italic;
 }
 
 /* ----------------- BODY ----------------- */
@@ -191,7 +237,7 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   padding: 0 15px;
   overflow-y: scroll;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 .chat-body #messages .message-output {
   margin-top: 11px;
@@ -225,13 +271,13 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
 
 /* ---------------- RESPONSIVE ----------------- */
 @media (max-width: 991px) {
-  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
+  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer, .chat-body .spacer {
+  .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
     flex: 0.1 1 auto;
   }
-  .header .logo-column, .header #game-window, .chat-body .logo-column, .chat-body #game-window {
+  .header .logo-column, .header #game-window, .chat-bar .logo-column, .chat-bar #game-window, .chat-body .logo-column, .chat-body #game-window {
     flex: 0.5 1 0;
   }
 
@@ -240,44 +286,44 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
   }
 }
 @media (max-width: 1199px) {
-  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
+  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer, .chat-body .spacer {
+  .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
     flex: 0.2 1 auto;
   }
-  .header .logo-column, .chat-body .logo-column {
+  .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header #game-window, .chat-body #game-window {
+  .header #game-window, .chat-bar #game-window, .chat-body #game-window {
     flex: 0.7 1 0;
   }
 }
 @media (min-width: 1200px) {
-  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
+  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer, .chat-body .spacer {
+  .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
     flex: 0.35 1 auto;
   }
-  .header .logo-column, .chat-body .logo-column {
+  .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header #game-window, .chat-body #game-window {
+  .header #game-window, .chat-bar #game-window, .chat-body #game-window {
     flex: 0.85 1 0;
   }
 }
 @media (min-width: 1500px) {
-  .header #form, .header #messages, .chat-body #form, .chat-body #messages {
+  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
     flex: 1.5 1 0;
   }
-  .header .spacer, .chat-body .spacer {
+  .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
     flex: 0.5 1 auto;
   }
-  .header .logo-column, .chat-body .logo-column {
+  .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header #game-window, .chat-body #game-window {
+  .header #game-window, .chat-bar #game-window, .chat-body #game-window {
     flex: 1 1 0;
   }
 }
