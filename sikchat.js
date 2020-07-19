@@ -209,15 +209,15 @@ app.get('/', function(req, res) {
     res.cookie("sik_debug", "false", {path: "/"});
     
     // create or detect user & cookie
-    if(req.cookies.sik_user == false) {
+    if(req.cookies.sik_id == undefined) {
         createUser()
     }
     else {
-        let guid = JSON.parse(req.cookies.userData)
+        let guid = JSON.parse(req.cookies.sik_id)
         
         // refresh user stats
         if(userRepo.hasOwnProperty(guid)) {
-            res.cookie("sik_game", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
+            res.cookie("sik_data", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
         }
         // bunk cookie
         else {
@@ -236,8 +236,8 @@ app.get('/', function(req, res) {
         userRepo[guid] = new User()
 
         // send user to the client
-        res.cookie("sik_user", guid, {path: "/", expires: dayjs().add(1,"y").toDate()});
-        res.cookie("sik_game", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
+        res.cookie("sik_id", guid, {path: "/", expires: dayjs().add(1,"y").toDate()});
+        res.cookie("sik_data", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
     }
 
 });
@@ -246,6 +246,7 @@ app.get('/', function(req, res) {
 
 io.on('connection', (socket) => {
     console.log("user connected");
+    
 
     socket.on('chat_message', (chatMessage) => {            // { username, text, chatNumber }
         

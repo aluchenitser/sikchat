@@ -16,28 +16,21 @@ var gameWindowElement = document.getElementById("game-window")
 
 var messagesElement = document.getElementById("messages")
 
-// cookies
-    var user;
-    try {
-        user = JSON.parse(getCookie("userData"))
-    }
-    catch(e) { throw "fail load: browser may have cookies disabled" }
-
-    let debug = getCookie("sik_debug")
-
-    user.username = user.username || "someone"
-    userInputElement.value = user.username
-    // tinyHeaderUserNameElement.innerHTML = user.username
-
-
 // game state
-var fameState = {
+var gameState = {
 
     // live time checkpoints
     time: {
         current: "",
         tick: null,
         ticks: null
+    },
+
+    //user 
+    session: {
+        id: null,
+        data: null,
+        debug: false
     },
 
     // game loop flags
@@ -48,84 +41,105 @@ var fameState = {
     noFlag: true                // similar to isInit on the backend, but doesn't explicitly receive a signal
 }
 
+
+// read session
+!function() {
+    let id = getCookie("sik_id")
+    let data = getCookie("sik_data")
+    let debug = getCookie("sik_debug")
+    
+    if (id == undefined || data == undefined || debug == undefined) {
+        throw "bogus cookies: browser may have cookies disabled"
+    }
+    else {
+        gameState.session.id = id
+        gameState.session.data = data
+        gameState.session.debug = debug
+
+        userInputElement.value = gameState.session.id
+    }
+}()
+
+// console.log(gameState)
+
+// tinyHeaderUserNameElement.innerHTML = user.username
 /*  --------- GAME LOOP ---------- */
 // client states are "intermission", "starting", "started", and "ending"
 // server also has "init"
 var socket = io() 
-if(debug == "host") {
+if(gameState.session.debug == "host") {
     socket.close()
 }
 
-var states = ["init", ]
 socket.on('tick', server => {
 
-    fameState.time = server.time
-    fameState.qBank = server.qBank
-    // console.log(fameState.time)
-    // console.log(fameState.qBank)
+    gameState.time = server.time
+    gameState.qBank = server.qBank
+    // console.log(gameState.time)
+    // console.log(gameState.qBank)
 
-    if(server.time.current == "intermission" && (fameState.isEnding || fameState.noFlag)) {
+    if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
         Screen.load("intermission")
 
         // flags
-        fameState.noFlag = false;
-        fameState.isEnding = false;
-        fameState.isIntermission = true;
+        gameState.noFlag = false;
+        gameState.isEnding = false;
+        gameState.isIntermission = true;
     }
 
-    if(server.time.current == "starting" && (fameState.isIntermission || fameState.noFlag)) {
+    if(server.time.current == "starting" && (gameState.isIntermission || gameState.noFlag)) {
         console.log("starting")
         Screen.load("starting").done(() => {
-            Screen.populate("count-down", fameState.time.ticks - fameState.time.tick)
+            Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
         })
 
 
         // flags
-        fameState.noFlag = false;
-        fameState.isIntermission = false;
-        fameState.isStarting = true;        
+        gameState.noFlag = false;
+        gameState.isIntermission = false;
+        gameState.isStarting = true;        
     }
 
-    if(server.time.current == "starting" && fameState.isStarting == true && fameState.time.tick > 1) {
-        Screen.populate("count-down", fameState.time.ticks - fameState.time.tick)
+    if(server.time.current == "starting" && gameState.isStarting == true && gameState.time.tick > 1) {
+        Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
     }
 
-    if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
+    if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag)) {
         console.log("started")
         Screen.load("started").done(() => {
 
             // first question
-            Screen.populate("topic", fameState.qBank.topic)
-            Screen.populate("question", fameState.qBank.currentQuestion.question)
-            Screen.populate("answer", fameState.qBank.currentQuestion.answer)
+            Screen.populate("topic", gameState.qBank.topic)
+            Screen.populate("question", gameState.qBank.currentQuestion.question)
+            Screen.populate("answer", gameState.qBank.currentQuestion.answer)
         
-            // console.log("timeAlloted: ", fameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", fameState.qBank.currentQuestion.timeLeft)
+            // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
         })
 
         // flags
-        fameState.noFlag = false;
-        fameState.isStarting = false;
-        fameState.isStarted = true;        
+        gameState.noFlag = false;
+        gameState.isStarting = false;
+        gameState.isStarted = true;        
     }
 
-    if(server.time.current == "started" && fameState.isStarted == true && fameState.time.tick > 1) {
+    if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1) {
         
-        Screen.populate("topic", fameState.qBank.topic)
-        Screen.populate("question", fameState.qBank.currentQuestion.question)
-        Screen.populate("answer", fameState.qBank.currentQuestion.answer)
+        Screen.populate("topic", gameState.qBank.topic)
+        Screen.populate("question", gameState.qBank.currentQuestion.question)
+        Screen.populate("answer", gameState.qBank.currentQuestion.answer)
 
-        // console.log("timeAlloted: ", fameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", fameState.qBank.currentQuestion.timeLeft)
+        // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
-    if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
+    if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag)) {
         console.log("ending")
         Screen.load("ending")
 
         // flags
-        fameState.noFlag = false;
-        fameState.isStarted = false;
-        fameState.isEnding = true;
+        gameState.noFlag = false;
+        gameState.isStarted = false;
+        gameState.isEnding = true;
     }
 });
 
@@ -138,20 +152,22 @@ document.getElementById('chat-form').addEventListener('submit', e => {
     messageInputElement.focus()
     let text = messageInputElement.value
     if(!text) return false
-    let username = user.username || 'someone';
+    let id = gameState.session.id;
+    console.log("egress", id)
     
-    socket.emit('chat_message', { text, username })
+    socket.emit('chat_message', { text, id })
 })
 
 // --- receive chat
 socket.on('chat_message_response', msg => {       // { username, text }
+console.log(msg)
     let user = userInputElement.value || 'someone'; 
-    let messageClass = user.username == msg.username
+    let messageClass = user.id == msg.id
         ? 'message-output is-current-user'
         : 'message-output'
 
     // add new message to UI
-    const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
+    const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${msg.id}</span></div><p class='output-text'>${msg.text}</p></div>`
     $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })
