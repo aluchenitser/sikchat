@@ -66,7 +66,10 @@ var gameState = {
 /*  --------- GAME LOOP ---------- */
 // client states are "intermission", "starting", "started", and "ending"
 // server also has "init"
-var socket = io() 
+var socket = io({
+    id: gameState.session.id
+}) 
+
 if(gameState.session.debug == "host") {
     socket.close()
 }

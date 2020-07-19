@@ -12,6 +12,8 @@ var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
 
 const cookieParser = require('cookie-parser')
+var cookie = require('cookie')
+
 app.use(cookieParser());
 
 // requires that load my stuff
@@ -104,6 +106,7 @@ var gameState = {
 
 var userRepo = {};              // stores user accounts, 
 var chatNumber = 0;             // puts an id on each chat
+var questionCount = 0;         // puts an id on each question
 
 /* ----------------- GAME LOOP ----------------- */
 checkWindowIntegrity();
@@ -224,6 +227,8 @@ app.get('/', function(req, res) {
             createUser()
         }
     }
+
+
     function createUser() {
         // new user is guid, a verified user is an email address    
         var guid;
@@ -245,12 +250,12 @@ app.get('/', function(req, res) {
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', (socket) => {
-    console.log("user connected");
+    socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
     
-
+    // console.log(cookie.parse(socket.cookie))
     socket.on('chat_message', (chatMessage) => {            // { username, text, chatNumber }
         
-        // chat number allows the client to decorate individual messages for special events
+        // chat number allows the client to decorate individual messages with visual effects
         chatMessage.chatNumber = chatNumber; 
 
         // broadcast to the room
@@ -260,18 +265,18 @@ io.on('connection', (socket) => {
         // see if they've answered a question correctly
         if(gameState.time.current == "started") {
 
-            // success
-            if(gameState.qBank.currentQuestion.answer.indexOf(chatMessage.text) >= 0) {
+            // correct answer
+            if(gameState.qBank.currentQuestion.answer.indexOf(chatMessage.text) >= 0 && socket.user.lastQuestionAnswered != questionCount) {
+
+                socket.user.lastQuestionAnswered = questionCount
+
                 let successMessage = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
                     chatNumber: chatNumber
                 }
-
+                
+                console.log("correct!!")
                 socket.emit("correct_answer", successMessage)    // { difficulty, chatNumber }
-            }
-            // failure
-            else {
-                console.log("wrong!!")
             }
         }
 
@@ -447,6 +452,7 @@ function loadQuestion() {
   // load question
     gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
     gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
+    gameState.qBank.currentQuestion.questionNumber = ++questionCount
 
     // console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
