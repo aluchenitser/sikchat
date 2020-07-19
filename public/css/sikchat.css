@@ -256,6 +256,7 @@ body.show-header .chat-bar {
 .chat-body #messages .message-output {
   margin-top: 11px;
   letter-spacing: -1.5px;
+  animation: scrollpaper 0.2s;
 }
 .chat-body #messages .message-output .user-name {
   font-size: 12px;
@@ -275,6 +276,14 @@ body.show-header .chat-bar {
 }
 .chat-body #messages .message-output.hard {
   background-color: #ffea0d;
+}
+@keyframes scrollpaper {
+  0% {
+    margin-bottom: -3em;
+  }
+  100% {
+    margin-bottom: 0;
+  }
 }
 .chat-body #game-window {
   position: relative;

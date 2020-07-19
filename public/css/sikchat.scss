@@ -319,6 +319,7 @@ h1, p {
         .message-output {
             margin-top: 11px;
             letter-spacing: -1.5px;
+            animation: scrollpaper .2s;
 
             .user-name {
                 font-size: 12px;
@@ -345,6 +346,11 @@ h1, p {
             &.hard {
                 background-color: #ffea0d;
             }
+        }
+
+        @keyframes scrollpaper {
+            0% { margin-bottom: -3em; }
+            100% { margin-bottom: 0; }
         }
     }
 

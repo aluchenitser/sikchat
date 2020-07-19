@@ -266,7 +266,7 @@ io.on('connection', (socket) => {
         if(gameState.time.current == "started") {
 
             // correct answer
-            if(gameState.qBank.currentQuestion.answer.indexOf(chatMessage.text) >= 0 && socket.user.lastQuestionAnswered != questionCount) {
+            if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.user.lastQuestionAnswered != questionCount) {
 
                 socket.user.lastQuestionAnswered = questionCount
 
