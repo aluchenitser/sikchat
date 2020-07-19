@@ -207,6 +207,15 @@ body.drawer-is-open .header .logo-column .drawer .drawer-handle {
 .chat-body #messages .message-output.is-current-user {
   text-align: right;
 }
+.chat-body #messages .message-output.easy {
+  background-color: #fff9bc;
+}
+.chat-body #messages .message-output.medium {
+  background-color: #fff482;
+}
+.chat-body #messages .message-output.hard {
+  background-color: #ffea0d;
+}
 .chat-body #game-window {
   position: relative;
   display: flex;

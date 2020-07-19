@@ -94,11 +94,13 @@ socket.on('tick', server => {
     if(server.time.current == "started" && (fameState.isStarting || fameState.noFlag)) {
         console.log("started")
         Screen.load("started").done(() => {
+
+            // first question
             Screen.populate("topic", fameState.qBank.topic)
             Screen.populate("question", fameState.qBank.currentQuestion.question)
             Screen.populate("answer", fameState.qBank.currentQuestion.answer)
         
-            console.log("alloted: ", fameState.qBank.currentQuestion.timeAllotted, "left: ", fameState.qBank.currentQuestion.timeLeft)
+            // console.log("timeAlloted: ", fameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", fameState.qBank.currentQuestion.timeLeft)
         })
 
         // flags
@@ -108,13 +110,12 @@ socket.on('tick', server => {
     }
 
     if(server.time.current == "started" && fameState.isStarted == true && fameState.time.tick > 1) {
-        // console.log(Screen.vm)
         
         Screen.populate("topic", fameState.qBank.topic)
         Screen.populate("question", fameState.qBank.currentQuestion.question)
         Screen.populate("answer", fameState.qBank.currentQuestion.answer)
 
-        console.log("alloted: ", fameState.qBank.currentQuestion.timeAllotted, "left: ", fameState.qBank.currentQuestion.timeLeft)
+        // console.log("timeAlloted: ", fameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", fameState.qBank.currentQuestion.timeLeft)
     }
 
     if(server.time.current == "ending" && (fameState.isStarted || fameState.noFlag)) {
@@ -132,7 +133,6 @@ socket.on('tick', server => {
 
 /* -------------------- CHAT --------------------- */
 
-
 document.getElementById('form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
@@ -144,16 +144,22 @@ document.getElementById('form').addEventListener('submit', e => {
 })
 
 // --- receive chat
-socket.on('chat_message_response', msg => { 
+socket.on('chat_message_response', msg => {       // { username, text }
     let user = userInputElement.value || 'someone'; 
     let messageClass = user.username == msg.username
         ? 'message-output is-current-user'
         : 'message-output'
 
     // add new message to UI
-    const markup = `<div class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
+    const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${msg.username}</span></div><p class='output-text'>${msg.text}</p></div>`
     $(markup).appendTo("#messages")
     messageInputElement.value = ""
+})
+
+socket.on("correct_answer", msg => {     // {difficulty, chatNumber}
+    let className = msg.difficulty;
+
+    document.getElementById("chat_" + msg.chatNumber).classList.add(className)
 })
 
 /* -------------------- SESSION --------------------- */

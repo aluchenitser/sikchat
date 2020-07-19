@@ -261,6 +261,19 @@ h1, p {
             &.is-current-user {
                 text-align: right;
             }
+
+            // question answered successfully 
+            &.easy {
+                background-color: #fff9bc;
+            }
+
+            &.medium {
+                background-color: #fff482;
+            }
+
+            &.hard {
+                background-color: #ffea0d;
+            }
         }
     }
 

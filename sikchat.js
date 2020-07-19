@@ -51,6 +51,12 @@ const timeConstants = {
     QUESTION_HARD: 20,
 }
 
+const scoreConstants = {
+    EASY: 4,
+    MEDIUM: 9,
+    HARD: 15
+}
+
 // game state
 var gameState = {
 
@@ -96,7 +102,8 @@ var gameState = {
     logString: null,
 }
 
-var userRepo = [];
+var userRepo = [];              // stores user accounts, 
+var chatNumber = 0;             // puts an id on each chat
 
 /* ----------------- GAME LOOP ----------------- */
 checkWindowIntegrity();
@@ -246,17 +253,34 @@ app.get('/', function(req, res) {
 io.on('connection', (socket) => {
     console.log("user connected");
 
-    socket.on('chat_message', (msg) => {            // { username, text }
-        io.emit('chat_message_response', msg);
-        console.log(msg)
+    socket.on('chat_message', (chatMessage) => {            // { username, text, chatNumber }
+        
+        // chat number allows the client to decorate individual messages for special events
+        chatMessage.chatNumber = chatNumber; 
+
+        // broadcast to the room
+        io.emit('chat_message_response', chatMessage);
+        console.log(chatMessage)
+
+        // see if they've answered a question correctly
         if(gameState.time.current == "started") {
-            if(gameState.qBank.currentQuestion.question.indexOf(msg.text) >= 0) {
-                console.log("correct!!")
+
+            // success
+            if(gameState.qBank.currentQuestion.answer.indexOf(chatMessage.text) >= 0) {
+                let successMessage = {
+                    difficulty: gameState.qBank.currentQuestion.difficulty,
+                    chatNumber: chatNumber
+                }
+
+                socket.emit("correct_answer", successMessage)    // { difficulty, chatNumber }
             }
+            // failure
             else {
                 console.log("wrong!!")
             }
         }
+
+        chatNumber++
     })
     
     socket.on('username_update', (msg) => {         // { username, guid }
@@ -411,7 +435,7 @@ function loadQuestionBank() {
         
         // make up the rest by adding time to the final question
         if(timeLeft > 0) {
-            gameState.qBank.questionStack[gameState.qBank.questionStack.length - 1].timeAllotted += timeConstants.STARTED - timeLeft
+            gameState.qBank.questionStack[gameState.qBank.questionStack.length - 1].timeAllotted += timeLeft
         }
 
         gameState.qBank.questionStack.originalLength = gameState.qBank.questionStack.length
