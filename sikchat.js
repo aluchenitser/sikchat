@@ -102,7 +102,7 @@ var gameState = {
     logString: null,
 }
 
-var userRepo = [];              // stores user accounts, 
+var userRepo = {};              // stores user accounts, 
 var chatNumber = 0;             // puts an id on each chat
 
 /* ----------------- GAME LOOP ----------------- */
@@ -200,52 +200,46 @@ setInterval(() => {
 
 // page request
 app.get('/', function(req, res) {
-    consoleLatestUserRepo("simple");
+    // consoleLatestUserRepo("simple");
     
     // send front end code
     res.sendFile(__dirname + '/index.html');
 
     // disable debug mode
-    res.cookie("debug", "false", {path: "/"});
+    res.cookie("sik_debug", "false", {path: "/"});
     
     // create or detect user & cookie
-    if(!req.cookies.userData) {
-        console.log("new cookie")
-
-        // add the user to the server
-        createUserSendCookie()
+    if(req.cookies.sik_user == false) {
+        createUser()
     }
     else {
-        console.log("old cookie")
-        // read cookie
-        let data = JSON.parse(req.cookies.userData)
-
-        // find a match in the userRepo
-        let i = 0;
-        let found = false;
-        while(i < userRepo.length) {
-            if (userRepo[i].guid == data.guid) {
-                found = true;
-                break;
-            }
-            i++;
-        }
+        let guid = JSON.parse(req.cookies.userData)
         
-        // cookie doesn't match with anything in the userRepo
-        if(found == false) {
-            console.log("bogus user cookie, sending a new one")
-            createUserSendCookie()
+        // refresh user stats
+        if(userRepo.hasOwnProperty(guid)) {
+            res.cookie("sik_game", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
         }
-
+        // bunk cookie
+        else {
+            createUser()
+        }
     }
-    function createUserSendCookie() {
-            // add the user to the server
-            var user = new User()
-            userRepo.push(user)
+    function createUser() {
+        // new user is guid, a verified user is an email address    
+        var guid;
 
-            // add the user to the client
-            res.cookie("userData", JSON.stringify(user), {path: "/", expires: dayjs().add(1,"y").toDate()});
+        do { 
+            guid = Math.random() 
+        } while (userRepo.hasOwnProperty(guid) == true)  // just in case we're unlucky
+
+        // add user
+        userRepo[guid] = new User()
+
+        // send user to the client
+        res.cookie("sik_user", guid, {path: "/", expires: dayjs().add(1,"y").toDate()});
+        res.cookie("sik_game", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
     }
+
 });
 
 /* ------------------- SOCKETS ------------------- */

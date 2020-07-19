@@ -9,8 +9,8 @@ module.exports = {
             // meta
             this.created = date.format()
             this.last = date.format()
-            this.guid = Math.random()
             this.username = username
+            this.password = null
 
             // current round          
             this.answered = 0

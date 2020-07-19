@@ -23,7 +23,7 @@ var messagesElement = document.getElementById("messages")
     }
     catch(e) { throw "fail load: browser may have cookies disabled" }
 
-    let debug = getCookie("debug")
+    let debug = getCookie("sik_debug")
 
     user.username = user.username || "someone"
     userInputElement.value = user.username

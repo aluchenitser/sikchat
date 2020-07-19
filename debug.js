@@ -20,7 +20,7 @@ exports.host = function() {
     app.get('/', function(req, res) {
 
         // res.cookie("debug", "host", {expires: dayjs().format(), path: "/"})
-        res.cookie("debug", "host", {path: "/"})
+        res.cookie("sik_debug", "host", {path: "/"})
         res.sendFile(__dirname + '/index.html');
     })
     
