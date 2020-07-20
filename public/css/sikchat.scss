@@ -420,3 +420,10 @@ h1, p {
         #game-window {                    flex: 1 1 0; }   
     }
 }
+
+// ANIMATIONS
+
+@keyframes fadeIn {
+    0% { opacity: 0 }
+    100% { opacity: 1 }
+}

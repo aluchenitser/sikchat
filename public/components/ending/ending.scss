@@ -1,19 +1,47 @@
-.wrap {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-
-    width: 100%;
-    height: 100%;
-
+.ending {
     h1, h2 {
         position: relative;
     }
 
-    .ending {
-        position: relative;
-        display: none;
-        animation: fadeIn .5s;
-        transition: opacity 0.5s;
+    padding: 0 15px;
+
+    position: relative;
+    animation: fadeIn .5s;
+    transition: opacity 0.5s;
+    margin: auto 0;
+    transform: translate(0, -15%);
+
+    .complete {
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .topic-wrap {
+        font-size: 1.2rem;
+        font-style: underline;
+        text-align: center;
+    }
+
+    .ending-quip {
+        margin-top: 40px;
+        font-size: 1.6rem;
+        font-style: italic;
+        letter-spacing: -2.6px;
+    }
+
+    .stats-wrap {
+        text-align: center;
+
+        .stats {
+            display: inline-block;
+            margin-top: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+
+            border: 2px dashed black;
+            /* border-radius: 50%; */
+            padding: 25px;
+        }
     }
 }
