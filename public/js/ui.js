@@ -94,6 +94,10 @@ socket.on('tick', server => {
     if(server.time.current == "starting" && (gameState.isIntermission || gameState.noFlag)) {
         console.log("starting")
         Screen.load("starting").done(() => {
+            Screen.populate("starting-h1", gameState.qBank.loaded.meta["starting-h1"])
+            Screen.populate("starting-h2", gameState.qBank.loaded.meta["starting-h2"])
+            Screen.populate("topic", gameState.qBank.loaded.meta.topic)
+                        
             Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
         })
 
@@ -155,6 +159,10 @@ socket.on('tick', server => {
     }
 });
 
+socket.on("stats_refresh", ()=> {
+    setCookie(sik_data)
+})
+
 
 
 /* -------------------- CHAT --------------------- */
@@ -184,14 +192,14 @@ console.log(msg)
     messageInputElement.value = ""
 })
 
-socket.on("correct_answer", msg => {     // {difficulty, chatNumber}
-    let className = msg.difficulty;
-    gameState.session.data.answered = msg.user.answered
-    gameState.session.data.points = msg.user.points
-    gameState.session.data.lifeTimeAnswered = msg.user.lifeTimeAnswered
-    gameState.session.data.lifeTimePoints = msg.user.lifeTimePoints
+socket.on("success_response", successResponse => {     // {difficulty, chatNumber, user}
+    let className = successResponse.difficulty;
+    gameState.session.data.answered = successResponse.user.answered
+    gameState.session.data.points = successResponse.user.points
+    gameState.session.data.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
+    gameState.session.data.lifeTimePoints = successResponse.user.lifeTimePoints
 
-    document.getElementById("chat_" + msg.chatNumber).classList.add(className)
+    document.getElementById("chat_" + successResponse.chatNumber).classList.add(className)
 })
 
 /* -------------------- SESSION --------------------- */

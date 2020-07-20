@@ -100,13 +100,17 @@ var gameState = {
         questionStack: []
     },
 
+    // counters
+    chatCount: 0,
+    questionCount: 0,
+
     // logging
     logString: null,
 }
 
+
 var userRepo = {};              // stores user accounts, 
-var chatNumber = 0;             // puts an id on each chat
-var questionCount = 0;         // puts an id on each question
+
 
 /* ----------------- GAME LOOP ----------------- */
 checkWindowIntegrity();
@@ -133,11 +137,12 @@ setInterval(() => {
             updateTimeWindow()
             printTimeWindow()
         }
+
         loadQuestionBank()
+        clearUserStatistics()
     
         //flags
         gameState.isInit = false
-
         gameState.time.tick = 0
         gameState.time.ticks = timeConstants.INTERMISSION
         gameState.isEnding = false
@@ -250,13 +255,15 @@ app.get('/', function(req, res) {
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', (socket) => {
+    console.log("user connected")
+
+    // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
     socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
-    
-    // console.log(cookie.parse(socket.cookie))
-    socket.on('chat_message', (chatMessage) => {            // { username, text, chatNumber }
+
+    socket.on('chat_message', (chatMessage) => {            // { username, text, chatCount }
         
         // chat number allows the client to decorate individual messages with visual effects
-        chatMessage.chatNumber = chatNumber; 
+        chatMessage.chatCount = gameState.chatCount; 
 
         // broadcast to the room
         io.emit('chat_message_response', chatMessage);
@@ -266,28 +273,28 @@ io.on('connection', (socket) => {
         if(gameState.time.current == "started") {
 
             // correct answer
-            if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.user.lastQuestionAnswered != questionCount) {
-
-                socket.user.lastQuestionAnswered = questionCount
-
+            if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.user.lastQuestionAnswered != gameState.questionCount) {
+                
+                // update the userRepo 
+                socket.user.lastQuestionAnswered = gameState.questionCount
                 socket.user.answered++
                 socket.user.lifeTimeAnswered++
-                
                 socket.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
                 socket.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
+                //       \___ socket.user is the same memory address as userRepo[sik_id])
 
-                let successMessage = {
+                let successReponse = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
-                    chatNumber: chatNumber,
-                    user: socket.user
+                    chatCount: gameState.chatCount,
+                    user: socket.user // update the client
                 }
                 
                 console.log("correct!!")
-                socket.emit("correct_answer", successMessage)    // { difficulty, chatNumber }
+                socket.emit("success_response", successReponse)    // { difficulty, chatCount }
             }
         }
 
-        chatNumber++
+        gameState.chatCount++
     })
     
     socket.on('username_update', (msg) => {         // { username, guid }
@@ -459,12 +466,24 @@ function loadQuestion() {
   // load question
     gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
     gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
-    gameState.qBank.currentQuestion.questionNumber = ++questionCount
+    gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
 
     // console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
 
 /* ------------------ USER FUNCTIONS ------------------- */
+
+function clearUserStatistics() {
+    console.log("clear user statistics_______")
+
+    for (var user in userRepo) {
+        if(userRepo.hasOwnProperty(user)) {
+            userRepo[user].answered = 0
+            userRepo[user].points = 0
+        }
+    }
+}
+
 
 function consoleLatestUserRepo(mode) 
 {
@@ -475,7 +494,7 @@ function consoleLatestUserRepo(mode)
                 console.log("%cempty", "color: green");
                 return;
             }
-            userRepo.forEach(item => {
+            userRepo.forEach(item => {    // since userRepo is now an object, this bit of code is fucked
                 console.log("%c" + item.username + " " + item.guid, "color: green");
             })
             break;

@@ -42,6 +42,7 @@ var Screen = {
             })
         } else { throw "bogus model property" }
     },
+    // used for dev / debug purposes
     populateFiller() {
         document.querySelectorAll(`[sik]`).forEach((markup)=> {
             markup.textContent = "FILLER"
@@ -49,8 +50,7 @@ var Screen = {
     },
     display(id) {       // id optional
         if(this.markup) {
-            // console.log(this.markup)
-            
+
             let windowElement = document.getElementById(id ? id : "game-window")
             windowElement.textContent = ''
             windowElement.appendChild(this.markup)
