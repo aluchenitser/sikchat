@@ -248,6 +248,7 @@ body.show-header .chat-bar {
   height: calc(100% - 3rem);
 }
 .chat-body #messages {
+  flex: 1 1 auto;
   padding: 0 15px;
   overflow-y: scroll;
   display: flex;
@@ -285,7 +286,23 @@ body.show-header .chat-bar {
     margin-bottom: 0;
   }
 }
+.chat-body .handler {
+  width: 20px;
+  padding: 0;
+  cursor: ew-resize;
+  flex: 0 0 auto;
+  left: -17px;
+  position: relative;
+}
+.chat-body .handler::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 100%;
+  margin: 0 auto;
+}
 .chat-body #game-window {
+  flex: 1 1 0;
   position: relative;
   display: flex;
   justify-content: center;
@@ -294,13 +311,13 @@ body.show-header .chat-bar {
 
 /* ---------------- RESPONSIVE ----------------- */
 @media (max-width: 991px) {
-  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
+  .header .form-column, .chat-bar .form-column, .chat-body .form-column {
     flex: 1.5 1 0;
   }
   .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
     flex: 0.1 1 auto;
   }
-  .header .logo-column, .header #game-window, .chat-bar .logo-column, .chat-bar #game-window, .chat-body .logo-column, .chat-body #game-window {
+  .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
 
@@ -309,7 +326,7 @@ body.show-header .chat-bar {
   }
 }
 @media (max-width: 1199px) {
-  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
+  .header .form-column, .chat-bar .form-column, .chat-body .form-column {
     flex: 1.5 1 0;
   }
   .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
@@ -318,12 +335,9 @@ body.show-header .chat-bar {
   .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header #game-window, .chat-bar #game-window, .chat-body #game-window {
-    flex: 0.7 1 0;
-  }
 }
 @media (min-width: 1200px) {
-  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
+  .header .form-column, .chat-bar .form-column, .chat-body .form-column {
     flex: 1.5 1 0;
   }
   .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
@@ -332,12 +346,9 @@ body.show-header .chat-bar {
   .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
   }
-  .header #game-window, .chat-bar #game-window, .chat-body #game-window {
-    flex: 0.85 1 0;
-  }
 }
 @media (min-width: 1500px) {
-  .header .form-column, .header #messages, .chat-bar .form-column, .chat-bar #messages, .chat-body .form-column, .chat-body #messages {
+  .header .form-column, .chat-bar .form-column, .chat-body .form-column {
     flex: 1.5 1 0;
   }
   .header .spacer-column, .chat-bar .spacer-column, .chat-body .spacer-column {
@@ -345,9 +356,6 @@ body.show-header .chat-bar {
   }
   .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
-  }
-  .header #game-window, .chat-bar #game-window, .chat-body #game-window {
-    flex: 1 1 0;
   }
 }
 @keyframes fadeIn {

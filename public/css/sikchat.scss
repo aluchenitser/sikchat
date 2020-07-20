@@ -311,6 +311,8 @@ h1, p {
     height: calc(100% - 3rem);
 
     #messages {
+        flex: 1 1 auto;
+
         padding: 0 15px;
         overflow-y: scroll;
         display: flex;
@@ -354,11 +356,28 @@ h1, p {
         }
     }
 
-    .spacer-column {
+    .handler {
+        width: 20px;
+        padding: 0;
+        cursor: ew-resize;
+        flex: 0 0 auto;
+        left: -17px;
+        position: relative;
 
+        &::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 100%;
+            // background: red;
+            margin: 0 auto;
+        }
     }
+      
+    
 
     #game-window {
+        flex: 1 1 0;
         position: relative;
         display: flex;
         justify-content: center;
@@ -381,9 +400,9 @@ h1, p {
 // medium
 @media (max-width: 991px) {
     .header, .chat-bar, .chat-body {
-        .form-column, #messages {              flex: 1.5 1 0;        }
+        .form-column {              flex: 1.5 1 0;        }
         .spacer-column {                       flex: .1 1 auto;      }
-        .logo-column, #game-window {          flex: .5 1 0;         }
+        .logo-column {          flex: .5 1 0;         }
     }
 
     #username {
@@ -394,30 +413,27 @@ h1, p {
 // large
 @media (max-width: 1199px) {
     .header, .chat-bar, .chat-body {
-        .form-column, #messages {              flex: 1.5 1 0; }
+        .form-column {              flex: 1.5 1 0; }
         .spacer-column {                       flex: .2 1 auto; }
         .logo-column{                   flex: .5 1 0; }
-        #game-window {                        flex: .7 1 0; }   
     }
 }
 
 // extra large
 @media (min-width: 1200px) {
     .header, .chat-bar, .chat-body {
-        .form-column, #messages {            flex: 1.5 1 0; }
+        .form-column {            flex: 1.5 1 0; }
         .spacer-column {                     flex: .35 1 auto; }
         .logo-column {                flex: .5 1 0; }
-        #game-window {                      flex: .85 1 0; }   
     }
 }
 
 // orca whale
 @media (min-width: 1500px) {
     .header, .chat-bar, .chat-body {
-        .form-column, #messages {          flex: 1.5 1 0; }
+        .form-column {          flex: 1.5 1 0; }
         .spacer-column {                   flex: .5 1 auto; }
         .logo-column {              flex: .5 1 0; } 
-        #game-window {                    flex: 1 1 0; }   
     }
 }
 

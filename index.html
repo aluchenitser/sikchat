@@ -54,10 +54,9 @@
                 </div>
             </div>
         </div>
-       
-        
         <div class="chat-body">
             <div id="messages"></div>
+            <div class="handler"></div>
             <div id="game-window"></div>
         </div>
         
@@ -81,10 +80,74 @@
         <script src="js/ui.js"></script>
 
         <script>
+            /* ------------- EXPERIMENTAL UI ------------- */
+            
+            // --- toggle settings mode on top of screen
             $("body").on("click", ".spacer-column", (e) => {
                 console.log(e.target)
                 document.body.classList.toggle("show-header")
             })
+            
+            var handler = document.querySelector('.handler');
+            var chatBody = document.querySelector('.chat-body');
+            var messages = document.getElementById('messages');
+            var isHandlerDragging = false;
+
+            // --- resizable center bar!!
+            // init left window
+            initDrag()
+
+            document.addEventListener('mousedown', function(e) {
+                console.log()
+
+                // If mousedown event is fired from .handler, toggle flag to true
+                if (e.target === handler) {
+                    isHandlerDragging = true;
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+            // Don't do anything if dragging flag is false
+                if (!isHandlerDragging) {
+                    return false;
+                }
+
+            // Get offset
+                var containerOffsetLeft = chatBody.offsetLeft;
+
+                // Get x-coordinate of pointer relative to container
+                var pointerRelativeXpos = e.clientX - containerOffsetLeft;
+
+                // Resize box A
+                // * 8px is the left/right spacing between .handler and its inner pseudo-element
+                // * Set flex-grow to 0 to prevent it from growing
+                // messages.style.width = (pointerRelativeXpos - 8) + 'px';
+                messages.style.width = pointerRelativeXpos + 'px';
+                messages.style.flexGrow = 0;
+            });
+
+            document.addEventListener('mouseup', function(e) {
+                // Turn off dragging flag when user mouse is up
+                isHandlerDragging = false;
+            });
+
+            window.addEventListener("resize", () => {
+                if(messages.style.flexGrow == 0) {
+                    messages.style.flex = "1 1 0"
+                    messages.style.width = "auto"
+                }
+            })
+
+            var resizeId;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeId);
+                resizeId = setTimeout(initDrag, 500)
+            })
+
+            function initDrag() {
+                messages.style.width = messages.offsetWidth + "px"
+                messages.style.flex = "0 1 auto"
+            }
         </script>
     </body>
 </html>
