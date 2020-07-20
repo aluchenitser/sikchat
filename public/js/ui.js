@@ -182,12 +182,17 @@ document.getElementById('chat-form').addEventListener('submit', e => {
 socket.on('chat_message_response', msg => {       // { username, text }
 console.log(msg)
     let user = userInputElement.value || 'someone'; 
-    let messageClass = user.id == msg.id
+    let messageClass = gameState.session.id == msg.id
         ? 'message-output is-current-user'
         : 'message-output'
 
+    
+    let username = gameState.session.id.indexOf("@") == -1
+        ? "@@ mystery person @@"
+        : gameState.session.data.username
+
     // add new message to UI
-    const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${msg.id}</span></div><p class='output-text'>${msg.text}</p></div>`
+    const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${username}</span></div><p class='output-text'>${msg.text}</p></div>`
     $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })
