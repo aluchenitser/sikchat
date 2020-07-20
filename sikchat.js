@@ -271,14 +271,15 @@ io.on('connection', (socket) => {
                 socket.user.lastQuestionAnswered = questionCount
 
                 socket.user.answered++
-                socket.user.totalAnswered++
+                socket.user.lifeTimeAnswered++
                 
                 socket.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
-                socket.user.totalPoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
+                socket.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
 
                 let successMessage = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
-                    chatNumber: chatNumber
+                    chatNumber: chatNumber,
+                    user: socket.user
                 }
                 
                 console.log("correct!!")
@@ -490,9 +491,8 @@ function consoleLatestUserRepo(mode)
 // look at a questions_xyz.json file to see what the object looks like
 function mapGameStateForEmit() {
     let clone = JSON.parse(JSON.stringify(gameState))
-    clone.qBank.topic = gameState.qBank.loaded.meta.topic
 
-    delete clone.qBank.loaded
+    delete clone.qBank.loaded.questions
     delete clone.qBank.questionStack
     delete clone.time.questionStack
 

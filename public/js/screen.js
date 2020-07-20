@@ -14,8 +14,6 @@ var Screen = {
                 return false;
             }
 
-            // console.log(data);
-
             // load current view model
             this.vm = this._models[type]
 
@@ -51,27 +49,32 @@ var Screen = {
         } else { throw "nothing to display"}
     },
 
-    // read only: properties here match [sik] attributes in view files
+    // properties here match [sik] attributes in view files
     _models: {
         intermission: {
             "path": "../components/intermission/intermission.html"
-            
         },
         starting: {
             "path": "../components/starting/starting.html",
-            "count-down": null
-
+            "topic": null,
+            "count-down": null,
+            "starting-h1": null,
+            "starting-h2": null
         },
         started: {
             "path": "../components/started/started.html",
             "topic": null,
             "question": null,
             "answer": null
-
         },
         ending: {
-            "path": "../components/ending/ending.html"
-
+            "path": "../components/ending/ending.html",
+            "topic": null,
+            "ending-quip": null,
+            "answered": null,
+            "points": null,
+            "lifeTimeAnswered": null,
+            "lifeTimePoints": null
         }
     }
 }

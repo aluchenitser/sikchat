@@ -17,8 +17,8 @@ module.exports = {
             this.points = 0
             
             // lifetime achievement
-            this.totalAnswered = 0
-            this.totalPoints = 0
+            this.lifeTimeAnswered = 0
+            this.lifeTimePoints = 0
 
             this.lastQuestionAnswered = 0         // used to avoid repeat successes during the current question
         }

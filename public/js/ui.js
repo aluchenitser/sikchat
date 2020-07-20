@@ -111,9 +111,9 @@ socket.on('tick', server => {
     if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag)) {
         console.log("started")
         Screen.load("started").done(() => {
-
+            
             // first question
-            Screen.populate("topic", gameState.qBank.topic)
+            Screen.populate("topic", gameState.qBank.loaded.meta.topic)
             Screen.populate("question", gameState.qBank.currentQuestion.question)
             Screen.populate("answer", gameState.qBank.currentQuestion.answer)
         
@@ -128,7 +128,7 @@ socket.on('tick', server => {
 
     if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1) {
         
-        Screen.populate("topic", gameState.qBank.topic)
+        Screen.populate("topic", gameState.qBank.loaded.meta.topic)
         Screen.populate("question", gameState.qBank.currentQuestion.question)
         Screen.populate("answer", gameState.qBank.currentQuestion.answer)
 
@@ -137,7 +137,16 @@ socket.on('tick', server => {
 
     if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag)) {
         console.log("ending")
-        Screen.load("ending")
+        Screen.load("ending").done(() => {
+            Screen.populate("topic", gameState.qBank.loaded.meta.topic)
+            Screen.populate("ending-quip", gameState.qBank.loaded.meta["ending-quip"])
+            
+            Screen.populate("answered", gameState.session.data.answered)
+            Screen.populate("points", gameState.session.data.points)
+            Screen.populate("lifeTimeAnswered", gameState.session.data.lifeTimeAnswered)
+            Screen.populate("lifeTimePoints", gameState.session.data.lifeTimePoints)
+
+        })
 
         // flags
         gameState.noFlag = false;
@@ -177,6 +186,10 @@ console.log(msg)
 
 socket.on("correct_answer", msg => {     // {difficulty, chatNumber}
     let className = msg.difficulty;
+    gameState.session.data.answered = msg.user.answered
+    gameState.session.data.points = msg.user.points
+    gameState.session.data.lifeTimeAnswered = msg.user.lifeTimeAnswered
+    gameState.session.data.lifeTimePoints = msg.user.lifeTimePoints
 
     document.getElementById("chat_" + msg.chatNumber).classList.add(className)
 })
