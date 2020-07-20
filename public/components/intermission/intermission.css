@@ -1,6 +1,8 @@
 .intermission {
   position: relative;
   animation: fadeIn 0.5s;
+  margin: auto 0;
+  transform: translate(0, -50%);
 }
 .intermission .intermission-h1 {
   font-family: "Lobster", cursive;

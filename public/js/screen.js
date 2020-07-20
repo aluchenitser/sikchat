@@ -26,6 +26,10 @@ var Screen = {
             if(display == true) {
                 this.display()
             }
+
+            if(name == "filler") {
+                this.populateFiller()
+            }
         })
     },
 
@@ -38,7 +42,11 @@ var Screen = {
             })
         } else { throw "bogus model property" }
     },
-    
+    populateFiller() {
+        document.querySelectorAll(`[sik]`).forEach((markup)=> {
+            markup.textContent = "FILLER"
+        })
+    },
     display(id) {       // id optional
         if(this.markup) {
             // console.log(this.markup)
@@ -75,6 +83,9 @@ var Screen = {
             "points": null,
             "lifeTimeAnswered": null,
             "lifeTimePoints": null
+        },
+        debug: {
+
         }
     }
 }
