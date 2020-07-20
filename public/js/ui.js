@@ -53,7 +53,7 @@ var gameState = {
     }
     else {
         gameState.session.id = id
-        gameState.session.data = data
+        gameState.session.data = JSON.parse(data)
         gameState.session.debug = debug
 
         userInputElement.value = gameState.session.id
