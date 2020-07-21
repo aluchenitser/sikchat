@@ -192,19 +192,19 @@ console.log(msg)
         : gameState.session.data.username
 
     // add new message to UI
-    const markup = `<div id="chat_${msg.chatNumber}" class='${messageClass}'><div class='user-name'><span>${username}</span></div><p class='output-text'>${msg.text}</p></div>`
+    const markup = `<div id="chat_${msg.chatCount}" class='${messageClass}'><div class='user-name'><span>${username}</span></div><p class='output-text'>${msg.text}</p></div>`
     $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })
 
-socket.on("success_response", successResponse => {     // {difficulty, chatNumber, user}
+socket.on("success_response", successResponse => {     // {difficulty, chatCount, user}
     let className = successResponse.difficulty;
     gameState.session.data.answered = successResponse.user.answered
     gameState.session.data.points = successResponse.user.points
     gameState.session.data.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
     gameState.session.data.lifeTimePoints = successResponse.user.lifeTimePoints
 
-    document.getElementById("chat_" + successResponse.chatNumber).classList.add(className)
+    document.getElementById("chat_" + successResponse.chatCount).classList.add(className)
 })
 
 /* -------------------- SESSION --------------------- */
