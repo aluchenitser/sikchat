@@ -20,8 +20,27 @@
         <link rel="stylesheet" type="text/css" href="css/clock.css">
 
         <link rel="stylesheet" type="text/css" href="components/ending/ending.css">
+        <script src="https://use.fontawesome.com/4d7207fa33.js"></script>
     </head>
     <body>
+        <input id="side-bar-toggler" type="checkbox" />
+        <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
+        <div class="side-bar">
+            <label for="side-bar-toggler"><i class="fa fa-caret-left"></i></label>
+            moniker
+            <br>
+            <input id="username" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" />
+            <br>
+            rooms
+            <br>
+            <select multiple>
+                <option>history</option>
+                <option>slang</option>
+                <option>maps</option>
+                <option>madlibs</option>
+                <option>qewrty</option>
+            </select>
+        </div>
         <!-- <div class="tiny-header-user-name"></div> -->
         <div class="header">
             <div class="form-column">
