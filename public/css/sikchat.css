@@ -36,136 +36,6 @@ body.drawer-is-open .tiny-header-user-name {
   opacity: 0;
 }
 
-.header, .chat-body, .chat-bar {
-  top: 0;
-  transition: margin 0.4s, top 0.4s;
-  position: relative;
-}
-
-.header {
-  display: flex;
-  color: white;
-  justify-content: space-between;
-  height: 3rem;
-  z-index: 1;
-  margin-top: -3rem;
-}
-body.show-header .header {
-  margin-top: 0;
-}
-
-.header .form-column {
-  display: flex;
-  position: relative;
-  width: 100%;
-  padding: 12px 0 10px 15px;
-  border-radius: 0 0 0 21px;
-  background-color: #EE90EE;
-}
-.header .form-column .next-game-in-wrapper {
-  visibility: hidden;
-  right: -96px;
-  position: absolute;
-  font-size: 13px;
-  bottom: 11px;
-  line-height: 1;
-  letter-spacing: -0.1px;
-}
-.header .form-column .next-game-in-wrapper > span {
-  color: white;
-}
-.header .spacer-column {
-  background-color: #EE90EE;
-}
-.header .logo-column {
-  position: relative;
-  font-size: 22px;
-  text-align: right;
-  font-style: italic;
-  text-decoration: underline;
-}
-.header .logo-column .ghost-drawer {
-  padding: 12px 15px 10px 0;
-  visibility: hidden;
-}
-.header .logo-column .ghost-drawer .ghost-logo {
-  padding: 0 15px;
-}
-.header .logo-column .drawer {
-  display: flex;
-  flex-flow: column;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  height: 100%;
-  transition: height 0.5s;
-  transform-origin: left;
-}
-.header .logo-column .drawer .drawer-contents {
-  flex: 1 1 0;
-  overflow: hidden;
-  color: black;
-  font-style: normal;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item {
-  display: flex;
-  flex-flow: column;
-  padding: 0 10px;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item .username {
-  font-size: 12px;
-  color: gray;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item .username .bogus-username {
-  display: none;
-  color: red;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item .username .in-use-username {
-  display: none;
-  color: red;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item .username .checking-username {
-  display: none;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item .username .username-lookup-success {
-  color: green;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item .username .username-lookup-success.off {
-  transition: opacity 0.5s 2s;
-  opacity: 0;
-}
-.header .logo-column .drawer .drawer-contents .drawer-item input {
-  border: none;
-  border-bottom: 1px solid darkgray;
-  outline: none;
-  text-align: right;
-  font-size: 20px;
-  width: 100%;
-}
-.header .logo-column .drawer .drawer-handle {
-  flex: 0 1 auto;
-  background-color: #EE90EE;
-  padding: 12px 15px 10px 0;
-  transition: transform 0.5s;
-  height: 3rem;
-  z-index: 1;
-  position: relative;
-  left: -1px;
-}
-.header .logo-column .drawer .drawer-handle:hover {
-  cursor: pointer;
-}
-.header .logo-column .drawer .drawer-handle .logo {
-  font-size: 20px;
-  padding: 0 15px;
-}
-body.drawer-is-open .header .logo-column .drawer {
-  height: 250%;
-}
-body.drawer-is-open .header .logo-column .drawer .drawer-handle {
-  transform: rotate(4deg);
-}
-
 .chat-bar {
   height: 3rem;
   display: flex;
@@ -195,6 +65,7 @@ body.show-header .chat-bar {
   flex: 1 1 auto;
   border-radius: 30px 0 0 0;
   padding-left: 15px;
+  margin-right: -1px;
 }
 .chat-bar .form-column #message-input:focus, .chat-bar .form-column #message-input:focus + #submit-button {
   border-bottom: 1px solid #d875d8;
