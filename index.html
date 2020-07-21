@@ -26,17 +26,14 @@
         <input id="side-bar-toggler" type="checkbox" />
         <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
         <div class="side-bar">
-            <label for="side-bar-toggler"><i class="fa fa-caret-left"></i></label>
+            <label class="close" for="side-bar-toggler"></label>
+
             <div class="side-bar-row">
-                moniker
+                <label>moniker</label>
+                <div class="user-bar"><input id="username" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" /><button id="user-submit"></button></div>
             </div>
-            <div>
-                <input id="username" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" />
-            </div>
-            <div>
-                rooms
-            </div>
-            <div>
+            <div class="side-bar-row">
+                <label>rooms</label><br />
                 <select size="5">
                     <option>history</option>
                     <option>slang</option>
@@ -47,7 +44,7 @@
             </div>
         </div>
 
-        
+
         <!-- <div class="tiny-header-user-name"></div> -->
       
         <div class="chat-body">
@@ -119,7 +116,9 @@
             document.addEventListener('mouseup', function(e) {
                 // Turn off dragging flag when user mouse is up
                 isHandlerDragging = false;
+                console.log(e.target)
             });
+
 
             window.addEventListener("resize", () => {
                 if(messages.style.flexGrow == 0) {
@@ -138,6 +137,19 @@
                 messages.style.width = messages.offsetWidth + "px"
                 messages.style.flex = "0 1 auto"
             }
+
+
+            document.addEventListener('mouseup', function(e) {
+                // Turn off dragging flag when user mouse is up
+                isHandlerDragging = false;
+            });
+
+            window.addEventListener("keyup", function(e) {
+                console.log(e)
+                if(e.key == "Escape" && e.target.id != "message-input") {
+                    document.getElementById("side-bar-toggler").checked = false
+                }
+            })
         </script>
     </body>
 </html>

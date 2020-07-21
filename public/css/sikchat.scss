@@ -253,38 +253,13 @@ h1, p {
     }    
 }
 
-.side-bar {
-    
-    // transition: left .2s .3s;
-    border-radius: 0 0 5px 0;
-    background-color: #EE90EE;
-    position: fixed;
-    width: 260px;
-    color: white;
-    z-index: 1;
-    padding: 15px;
-
-    // transition: left .2s .3s;
-
-    label {
-        position: absolute;
-        top: 0;
-        right: 0;
-        cursor: pointer;
-        padding: 4px 8px 4px 8px;
-    }
-
-    input, select {
-        width: 100%;
-    }
-}
 
 .show-side-bar {
-    
     position: fixed;
     top: 10px;
     border-radius: 0 4px 4px 0px;
     width: 35px;
+    border: none;
     
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
@@ -293,7 +268,6 @@ h1, p {
     cursor: pointer;
     color: white;
     background-color: #EE90EE;
-    border-color: #EE90EE;
 
     display: inline-block;
     font-weight: 400;
@@ -302,7 +276,6 @@ h1, p {
     vertical-align: middle;
 
     user-select: none;
-    border: 1px solid transparent;
 
     text-decoration: none;
     box-sizing: border-box;
@@ -313,7 +286,90 @@ h1, p {
         top: 1px;
         position: relative;
     }
+}
 
+
+.side-bar {
+
+    border-radius: 0 0 18px;
+    background-color: #EE90EE;
+    position: fixed;
+    width: 260px;
+    color: white;
+    z-index: 1;
+    padding: 15px;
+
+    padding: 15px 10px 10px 15px;
+    
+    .side-bar-row {
+        margin-bottom: 10px;
+
+        &:last-of-type {
+            margin: 0;
+        }
+    }
+
+    label.close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        padding: 4px 15px 4px 8px;
+
+    }
+
+    input, select {
+        width: 100%;
+        border: none;
+        outline: none;
+    }
+
+    select{
+        overflow: hidden;
+        border-radius: 0 0 13px 0;
+        padding: 5px;
+        cursor: pointer;
+        border: none;
+        outline: none;
+
+        
+        option {
+            padding: 5px;
+            &:checked {
+                background-color: #90EE90;
+            }
+        }
+    }
+
+    .user-bar {
+        display: flex;
+
+        input {
+            flex: 1 1 auto;
+        }
+
+        #user-submit {
+
+            font-size: 16px;
+            outline: none;
+            border: none;
+
+            color: white;
+            flex: 0 0 30px;
+            background-color: #efefef;
+            transition: background-color 0.1s;
+            // border-radius: 0 15px 15px 0;
+
+            &:focus {
+                text-decoration: underline;
+                background-color: #cecece;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
 }
 
 

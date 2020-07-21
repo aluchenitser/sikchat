@@ -203,45 +203,24 @@ body.show-header .chat-bar {
   transition: left 0.2s 0.25s;
 }
 
-.side-bar {
-  border-radius: 0 0 5px 0;
-  background-color: #EE90EE;
-  position: fixed;
-  width: 260px;
-  color: white;
-  z-index: 1;
-  padding: 15px;
-}
-.side-bar label {
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-  padding: 4px 8px 4px 8px;
-}
-.side-bar input, .side-bar select {
-  width: 100%;
-}
-
 .show-side-bar {
   position: fixed;
   top: 10px;
   border-radius: 0 4px 4px 0px;
   width: 35px;
+  border: none;
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   line-height: 1.5;
   cursor: pointer;
   color: white;
   background-color: #EE90EE;
-  border-color: #EE90EE;
   display: inline-block;
   font-weight: 400;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   user-select: none;
-  border: 1px solid transparent;
   text-decoration: none;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -250,6 +229,71 @@ body.show-header .chat-bar {
 .show-side-bar > .fa {
   top: 1px;
   position: relative;
+}
+
+.side-bar {
+  border-radius: 0 0 18px;
+  background-color: #EE90EE;
+  position: fixed;
+  width: 260px;
+  color: white;
+  z-index: 1;
+  padding: 15px;
+  padding: 15px 10px 10px 15px;
+}
+.side-bar .side-bar-row {
+  margin-bottom: 10px;
+}
+.side-bar .side-bar-row:last-of-type {
+  margin: 0;
+}
+.side-bar label.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 4px 15px 4px 8px;
+}
+.side-bar input, .side-bar select {
+  width: 100%;
+  border: none;
+  outline: none;
+}
+.side-bar select {
+  overflow: hidden;
+  border-radius: 0 0 13px 0;
+  padding: 5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.side-bar select option {
+  padding: 5px;
+}
+.side-bar select option:checked {
+  background-color: #90EE90;
+}
+.side-bar .user-bar {
+  display: flex;
+}
+.side-bar .user-bar input {
+  flex: 1 1 auto;
+}
+.side-bar .user-bar #user-submit {
+  font-size: 16px;
+  outline: none;
+  border: none;
+  color: white;
+  flex: 0 0 30px;
+  background-color: #efefef;
+  transition: background-color 0.1s;
+}
+.side-bar .user-bar #user-submit:focus {
+  text-decoration: underline;
+  background-color: #cecece;
+}
+.side-bar .user-bar #user-submit:hover {
+  cursor: pointer;
 }
 
 /* ---------------- RESPONSIVE ----------------- */
