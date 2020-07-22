@@ -26,15 +26,14 @@
         <input id="side-bar-toggler" type="checkbox" />
         <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
         <div class="side-bar">
-            <label class="close" for="side-bar-toggler"><i class="fa fa-close"></i></label>
+            <label class="close" for="side-bar-toggler"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
 
             <div class="side-bar-row">
-                <label>moniker</label>
+                <div class="user-label-wrap">
+                    <label>moniker</label><span class="change-control" tabindex="0">change</span>
+                </div>
                 <form id="user-bar" class="user-bar">
-                    <input id="username" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" />
-
-                    <i class="indicator fa fa-caret-right" ></i>
-                    <!-- <span class="indicator">&lt;</span> -->
+                    <input id="username" name="username" type="text" disabled autocomplete="off" spellcheck="false" maxlength="16" />
                 </form> 
             </div>
             <div class="side-bar-row">
@@ -78,14 +77,15 @@
         <script src="js/ui.js"></script>
 
         <script>
-            /* ------------- EXPERIMENTAL UI ------------- */
+            /* ------------- GENERAL UI ------------- */
             
             var handler = document.querySelector('.handler');
             var chatBody = document.querySelector('.chat-body');
             var messages = document.getElementById('messages');
             var isHandlerDragging = false;
 
-            // --- resizable center bar!!
+            // --- resizeable center bar ---
+
             // init left window
             initDrag()
 
@@ -155,6 +155,8 @@
                     document.getElementById("side-bar-toggler").checked = false
                 }
             })
+
+            
         </script>
     </body>
 </html>

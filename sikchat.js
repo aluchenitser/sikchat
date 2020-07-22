@@ -18,6 +18,7 @@ app.use(cookieParser());
 
 // requires that load my stuff
 const User = require('./user.js').User
+app.use(express.static(__dirname + "/public/"));
 
 /* ------------------- DEBUG MODES ------------------- */
 
@@ -26,13 +27,7 @@ if(process.argv[2] == "--host" || process.argv[2] == "-h") {
     return;
 }
 
-
-
 /* ------------------- SETUP ------------------- */
-
-app.use(express.static(__dirname + "/public/"));
-
-
 
 const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
 
@@ -152,8 +147,6 @@ setInterval(() => {
 
     // proceed to starting
     if(dayjs().isSameOrAfter(gameState.time.starting) && gameState.isIntermission) { 
-        
-
 
         // flags
         gameState.time.tick = 0
@@ -162,7 +155,6 @@ setInterval(() => {
         gameState.time.current = "starting";
         gameState.isStarting = true;
     }
-
     
     // proceed to started
     if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
@@ -233,7 +225,6 @@ app.get('/', function(req, res) {
         }
     }
 
-
     function createUser() {
         // new user is guid, a verified user is an email address    
         var guid;
@@ -301,25 +292,11 @@ io.on('connection', (socket) => {
         let foundDuplicate = false;
 
         // look for duplicate username
-        let i = 0;
-        while(i < userRepo.length) {
-            if (userRepo[i].username == msg.username) {
-                foundDuplicate = true;
-                break;
-            }
-            i++;
+        if(userRepo[msg.id].username == msg.username) {
+            foundDuplicate = true
         }
-
-        // if all is clear, update the user with the new username
-        let j = 0;
-        if(!foundDuplicate) {
-            while(j < userRepo.length) {
-                if (userRepo[j].guid == msg.guid) {
-                    userRepo[j].username = msg.username;
-                    break;
-                }
-                j++;
-            }
+        else {
+            userRepo[msg.id].username = msg.username
         }
 
         socket.emit('username_update_response', {username: msg.username, foundDuplicate});

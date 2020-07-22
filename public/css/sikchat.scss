@@ -2,7 +2,7 @@
 
 /* ----------------- VARIABLES ----------------- */
 
-$header-background-color: #EE90EE;
+$general-background-color: #EE90EE;
 $label-text-color: gray;
 
 $font-size-message: 16px;
@@ -69,7 +69,7 @@ h1, p {
         padding: 12px 0 10px 15px;
         border-radius: 21px 0 0 0;
 
-        background-color: $header-background-color;
+        background-color: $general-background-color;
 
         #message-input, button {
             font-size: $font-size-message;
@@ -125,12 +125,12 @@ h1, p {
     }
 
     .spacer-column {
-        background-color: $header-background-color;
+        background-color: $general-background-color;
     }
 
     .logo-column {
         flex: 0 1 auto;
-        background-color: #EE90EE;
+        background-color: $general-background-color;
         padding: 12px 15px 10px 0;
         transition: transform 0.5s;
         height: 3rem;
@@ -267,7 +267,7 @@ h1, p {
     
     cursor: pointer;
     color: white;
-    background-color: #EE90EE;
+    background-color: $general-background-color;
 
     display: inline-block;
     font-weight: 400;
@@ -292,14 +292,12 @@ h1, p {
 .side-bar {
 
     border-radius: 0 0 18px;
-    background-color: #EE90EE;
+    background-color: $general-background-color;
     position: fixed;
     width: 260px;
     color: white;
     z-index: 1;
-    padding: 15px;
-
-    padding: 15px 10px 10px 15px;
+    padding: 23px 10px 10px 15px;
     
     .side-bar-row {
         margin-bottom: 10px;
@@ -311,10 +309,8 @@ h1, p {
 
     label.close {
         position: absolute;
-        top: -1px;
-        right: 2px;
+        top: 5px;
         cursor: pointer;
-
     }
 
     input, select {
@@ -340,24 +336,33 @@ h1, p {
         }
     }
 
+    .user-label-wrap {
+
+        .change-control {
+            // font-size: 12px;
+            position: absolute;
+            display: inline-block;
+            right: 11px;
+            top: 5px;
+            cursor: pointer;
+            opacity: 0.6;
+
+            &:hover, &:focus {
+                opacity: 1;
+                outline: none;
+            }
+        }
+    }
+
     .user-bar {
         position: relative;
 
         #username {
             font-size: 16px;
-    
-            + .indicator {
-                position: absolute;
-                color: white;
-                right: 5px;
-                font-size: 20px;
-                cursor: pointer;
-            }
-            &:focus + .indicator, & + .indicator:focus {
+            &[disabled] {
                 color: black;
-                display: inline-block;
+                background-color: white;
             }
-
         }
     }
 }

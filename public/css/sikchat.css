@@ -238,8 +238,7 @@ body.show-header .chat-bar {
   width: 260px;
   color: white;
   z-index: 1;
-  padding: 15px;
-  padding: 15px 10px 10px 15px;
+  padding: 23px 10px 10px 15px;
 }
 .side-bar .side-bar-row {
   margin-bottom: 10px;
@@ -249,8 +248,7 @@ body.show-header .chat-bar {
 }
 .side-bar label.close {
   position: absolute;
-  top: -1px;
-  right: 2px;
+  top: 5px;
   cursor: pointer;
 }
 .side-bar input, .side-bar select {
@@ -272,22 +270,27 @@ body.show-header .chat-bar {
 .side-bar select option:checked {
   background-color: #90EE90;
 }
+.side-bar .user-label-wrap .change-control {
+  position: absolute;
+  display: inline-block;
+  right: 11px;
+  top: 5px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.side-bar .user-label-wrap .change-control:hover, .side-bar .user-label-wrap .change-control:focus {
+  opacity: 1;
+  outline: none;
+}
 .side-bar .user-bar {
   position: relative;
 }
 .side-bar .user-bar #username {
   font-size: 16px;
 }
-.side-bar .user-bar #username + .indicator {
-  position: absolute;
-  color: white;
-  right: 5px;
-  font-size: 20px;
-  cursor: pointer;
-}
-.side-bar .user-bar #username:focus + .indicator, .side-bar .user-bar #username + .indicator:focus {
+.side-bar .user-bar #username[disabled] {
   color: black;
-  display: inline-block;
+  background-color: white;
 }
 
 /* ---------------- RESPONSIVE ----------------- */

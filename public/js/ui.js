@@ -56,16 +56,20 @@ var gameState = {
         gameState.session.data = JSON.parse(data)
         gameState.session.debug = debug
 
-        userInputElement.value = gameState.session.id.indexOf("0.") != -1 
-            ? "someone" 
-            : gameState.session.data.username
+        userInputElement.value = gameState.session.data.username
+            ? gameState.session.data.username
+            : "someone"
     }
 }()
 
 // console.log(gameState)
 
 // tinyHeaderUserNameElement.innerHTML = user.username
+
+
+
 /*  --------- GAME LOOP ---------- */
+
 // client states are "intermission", "starting", "started", and "ending"
 // server also has "init"
 var socket = io({
@@ -211,6 +215,9 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 /* -------------------- SESSION --------------------- */
 
+var changeControlElement = document.querySelector(".user-label-wrap .change-control")
+changeControlElement.addEventListener
+
 var validUserPattern = /^[a-z0-9_-]{1,16}$/
 
 // --- username & drawer logic
@@ -222,7 +229,7 @@ userInputElement.addEventListener("keydown", e => {
         if(username == gameState.session.id) return;
 
         if(validUserPattern.test(username)) {
-            socket.emit('username_update', {username, guid: currentUserGUID})
+            socket.emit('username_update', {username, id: gameState.session.id})
         }
     } 
 })
