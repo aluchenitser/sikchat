@@ -274,11 +274,11 @@ body.show-header .chat-bar {
   position: absolute;
   display: inline-block;
   right: 11px;
-  top: 5px;
+  top: 13px;
   cursor: pointer;
   opacity: 0.6;
 }
-.side-bar .user-label-wrap .change-control:hover, .side-bar .user-label-wrap .change-control:focus {
+.side-bar .user-label-wrap .change-control:hover, .side-bar .user-label-wrap .change-control:focus, .side-bar .user-label-wrap .change-control.save {
   opacity: 1;
   outline: none;
 }

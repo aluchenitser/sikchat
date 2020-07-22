@@ -216,26 +216,44 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 /* -------------------- SESSION --------------------- */
 
 var changeControlElement = document.querySelector(".user-label-wrap .change-control")
-changeControlElement.addEventListener
 
-var validUserPattern = /^[a-z0-9_-]{1,16}$/
+// 
+changeControlElement.addEventListener("click", (e)=> {
+    if(e.target.textContent == "change") {
+        userInputElement.removeAttribute("disabled")
+        changeControlElement.classList.add("save")
+        changeControlElement.textContent = "save"
+        userInputElement.focus()
+        userInputElement.select()
+    }
+    else if (e.target.textContent == "save") {
+        submitUserNameChange(e)
+    }
+
+
+})
+
 
 // --- username & drawer logic
 userInputElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         e.preventDefault()
-        let username = e.target.value;
-        
-        if(username == gameState.session.id) return;
-
-        if(validUserPattern.test(username)) {
-            socket.emit('username_update', {username, id: gameState.session.id})
-        }
+        submitUserNameChange(e)
+        userInputElement.removeAttribute("disabled")
     } 
 })
 
-
 // --- username functions
+function submitUserNameChange(e) {
+    var validUserPattern = /^[a-z0-9_-]{1,16}$/
+    let username = e.target.value;
+
+    if(username == gameState.session.id) return;
+
+    if(validUserPattern.test(username)) {
+        socket.emit('username_update', {username, id: gameState.session.id})
+    }
+}
 
 function clearUsernameValidationDisplays() {
     inUseUsernameElement.style.display = "none"
