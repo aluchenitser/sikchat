@@ -26,6 +26,9 @@
         <input id="side-bar-toggler" type="checkbox" />
         <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
         <div class="side-bar">
+            <input type="checkbox" id="register-toggler" />
+            <input type="checkbox" id="password-toggler" />
+
             <label class="close" for="side-bar-toggler"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
 
             <div class="side-bar-row">
@@ -47,12 +50,22 @@
                 </select>
             </div>
             <div class="side-bar-row side-bar-row-login">
-                <input type="checkbox" id="register-toggler" />
+
                 <label class="register" for="register-toggler">register</label>
                 <div class="email-wrap">
-                    <span class="email-submit-control" tabindex="0">submit</span>
                     <label class="email" for="register-email">email</label>
                     <input id="email-input-element" class="email" name="email" type="text" autocomplete="off" />
+                </div>
+                <div class="password-wrap">
+                    <label class="password">password</label>
+                    <input id="password" type="text" autocomplete="off" />
+                </div>
+                <div class="retype-password-wrap">
+                    <label class="retype-password">retype password</label>
+                    <input id="retype-password" type="text" autocomplete="off" />
+                </div>
+                <div class="email-submit-wrap">
+                    <span class="email-submit-control" tabindex="0">submit</span>
                 </div>
             </div>
         </div>
@@ -86,7 +99,7 @@
         <script src="js/ui.js"></script>
 
         <script>
-            /* ------------- GENERAL UI ------------- */
+            /* ------------- DRAGGABLE WINDOW DIVIDER ------------- */
             
             var handler = document.querySelector('.handler');
             var chatBody = document.querySelector('.chat-body');

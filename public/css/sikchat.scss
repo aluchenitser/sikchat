@@ -298,7 +298,46 @@ h1, p {
     color: white;
     z-index: 1;
     padding: 23px 10px 10px 15px;
+
+    * {
+        transition: border-radius .2s;
+    }
     
+    &.square {
+        border-radius: 0;
+    }
+
+    #register-toggler {
+        position: absolute;
+        visibility: hidden;
+
+        &:checked ~ .side-bar-row-login .register {
+            display: none;
+        }
+        
+        &:checked ~ .side-bar-row-login .email-wrap {
+            display: block;
+        }
+
+        &:checked ~ .side-bar-row select {
+            border-radius: 0;
+        }
+    }
+    
+ 
+    #password-toggler {
+        visibility: hidden;
+        position: absolute;
+
+        &:checked ~ .side-bar-row-login .password-wrap, &:checked ~ .side-bar-row-login .retype-password-wrap, &:checked ~ .side-bar-row-login .email-submit-wrap {
+            display: block;
+        }
+
+        &:checked ~ .side-bar-row-login .email-wrap #email-input-element {
+            border-radius: 0;
+        }
+    }
+
     .side-bar-row {
         margin-bottom: 10px;
 
@@ -308,19 +347,7 @@ h1, p {
 
 
         &.side-bar-row-login {
-            #register-toggler {
-                position: absolute;
-                visibility: hidden;
-
-                &:checked + .register {
-                    display: none;
-                }
-                
-                &:checked ~ .email-wrap {
-                    display: block;
-                }
-            }
-            
+          
             .register {
                 cursor: pointer;
                 user-select: none;
@@ -333,6 +360,7 @@ h1, p {
             .email-wrap {
                 display: none;
                 position: relative;
+                margin-bottom: 10px;
                                 
                 input.email {
                     border-radius: 0 0 13px 0;
@@ -345,6 +373,22 @@ h1, p {
                     opacity: 0.6;
                 }
             }
+
+            .password-wrap {
+                display: none;
+            }
+
+            .retype-password-wrap {
+                display: none;
+                margin-bottom: 10px;
+                position: relative;
+            }
+            
+            .email-submit-wrap {
+                display: none;
+                text-align: right;
+            }
+           
 
         }
     }

@@ -240,21 +240,40 @@ body.show-header .chat-bar {
   z-index: 1;
   padding: 23px 10px 10px 15px;
 }
+.side-bar * {
+  transition: border-radius 0.2s;
+}
+.side-bar.square {
+  border-radius: 0;
+}
+.side-bar #register-toggler {
+  position: absolute;
+  visibility: hidden;
+}
+.side-bar #register-toggler:checked ~ .side-bar-row-login .register {
+  display: none;
+}
+.side-bar #register-toggler:checked ~ .side-bar-row-login .email-wrap {
+  display: block;
+}
+.side-bar #register-toggler:checked ~ .side-bar-row select {
+  border-radius: 0;
+}
+.side-bar #password-toggler {
+  visibility: hidden;
+  position: absolute;
+}
+.side-bar #password-toggler:checked ~ .side-bar-row-login .password-wrap, .side-bar #password-toggler:checked ~ .side-bar-row-login .retype-password-wrap, .side-bar #password-toggler:checked ~ .side-bar-row-login .email-submit-wrap {
+  display: block;
+}
+.side-bar #password-toggler:checked ~ .side-bar-row-login .email-wrap #email-input-element {
+  border-radius: 0;
+}
 .side-bar .side-bar-row {
   margin-bottom: 10px;
 }
 .side-bar .side-bar-row:last-of-type {
   margin: 0;
-}
-.side-bar .side-bar-row.side-bar-row-login #register-toggler {
-  position: absolute;
-  visibility: hidden;
-}
-.side-bar .side-bar-row.side-bar-row-login #register-toggler:checked + .register {
-  display: none;
-}
-.side-bar .side-bar-row.side-bar-row-login #register-toggler:checked ~ .email-wrap {
-  display: block;
 }
 .side-bar .side-bar-row.side-bar-row-login .register {
   cursor: pointer;
@@ -266,6 +285,7 @@ body.show-header .chat-bar {
 .side-bar .side-bar-row.side-bar-row-login .email-wrap {
   display: none;
   position: relative;
+  margin-bottom: 10px;
 }
 .side-bar .side-bar-row.side-bar-row-login .email-wrap input.email {
   border-radius: 0 0 13px 0;
@@ -275,6 +295,18 @@ body.show-header .chat-bar {
   right: 0;
   cursor: pointer;
   opacity: 0.6;
+}
+.side-bar .side-bar-row.side-bar-row-login .password-wrap {
+  display: none;
+}
+.side-bar .side-bar-row.side-bar-row-login .retype-password-wrap {
+  display: none;
+  margin-bottom: 10px;
+  position: relative;
+}
+.side-bar .side-bar-row.side-bar-row-login .email-submit-wrap {
+  display: none;
+  text-align: right;
 }
 .side-bar label.close {
   position: absolute;
