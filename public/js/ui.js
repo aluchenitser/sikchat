@@ -283,7 +283,11 @@ emailInputElement.addEventListener("keydown", (e)=> {
     if(validEmailPattern.test(e.target.value)) {
         passwordTogglerElement.checked = true;
         sideBarElement.classList.add("square");
-    } 
+    }
+    else {
+        passwordTogglerElement.checked = false;
+        sideBarElement.classList.remove("square");        
+    }
 })
 
 
