@@ -215,6 +215,34 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 /* -------------------- SESSION --------------------- */
 
+var t;    
+socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
+    console.log("username_update_response")
+    console.log(data)
+
+    if(data.foundDuplicate) {
+        changeControlElement.textContent = 'duplicate'
+        resetChangeControl()
+    }
+    else {
+        gameState.session.data.username = data.username
+        changeControlElement.textContent = 'changed!'
+
+        resetChangeControl()
+        userInputElement.blur()
+    
+    }
+})
+
+function resetChangeControl() {
+    clearTimeout(t)
+    t = setTimeout(()=> {
+        if(document.activeElement != userInputElement) {
+            changeControlElement.textContent = 'change'
+        }
+    }, 2000)
+}
+
 var changeControlElement = document.querySelector(".user-label-wrap .change-control")
 
 // 
@@ -229,12 +257,10 @@ changeControlElement.addEventListener("click", (e)=> {
     else if (e.target.textContent == "save") {
         submitUserNameChange(e)
     }
-
-
 })
 
 
-// --- username & drawer logic
+// --- username keyboard logic
 userInputElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         e.preventDefault()
@@ -243,22 +269,26 @@ userInputElement.addEventListener("keydown", e => {
     } 
 })
 
+userInputElement.addEventListener("blur", e => {    
+    userInputElement.setAttribute("disabled", "true")
+    if(changeControlElement.textContent == 'save') {
+        changeControlElement.textContent = 'change'
+    }
+})
+
 // --- username functions
 function submitUserNameChange(e) {
-    var validUserPattern = /^[a-z0-9_-]{1,16}$/
+    // var validUserPattern = /^[a-z0-9_-]{1,16}$/
+
+    var validUserPattern = /^[a-zA-Z0-9 ]*$/
     let username = e.target.value;
 
     if(username == gameState.session.id) return;
 
     if(validUserPattern.test(username)) {
+        changeControlElement.textContent = "checking.."
         socket.emit('username_update', {username, id: gameState.session.id})
     }
-}
-
-function clearUsernameValidationDisplays() {
-    inUseUsernameElement.style.display = "none"
-    bogusUsernameElement.style.display = "none"
-    checkingUsernameElement.style.display = "none"
 }
 
 // --- cookie functions

@@ -288,7 +288,7 @@ io.on('connection', (socket) => {
         gameState.chatCount++
     })
     
-    socket.on('username_update', (msg) => {         // { username, guid }
+    socket.on('username_update', (msg) => {         // { username, id }
         let foundDuplicate = false;
 
         // look for duplicate username

@@ -10,6 +10,7 @@ module.exports = {
             this.created = date.format()
             this.last = date.format()
             this.username = username
+            this.email = null
             this.password = null
 
             // current round          

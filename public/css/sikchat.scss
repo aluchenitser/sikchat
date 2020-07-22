@@ -360,10 +360,12 @@ h1, p {
 
         #username {
             font-size: 16px;
-            &[disabled] {
+            &:disabled {
                 color: black;
                 background-color: white;
+                user-select: none;
             }
+            
         }
     }
 }

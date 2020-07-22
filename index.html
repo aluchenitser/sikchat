@@ -43,7 +43,7 @@
                     <option>slang</option>
                     <option>maps</option>
                     <option>madlibs</option>
-                    <option>qewrty</option>
+                    <option>qwerty</option>
                 </select>
             </div>
         </div>
@@ -90,7 +90,7 @@
             initDrag()
 
             document.addEventListener('mousedown', function(e) {
-                console.log()
+                // console.log()
 
                 // If mousedown event is fired from .handler, toggle flag to true
                 if (e.target === handler) {
@@ -121,7 +121,7 @@
             document.addEventListener('mouseup', function(e) {
                 // Turn off dragging flag when user mouse is up
                 isHandlerDragging = false;
-                console.log(e.target)
+                // console.log(e.target)
             });
 
 
@@ -150,7 +150,7 @@
             });
 
             window.addEventListener("keyup", function(e) {
-                console.log(e)
+                // console.log(e)
                 if(e.key == "Escape" && e.target.id != "message-input") {
                     document.getElementById("side-bar-toggler").checked = false
                 }
