@@ -13,8 +13,12 @@ var checkingUsernameElement = document.querySelector('.checking-username')
 var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
 // var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
 var gameWindowElement = document.getElementById("game-window")
-
 var messagesElement = document.getElementById("messages")
+
+
+var changeControlElement = document.querySelector(".user-label-wrap .change-control")
+var emailInputElement = document.getElementById("email-input-element")
+
 
 // game state
 var gameState = {
@@ -215,7 +219,7 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 /* -------------------- SESSION --------------------- */
 
-var t;    
+var timeout_user;    
 socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
     console.log("username_update_response")
     console.log(data)
@@ -234,18 +238,8 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
     }
 })
 
-function resetChangeControl() {
-    clearTimeout(t)
-    t = setTimeout(()=> {
-        if(document.activeElement != userInputElement) {
-            changeControlElement.textContent = 'change'
-        }
-    }, 2000)
-}
 
-var changeControlElement = document.querySelector(".user-label-wrap .change-control")
-
-// 
+// -- username mouse logic
 changeControlElement.addEventListener("click", (e)=> {
     if(e.target.textContent == "change") {
         userInputElement.removeAttribute("disabled")
@@ -273,10 +267,36 @@ userInputElement.addEventListener("blur", e => {
     userInputElement.setAttribute("disabled", "true")
     if(changeControlElement.textContent == 'save') {
         changeControlElement.textContent = 'change'
+        changeControlElement.classList.remove("save")
+        userInputElement.value = gameState.session.data.username
     }
 })
 
-// --- username functions
+// --- email input logic
+emailInputElement.addEventListener("keydown") {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        e.preventDefault()
+        submitUserNameChange(e)
+        userInputElement.removeAttribute("disabled")
+    } 
+}
+
+
+/* -------------------- FUNCTIONS --------------------- */
+// email functions 
+function submitEmail(e) {
+    var validEmailPattern = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/
+    let email = e.target.value;
+
+    if(validUserPattern.test(username)) {
+        
+        // .. open 2 password fields before submission
+
+    }
+}
+
+
+// username functions
 function submitUserNameChange(e) {
     // var validUserPattern = /^[a-z0-9_-]{1,16}$/
 
@@ -291,8 +311,20 @@ function submitUserNameChange(e) {
     }
 }
 
-// --- cookie functions
 
+function resetChangeControl() {
+    clearTimeout(timeout_user)
+    timeout_user = setTimeout(()=> {
+        if(document.activeElement != userInputElement) {
+            changeControlElement.textContent = 'change'
+            changeControlElement.classList.remove("save")
+
+        }
+    }, 2000)
+}
+
+
+// cookie functions
 function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"

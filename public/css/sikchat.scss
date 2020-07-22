@@ -305,6 +305,48 @@ h1, p {
         &:last-of-type {
             margin: 0;
         }
+
+
+        &.side-bar-row-login {
+            #register-toggler {
+                position: absolute;
+                visibility: hidden;
+
+                &:checked + .register {
+                    display: none;
+                }
+                
+                &:checked ~ .email-wrap {
+                    display: block;
+                }
+            }
+            
+            .register {
+                cursor: pointer;
+                user-select: none;
+    
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .email-wrap {
+                display: none;
+                position: relative;
+                                
+                input.email {
+                    border-radius: 0 0 13px 0;
+                }
+
+                .email-submit-control {
+                    position: absolute;
+                    right: 0;
+                    cursor: pointer;
+                    opacity: 0.6;
+                }
+            }
+
+        }
     }
 
     label.close {
