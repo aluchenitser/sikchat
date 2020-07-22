@@ -26,11 +26,16 @@
         <input id="side-bar-toggler" type="checkbox" />
         <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
         <div class="side-bar">
-            <label class="close" for="side-bar-toggler"></label>
+            <label class="close" for="side-bar-toggler"><i class="fa fa-close"></i></label>
 
             <div class="side-bar-row">
                 <label>moniker</label>
-                <div class="user-bar"><input id="username" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" /><button id="user-submit"></button></div>
+                <form id="user-bar" class="user-bar">
+                    <input id="username" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" />
+
+                    <i class="indicator fa fa-caret-right" ></i>
+                    <!-- <span class="indicator">&lt;</span> -->
+                </form> 
             </div>
             <div class="side-bar-row">
                 <label>rooms</label><br />

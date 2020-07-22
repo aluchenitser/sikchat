@@ -56,7 +56,9 @@ var gameState = {
         gameState.session.data = JSON.parse(data)
         gameState.session.debug = debug
 
-        userInputElement.value = gameState.session.id
+        userInputElement.value = gameState.session.id.indexOf("0.") != -1 
+            ? "someone" 
+            : gameState.session.data.username
     }
 }()
 
@@ -209,123 +211,21 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 /* -------------------- SESSION --------------------- */
 
-
-
-/* -------------------- DRAWER --------------------- */
 var validUserPattern = /^[a-z0-9_-]{1,16}$/
 
-// // --- username & drawer logic
-// userInputElement.addEventListener("keydown", e => {
-//     if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == "Tab") {
-//         e.preventDefault()
+// --- username & drawer logic
+userInputElement.addEventListener("keydown", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        e.preventDefault()
+        let username = e.target.value;
         
-//         if(e.key == "Enter" || e.key == "NumpadEnter") {
-//             closeDrawerFocusMessageInput()
-//         }
-//         else if (e.key == "Tab") {
-//             messageInputElement.focus()
-//         }
-//     } 
-// })
+        if(username == gameState.session.id) return;
 
-// // --- change user name + validation
-// let timer = null;
-// userInputElement.addEventListener("keyup", e => {
-    
-//     let username = e.target.value;
-//     clearUsernameValidationDisplays()
-//     if(username == currentUserName) return;
-
-//     if(validUserPattern.test(username)) {
-//         checkingUsernameElement.style.display = "inline"
-        
-//         // buffer for UX, lookup waits a second
-//         clearTimeout(timer)
-//         timer = setTimeout(()=> {
-//             socket.emit('username_update', {username, guid: currentUserGUID})
-//         }, 1000)
-//     }
-//     else {
-//         bogusUsernameElement.style.display = "inline";
-//     }
-// })
-
-// var userInputMouseDown = false
-// var userInputArrivedByTab = false
-
-// document.body.addEventListener('mousedown', function (e) {
-//     if(e.targetid != "username") {
-//         userInputArrivedByTab = false
-//     }
-// })
-
-// userInputElement.addEventListener('mousedown', function () {
-//     userInputMouseDown = true
-// })
-
-// userInputElement.addEventListener('focusin', function () {
-//     if(!userInputMouseDown && !drawerIsOpen()) {
-//         openDrawer()
-//         userInputArrivedByTab = true
-//     }
-//     userInputMouseDown = false
-// })
-
-// userInputElement.addEventListener("blur", e => {
-//     if(userInputArrivedByTab)
-//     closeDrawer()
-    
-//     userInputArrivedByTab = false
-//     tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-// })
-
-// drawerHandleElement.addEventListener("click", toggleDrawerFreeFLoat)
-
-// socket.on("username_update_response", msg => {          // { username, foundDuplicate }
-
-//     if(msg.foundDuplicate) {
-//         clearUsernameValidationDisplays();
-//         inUseUsernameElement.style.display = "inline"
-//     }
-//     else {
-//         // fun effect for successful lookup
-//         currentUserName = msg.username
-//         tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-//         clearUsernameValidationDisplays();
-//         usernameLookupSuccessElement.classList.remove("off")
-//         setTimeout(() => { usernameLookupSuccessElement.classList.add("off") }, 0)
-//     }
-// })
-
-/* ------------------ FUNCTIONS ------------------ */
-
-// --- drawer functions
-// function openDrawer() {
-//     document.body.classList.add("drawer-is-open");
-//     document.getElementById("username").value = currentUserName || "";
-//     clearUsernameValidationDisplays();
-// }
-
-// function closeDrawer() {
-//     document.body.classList.remove("drawer-is-open");
-//     tinyHeaderUserNameElement.innerHTML = currentUserName || "someone"
-// }
-
-// function toggleDrawerFreeFLoat() {
-//     drawerIsOpen() ? closeDrawer() : openDrawer()
-// }
-
-// function closeDrawerFocusMessageInput() {
-//     closeDrawer();
-//     messageInputElement.focus()
-// }
-
-// function drawerIsOpen() {
-//     return document.body.classList.contains("drawer-is-open")
-//         ? true
-//         : false
-// }
-
+        if(validUserPattern.test(username)) {
+            socket.emit('username_update', {username, guid: currentUserGUID})
+        }
+    } 
+})
 
 
 // --- username functions

@@ -311,10 +311,9 @@ h1, p {
 
     label.close {
         position: absolute;
-        top: 0;
-        right: 0;
+        top: -1px;
+        right: 2px;
         cursor: pointer;
-        padding: 4px 15px 4px 8px;
 
     }
 
@@ -342,32 +341,23 @@ h1, p {
     }
 
     .user-bar {
-        display: flex;
+        position: relative;
 
-        input {
-            flex: 1 1 auto;
-        }
-
-        #user-submit {
-
+        #username {
             font-size: 16px;
-            outline: none;
-            border: none;
-
-            color: white;
-            flex: 0 0 30px;
-            background-color: #efefef;
-            transition: background-color 0.1s;
-            // border-radius: 0 15px 15px 0;
-
-            &:focus {
-                text-decoration: underline;
-                background-color: #cecece;
-            }
-
-            &:hover {
+    
+            + .indicator {
+                position: absolute;
+                color: white;
+                right: 5px;
+                font-size: 20px;
                 cursor: pointer;
             }
+            &:focus + .indicator, & + .indicator:focus {
+                color: black;
+                display: inline-block;
+            }
+
         }
     }
 }
@@ -393,9 +383,6 @@ h1, p {
         .logo-column {          flex: .5 1 0;         }
     }
 
-    #username {
-        font-size: 16px;
-    }
 }
 
 // large
