@@ -220,6 +220,8 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 /* -------------------- SESSION --------------------- */
 
+registerTogglerElement = document.getElementById("register-toggler")
+
 var timeout_user;    
 socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
     console.log("username_update_response")
@@ -239,6 +241,10 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
     }
 })
 
+// clear side bar when opening it
+document.querySelector(".show-side-bar").addEventListener("click", e => {
+    clearSideBar()
+})
 
 // -- username mouse logic
 changeControlElement.addEventListener("click", (e)=> {
@@ -278,7 +284,7 @@ var validEmailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^
 var passwordTogglerElement = document.getElementById("password-toggler")
 
 // --- email input logic
-emailInputElement.addEventListener("keydown", (e)=> {
+emailInputElement.addEventListener("keyup", (e)=> {
     console.log("tap", e.target.value)
     if(validEmailPattern.test(e.target.value)) {
         passwordTogglerElement.checked = true;
@@ -290,8 +296,59 @@ emailInputElement.addEventListener("keydown", (e)=> {
     }
 })
 
+var passwordElement = document.getElementById("password");
+var retypePasswordElement = document.getElementById("retype-password")
+
+emailInputElement.addEventListener("blur", (e)=> {
+    if(emailInputElement.value == "") {
+        passwordElement.value = ""
+        retypePasswordElement.value = ""
+        document.getElementById("register-toggler").checked = false
+        document.getElementById("password-toggler").checked = false
+    }
+})
+
+registerLabelElement = document.querySelector("label.register")
+registerLabelElement.addEventListener("click", e => {
+    e.preventDefault()
+    registerTogglerElement.checked = true
+    emailInputElement.focus()
+})
+
+passwordElement.addEventListener("keyup", passwordsAreValid)
+retypePasswordElement.addEventListener("keyup", passwordsAreValid)
+
+
+
+
+var emailSubmitControlElement = document.querySelector(".email-submit-control");
+emailSubmitControlElement.addEventListener("click", e => {
+
+})
 
 /* -------------------- FUNCTIONS --------------------- */
+// sidebar functions
+
+var validatePasswordPattern = /^(?=.*\d).{4,8}$/;   
+
+function passwordsAreValid(e) {
+    validatePasswordPattern.test(passwordElement.value) && validatePasswordPattern.test(retypePasswordElement.value)
+        ? emailSubmitControlElement.classList.add("valid")
+        : emailSubmitControlElement.classList.remove("valid")
+}
+
+function clearSideBar() {
+
+    document.getElementById("register-toggler").checked = false
+    document.getElementById("password-toggler").checked = false
+    emailInputElement.value = ""
+    passwordElement.value = ""
+    retypePasswordElement.value = ""
+    emailSubmitControlElement.classList.remove("valid")
+    userInputElement.value = gameState.session.data.username || "someone"
+}
+
+
 // email functions 
 function submitEmail(e) {
     

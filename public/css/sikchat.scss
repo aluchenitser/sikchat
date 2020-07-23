@@ -233,8 +233,7 @@ h1, p {
 
     &:checked ~ .side-bar {
         left: 0;
-        transition: left .2s .25s; 
-
+        transition: left .2s .25s, border-radius .2s;
     }
    
     &:not(:checked) ~ .side-bar {
@@ -366,12 +365,6 @@ h1, p {
                     border-radius: 0 0 13px 0;
                 }
 
-                .email-submit-control {
-                    position: absolute;
-                    right: 0;
-                    cursor: pointer;
-                    opacity: 0.6;
-                }
             }
 
             .password-wrap {
@@ -387,9 +380,17 @@ h1, p {
             .email-submit-wrap {
                 display: none;
                 text-align: right;
-            }
-           
 
+                .email-submit-control {
+                    cursor: pointer;
+                    opacity: 0.6;
+
+                    &.valid {
+                        cursor: pointer;
+                        opacity: 1;
+                    }
+                }
+            }
         }
     }
 
