@@ -262,6 +262,9 @@ body.show-header .chat-bar {
 .side-bar #register-wrap-toggle:checked ~ .side-bar-row .register-wrap {
   display: block;
 }
+.side-bar #register-wrap-toggle:checked ~ .side-bar-row select {
+  border-radius: 0;
+}
 .side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers .register {
   opacity: 0.3;
 }
@@ -273,6 +276,9 @@ body.show-header .chat-bar {
 }
 .side-bar #login-wrap-toggle:checked ~ .side-bar-row select {
   border-radius: 0;
+}
+.side-bar #register-password-toggle:checked ~ .side-bar-row .password-wrap, .side-bar #register-password-toggle:checked ~ .side-bar-row .retype-password-wrap, .side-bar #register-password-toggle:checked ~ .side-bar-row .register-submit-wrap {
+  display: block;
 }
 .side-bar .side-bar-row {
   margin-bottom: 10px;
@@ -288,9 +294,10 @@ body.show-header .chat-bar {
   opacity: 0.6;
   cursor: pointer;
   user-select: none;
+  transition: opacity 0.2s;
 }
 .side-bar .side-bar-row .login-choosers .login:hover, .side-bar .side-bar-row .login-choosers .register:hover {
-  opacity: 1;
+  opacity: 1 !important;
 }
 .side-bar .side-bar-row .login-choosers .login {
   float: left;
@@ -316,17 +323,21 @@ body.show-header .chat-bar {
   margin-top: 25px;
   cursor: pointer;
 }
-.side-bar .side-bar-row .email-submit-wrap {
+.side-bar .side-bar-row .register-wrap .email-wrap input {
+  border-radius: 0 0 6px 0;
+}
+.side-bar .side-bar-row .register-wrap .password-wrap {
+  margin-bottom: 10px;
+  display: none;
+}
+.side-bar .side-bar-row .register-wrap .retype-password-wrap {
+  display: none;
+}
+.side-bar .side-bar-row .register-wrap .register-submit-wrap {
   display: none;
   text-align: right;
-}
-.side-bar .side-bar-row .email-submit-wrap .email-submit-control {
+  margin-top: 25px;
   cursor: pointer;
-  opacity: 0.6;
-}
-.side-bar .side-bar-row .email-submit-wrap .email-submit-control.valid {
-  cursor: pointer;
-  opacity: 1;
 }
 .side-bar label.close {
   position: absolute;
@@ -359,6 +370,7 @@ body.show-header .chat-bar {
   top: 13px;
   cursor: pointer;
   opacity: 0.6;
+  transition: opacity 0.2s;
 }
 .side-bar .user-label-wrap .change-control:hover, .side-bar .user-label-wrap .change-control:focus, .side-bar .user-label-wrap .change-control.save {
   opacity: 1;

@@ -329,6 +329,10 @@ h1, p {
         &:checked ~ .side-bar-row .register-wrap {
             display: block;
         }
+
+        &:checked ~ .side-bar-row select {
+            border-radius: 0;
+        }   
     }
 
     #login-wrap-toggle {
@@ -348,6 +352,14 @@ h1, p {
         &:checked ~ .side-bar-row select {
             border-radius: 0;
         }      
+    }
+
+    #register-password-toggle {
+        &:checked ~ .side-bar-row {
+            .password-wrap, .retype-password-wrap, .register-submit-wrap {
+                display: block;
+            }
+        }
     }
 
 
@@ -397,9 +409,10 @@ h1, p {
                 opacity: 0.6;
                 cursor: pointer;
                 user-select: none;
+                transition: opacity .2s;
 
                 &:hover {
-                    opacity: 1;
+                    opacity: 1 !important;
                 }
             }
             .login {
@@ -414,7 +427,7 @@ h1, p {
         .login-wrap, .register-wrap {
             clear: both;
             display: none;
-            
+
             hr {
                 border: none;
                 border-top: 1px dashed white;
@@ -429,6 +442,30 @@ h1, p {
 
         .login-wrap {
             .login-submit-wrap {
+                text-align: right;
+                margin-top: 25px;
+                cursor: pointer;
+            }
+        }
+
+        .register-wrap {
+            .email-wrap {
+                input {
+                    border-radius: 0 0 6px 0;
+                }
+            }
+
+            .password-wrap {
+                margin-bottom: 10px;
+                display: none;
+            }
+
+            .retype-password-wrap {
+                display: none;
+            }
+
+            .register-submit-wrap {
+                display: none;
                 text-align: right;
                 margin-top: 25px;
                 cursor: pointer;
@@ -456,20 +493,7 @@ h1, p {
         //     position: relative;
         // }
         
-        .email-submit-wrap {
-            display: none;
-            text-align: right;
-
-            .email-submit-control {
-                cursor: pointer;
-                opacity: 0.6;
-
-                &.valid {
-                    cursor: pointer;
-                    opacity: 1;
-                }
-            }
-        }
+        
     }
 
     label.close {
@@ -511,7 +535,7 @@ h1, p {
             top: 13px;
             cursor: pointer;
             opacity: 0.6;
-            // text-decoration: underline;
+            transition: opacity .2s;
 
             &:hover, &:focus, &.save {
                 opacity: 1;
