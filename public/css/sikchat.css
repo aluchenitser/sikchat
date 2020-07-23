@@ -339,6 +339,13 @@ body.show-header .chat-bar {
   margin-top: 25px;
   cursor: pointer;
 }
+.side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit {
+  opacity: 0.6;
+}
+.side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit.valid {
+  opacity: 1;
+  cursor: pointer;
+}
 .side-bar label.close {
   position: absolute;
   top: 5px;

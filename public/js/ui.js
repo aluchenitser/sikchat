@@ -242,8 +242,12 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
 
 var emailInputLoginElement = document.getElementById("email-input-login")
 var emailInputRegisterElement = document.getElementById("email-input-register")
-var passwordRegisterElement = document.getElementById("password-register")
 var passwordLoginRegister = document.getElementById("password-login")
+var passwordRegisterElement = document.getElementById("password-register")
+var retypePasswordRegisterElement = document.getElementById("retype-password-register")
+
+var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
+// var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 
 // registerTogglerElement = document.getElementById("register-toggle")
 
@@ -334,7 +338,7 @@ var passwordElement = document.getElementById("password");
 var retypePasswordElement = document.getElementById("retype-password")
 
 emailInputRegisterElement.addEventListener("blur", (e)=> {
-    if(emailInputElement.value == "") {
+    if(emailInputRegisterElement.value == "") {
         passwordElement.value = ""
         retypePasswordElement.value = ""
         document.getElementById("register-toggler").checked = false
@@ -342,23 +346,23 @@ emailInputRegisterElement.addEventListener("blur", (e)=> {
     }
 })
 
-registerLabelElement = document.querySelector("label.register")
-registerLabelElement.addEventListener("click", e => {
-    e.preventDefault()
-    registerTogglerElement.checked = true
-    emailInputElement.focus()
-})
+// registerLabelElement = document.querySelector("label.register")
+// registerLabelElement.addEventListener("click", e => {
+//     e.preventDefault()
+//     registerTogglerElement.checked = true
+//     emailInputElement.focus()
+// })
 
-passwordElement.addEventListener("keyup", passwordsAreValid)
-retypePasswordElement.addEventListener("keyup", passwordsAreValid)
-
-
+passwordRegisterElement.addEventListener("keyup", passwordsAreValid)
+retypePasswordRegisterElement.addEventListener("keyup", passwordsAreValid)
 
 
-var emailSubmitControlElement = document.querySelector(".email-submit-control");
-emailSubmitControlElement.addEventListener("click", e => {
 
-})
+
+var registerSubmitControlElement = document.querySelector(".register-submit-control");
+// emailSubmitControlElement.addEventListener("click", e => {
+
+// })
 
 
 
@@ -368,9 +372,18 @@ emailSubmitControlElement.addEventListener("click", e => {
 var validatePasswordPattern = /^(?=.*\d).{4,8}$/;   
 
 function passwordsAreValid(e) {
-    validatePasswordPattern.test(passwordElement.value) && validatePasswordPattern.test(retypePasswordElement.value)
-        ? emailSubmitControlElement.classList.add("valid")
-        : emailSubmitControlElement.classList.remove("valid")
+    
+    if(validatePasswordPattern.test(passwordRegisterElement.value) && 
+        validatePasswordPattern.test(retypePasswordRegisterElement.value) &&
+        passwordRegisterElement.value == retypePasswordRegisterElement.value) {
+
+        console.log("valid")
+        registerSubmitElement.classList.add("valid")
+    }
+    else {
+        console.log("invalid")
+        registerSubmitElement.classList.remove("valid")
+    }
 }
 
 function clearSideBar() {
