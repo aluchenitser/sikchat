@@ -251,7 +251,7 @@ io.on('connection', (socket) => {
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
     socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
 
-    socket.on('chat_message', (chatMessage) => {            // { username, text, chatCount }
+    socket.on('chat_message', (chatMessage) => {            // { id, text, chatCount }
         
         // chat number allows the client to decorate individual messages with visual effects
         chatMessage.chatCount = gameState.chatCount; 

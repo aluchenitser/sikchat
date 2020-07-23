@@ -26,8 +26,11 @@
         <input id="side-bar-toggler" type="checkbox" />
         <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
         <div class="side-bar">
-            <input type="checkbox" id="register-toggler" />
-            <input type="checkbox" id="password-toggler" />
+            <input type="checkbox" class="toggles" id="register-wrap-toggle" />
+            <input type="checkbox" class="toggles" id="login-wrap-toggle" />
+            <!-- <input type="checkbox" id="register-toggler" />
+            <input type="checkbox" id="login-toggler" />
+            <input type="checkbox" id="password-toggler" /> -->
 
             <label class="close" for="side-bar-toggler"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
 
@@ -49,24 +52,43 @@
                     <option>qwerty</option>
                 </select>
             </div>
-            <div class="side-bar-row side-bar-row-login">
-
-                <label class="register" for="register-toggler">register</label>
-                <div class="email-wrap">
-                    <label class="email" for="register-email">email</label>
-                    <input id="email-input-element" class="email" name="email" type="text" autocomplete="off" />
+            <div class="side-bar-row">
+                <div class="login-choosers">
+                    <div class="register" id="register-wrap-toggler">REGISTER</div>
+                    <div class="login" id="login-wrap-toggler">LOGIN</div>
                 </div>
-                <div class="password-wrap">
-                    <label class="password">password (w/ number)</label>
-                    <input id="password" type="password" maxlength="8" autocomplete="off" />
+                 <div class="login-wrap">
+                    <div class="email-wrap">
+                        <label class="email" for="register-email">email</label>
+                        <input id="email-input-element" class="email" name="email" type="text" autocomplete="off" />
+                    </div>
+                    <div class="password-wrap">
+                        <label class="password">password (w/ number)</label>
+                        <input id="password" type="password" maxlength="8" autocomplete="off" />
+                    </div>
                 </div>
+                <div class="register-wrap">
+                    <div class="email-wrap">
+                        <label class="email" for="register-email">email</label>
+                        <input id="email-input-element" class="email" name="email" type="text" autocomplete="off" />
+                    </div>
+                    <div class="password-wrap">
+                        <label class="password">password (w/ number)</label>
+                        <input id="password" type="password" maxlength="8" autocomplete="off" />
+                    </div>
+                    <div class="retype-password-wrap">
+                        <label class="retype-password">retype password</label>
+                        <input id="retype-password" type="password" maxlength="8" autocomplete="off" />
+                    </div>
+                </div>
+<!-- 
                 <div class="retype-password-wrap">
                     <label class="retype-password">retype password</label>
                     <input id="retype-password" type="password" maxlength="8" autocomplete="off" />
                 </div>
                 <div class="email-submit-wrap">
                     <span class="email-submit-control" tabindex="0">submit</span>
-                </div>
+                </div> -->
             </div>
         </div>
 

@@ -306,36 +306,77 @@ h1, p {
         border-radius: 0;
     }
 
-    #register-toggler {
-        position: absolute;
-        visibility: hidden;
+    input.toggles {
+        // position: absolute;
+        // visibility: hidden;
+    }
 
-        &:checked ~ .side-bar-row-login .register {
-            display: none;
-        }
-        
-        &:checked ~ .side-bar-row-login .email-wrap {
-            display: block;
-        }
-
-        &:checked ~ .side-bar-row select {
-            border-radius: 0;
+    #register-wrap-toggle, #login-wrap-toggle {
+        &:checked ~ .side-bar-row .login-choosers {
+            margin-bottom: 10px;
         }
     }
+
+    #register-wrap-toggle {
+        &:checked ~ .side-bar-row .login-choosers {
+            .register {
+                opacity: 1;
+            }
+            .login {
+                opacity: 0.3;
+            }
+        }
+        &:checked ~ .side-bar-row .register-wrap {
+            display: block
+        }
+    }
+
+    #login-wrap-toggle {
+        &:checked ~ .side-bar-row .login-choosers {
+            .register {
+                opacity: 0.3;
+            }
+            .login {
+                opacity: 1;
+            }
+        }
+
+        &:checked ~ .side-bar-row .login-wrap {
+            display: block
+        }        
+    }
+
+
+    // #register-toggler {
+    //     position: absolute;
+    //     visibility: hidden;
+
+    //     &:checked ~ .side-bar-row-login .register {
+    //         display: none;
+    //     }
+        
+    //     &:checked ~ .side-bar-row-login .email-wrap {
+    //         display: block;
+    //     }
+
+    //     &:checked ~ .side-bar-row select {
+    //         border-radius: 0;
+    //     }
+    // }
     
  
-    #password-toggler {
-        visibility: hidden;
-        position: absolute;
+    // #password-toggler {
+    //     visibility: hidden;
+    //     position: absolute;
 
-        &:checked ~ .side-bar-row-login .password-wrap, &:checked ~ .side-bar-row-login .retype-password-wrap, &:checked ~ .side-bar-row-login .email-submit-wrap {
-            display: block;
-        }
+    //     &:checked ~ .side-bar-row-login .password-wrap, &:checked ~ .side-bar-row-login .retype-password-wrap, &:checked ~ .side-bar-row-login .email-submit-wrap {
+    //         display: block;
+    //     }
 
-        &:checked ~ .side-bar-row-login .email-wrap #email-input-element {
-            border-radius: 0;
-        }
-    }
+    //     &:checked ~ .side-bar-row-login .email-wrap #email-input-element {
+    //         border-radius: 0;
+    //     }
+    // }
 
     .side-bar-row {
         margin-bottom: 10px;
@@ -344,51 +385,65 @@ h1, p {
             margin: 0;
         }
 
+        .login-choosers {
+            overflow: hidden;
 
-        &.side-bar-row-login {
-          
-            .register {
+            .login, .register {
+                display: block;
+                opacity: 0.6;
                 cursor: pointer;
                 user-select: none;
-    
+
                 &:hover {
-                    text-decoration: underline;
+                    opacity: 1;
                 }
             }
-
-            .email-wrap {
-                display: none;
-                position: relative;
-                margin-bottom: 10px;
-                                
-                input.email {
-                    border-radius: 0 0 13px 0;
-                }
-
-            }
-
-            .password-wrap {
-                display: none;
-            }
-
-            .retype-password-wrap {
-                display: none;
-                margin-bottom: 10px;
-                position: relative;
+            .login {
+                float: left;
             }
             
-            .email-submit-wrap {
-                display: none;
-                text-align: right;
+            .register {
+                float: right;
+            }
+        }
 
-                .email-submit-control {
+        .login-wrap, .register-wrap {
+            clear: both;
+            display: none;
+        }
+
+        // .email-wrap {
+        //     display: none;
+        //     position: relative;
+        //     margin-bottom: 10px;
+                            
+        //     input.email {
+        //         border-radius: 0 0 13px 0;
+        //     }
+
+        // }
+
+        // .password-wrap {
+        //     display: none;
+        // }
+
+        // .retype-password-wrap {
+        //     display: none;
+        //     margin-bottom: 10px;
+        //     position: relative;
+        // }
+        
+        .email-submit-wrap {
+            display: none;
+            text-align: right;
+
+            .email-submit-control {
+                cursor: pointer;
+                opacity: 0.6;
+
+                &.valid {
                     cursor: pointer;
-                    opacity: 0.6;
-
-                    &.valid {
-                        cursor: pointer;
-                        opacity: 1;
-                    }
+                    opacity: 1;
                 }
             }
         }

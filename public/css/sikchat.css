@@ -246,28 +246,26 @@ body.show-header .chat-bar {
 .side-bar.square {
   border-radius: 0;
 }
-.side-bar #register-toggler {
-  position: absolute;
-  visibility: hidden;
+.side-bar #register-wrap-toggle:checked ~ .side-bar-row .login-choosers, .side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers {
+  margin-bottom: 10px;
 }
-.side-bar #register-toggler:checked ~ .side-bar-row-login .register {
-  display: none;
+.side-bar #register-wrap-toggle:checked ~ .side-bar-row .login-choosers .register {
+  opacity: 1;
 }
-.side-bar #register-toggler:checked ~ .side-bar-row-login .email-wrap {
+.side-bar #register-wrap-toggle:checked ~ .side-bar-row .login-choosers .login {
+  opacity: 0.3;
+}
+.side-bar #register-wrap-toggle:checked ~ .side-bar-row .register-wrap {
   display: block;
 }
-.side-bar #register-toggler:checked ~ .side-bar-row select {
-  border-radius: 0;
+.side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers .register {
+  opacity: 0.3;
 }
-.side-bar #password-toggler {
-  visibility: hidden;
-  position: absolute;
+.side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers .login {
+  opacity: 1;
 }
-.side-bar #password-toggler:checked ~ .side-bar-row-login .password-wrap, .side-bar #password-toggler:checked ~ .side-bar-row-login .retype-password-wrap, .side-bar #password-toggler:checked ~ .side-bar-row-login .email-submit-wrap {
+.side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-wrap {
   display: block;
-}
-.side-bar #password-toggler:checked ~ .side-bar-row-login .email-wrap #email-input-element {
-  border-radius: 0;
 }
 .side-bar .side-bar-row {
   margin-bottom: 10px;
@@ -275,38 +273,37 @@ body.show-header .chat-bar {
 .side-bar .side-bar-row:last-of-type {
   margin: 0;
 }
-.side-bar .side-bar-row.side-bar-row-login .register {
+.side-bar .side-bar-row .login-choosers {
+  overflow: hidden;
+}
+.side-bar .side-bar-row .login-choosers .login, .side-bar .side-bar-row .login-choosers .register {
+  display: block;
+  opacity: 0.6;
   cursor: pointer;
   user-select: none;
 }
-.side-bar .side-bar-row.side-bar-row-login .register:hover {
-  text-decoration: underline;
+.side-bar .side-bar-row .login-choosers .login:hover, .side-bar .side-bar-row .login-choosers .register:hover {
+  opacity: 1;
 }
-.side-bar .side-bar-row.side-bar-row-login .email-wrap {
+.side-bar .side-bar-row .login-choosers .login {
+  float: left;
+}
+.side-bar .side-bar-row .login-choosers .register {
+  float: right;
+}
+.side-bar .side-bar-row .login-wrap, .side-bar .side-bar-row .register-wrap {
+  clear: both;
   display: none;
-  position: relative;
-  margin-bottom: 10px;
 }
-.side-bar .side-bar-row.side-bar-row-login .email-wrap input.email {
-  border-radius: 0 0 13px 0;
-}
-.side-bar .side-bar-row.side-bar-row-login .password-wrap {
-  display: none;
-}
-.side-bar .side-bar-row.side-bar-row-login .retype-password-wrap {
-  display: none;
-  margin-bottom: 10px;
-  position: relative;
-}
-.side-bar .side-bar-row.side-bar-row-login .email-submit-wrap {
+.side-bar .side-bar-row .email-submit-wrap {
   display: none;
   text-align: right;
 }
-.side-bar .side-bar-row.side-bar-row-login .email-submit-wrap .email-submit-control {
+.side-bar .side-bar-row .email-submit-wrap .email-submit-control {
   cursor: pointer;
   opacity: 0.6;
 }
-.side-bar .side-bar-row.side-bar-row-login .email-submit-wrap .email-submit-control.valid {
+.side-bar .side-bar-row .email-submit-wrap .email-submit-control.valid {
   cursor: pointer;
   opacity: 1;
 }

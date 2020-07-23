@@ -176,7 +176,7 @@ socket.on("stats_refresh", ()=> {
 
 
 
-/* -------------------- CHAT --------------------- */
+/* -------------------- CHAT & CHAT INTERACTIONS --------------------- */
 
 document.getElementById('chat-form').addEventListener('submit', e => {
     e.preventDefault()
@@ -191,16 +191,14 @@ document.getElementById('chat-form').addEventListener('submit', e => {
 
 // --- receive chat
 socket.on('chat_message_response', msg => {       // { username, text }
-console.log(msg)
+    console.log(msg)
     let user = userInputElement.value || 'someone'; 
     let messageClass = gameState.session.id == msg.id
         ? 'message-output is-current-user'
         : 'message-output'
 
     
-    let username = gameState.session.id.indexOf("@") == -1
-        ? "@@ mystery person @@"
-        : gameState.session.data.username
+    let username = msg.username
 
     // add new message to UI
     const markup = `<div id="chat_${msg.chatCount}" class='${messageClass}'><div class='user-name'><span>${username}</span></div><p class='output-text'>${msg.text}</p></div>`
@@ -220,7 +218,6 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 /* -------------------- SESSION --------------------- */
 
-registerTogglerElement = document.getElementById("register-toggler")
 
 var timeout_user;    
 socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
@@ -234,17 +231,39 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
     else {
         gameState.session.data.username = data.username
         changeControlElement.textContent = 'changed!'
-
+        
         resetChangeControl()
         userInputElement.blur()
-    
+        
     }
 })
+
+/* ------------------- SIDE BAR --------------------- */
+
+// registerTogglerElement = document.getElementById("register-toggle")
 
 // clear side bar when opening it
 document.querySelector(".show-side-bar").addEventListener("click", e => {
     clearSideBar()
 })
+
+
+loginWrapToggleElement = document.getElementById("login-wrap-toggle")
+loginWrapTogglerElement = document.getElementById("login-wrap-toggler")
+
+registerWrapToggleElement = document.getElementById("register-wrap-toggle")
+registerWrapTogglerElement = document.getElementById("register-wrap-toggler")
+
+loginWrapTogglerElement.addEventListener("click", e => {
+    registerWrapToggleElement.checked = false;
+    loginWrapToggleElement.checked = !loginWrapToggleElement.checked
+})
+
+registerWrapTogglerElement.addEventListener("click", e => {
+    loginWrapToggleElement.checked = false;
+    registerWrapToggleElement.checked = !registerWrapToggleElement.checked    
+})
+
 
 // -- username mouse logic
 changeControlElement.addEventListener("click", (e)=> {
@@ -325,6 +344,8 @@ var emailSubmitControlElement = document.querySelector(".email-submit-control");
 emailSubmitControlElement.addEventListener("click", e => {
 
 })
+
+
 
 /* -------------------- FUNCTIONS --------------------- */
 // sidebar functions
