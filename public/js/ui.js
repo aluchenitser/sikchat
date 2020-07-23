@@ -257,6 +257,10 @@ registerWrapTogglerElement = document.getElementById("register-wrap-toggler")
 loginWrapTogglerElement.addEventListener("click", e => {
     registerWrapToggleElement.checked = false;
     loginWrapToggleElement.checked = !loginWrapToggleElement.checked
+
+    loginWrapToggleElement.checked
+        ? sideBarElement.classList.add("square")
+        : sideBarElement.classList.remove("square")
 })
 
 registerWrapTogglerElement.addEventListener("click", e => {

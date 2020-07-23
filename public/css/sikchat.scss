@@ -307,8 +307,8 @@ h1, p {
     }
 
     input.toggles {
-        // position: absolute;
-        // visibility: hidden;
+        position: absolute;
+        visibility: hidden;
     }
 
     #register-wrap-toggle, #login-wrap-toggle {
@@ -327,7 +327,7 @@ h1, p {
             }
         }
         &:checked ~ .side-bar-row .register-wrap {
-            display: block
+            display: block;
         }
     }
 
@@ -342,8 +342,12 @@ h1, p {
         }
 
         &:checked ~ .side-bar-row .login-wrap {
-            display: block
-        }        
+            display: block;
+        }
+        
+        &:checked ~ .side-bar-row select {
+            border-radius: 0;
+        }      
     }
 
 
@@ -410,6 +414,25 @@ h1, p {
         .login-wrap, .register-wrap {
             clear: both;
             display: none;
+            
+            hr {
+                border: none;
+                border-top: 1px dashed white;
+                height: 1px;
+                margin: 10px auto;
+            }
+
+            .email-wrap {
+                margin-bottom: 10px;
+            }
+        }
+
+        .login-wrap {
+            .login-submit-wrap {
+                text-align: right;
+                margin-top: 25px;
+                cursor: pointer;
+            }
         }
 
         // .email-wrap {

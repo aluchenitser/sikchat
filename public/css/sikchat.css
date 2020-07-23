@@ -246,6 +246,10 @@ body.show-header .chat-bar {
 .side-bar.square {
   border-radius: 0;
 }
+.side-bar input.toggles {
+  position: absolute;
+  visibility: hidden;
+}
 .side-bar #register-wrap-toggle:checked ~ .side-bar-row .login-choosers, .side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers {
   margin-bottom: 10px;
 }
@@ -266,6 +270,9 @@ body.show-header .chat-bar {
 }
 .side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-wrap {
   display: block;
+}
+.side-bar #login-wrap-toggle:checked ~ .side-bar-row select {
+  border-radius: 0;
 }
 .side-bar .side-bar-row {
   margin-bottom: 10px;
@@ -294,6 +301,20 @@ body.show-header .chat-bar {
 .side-bar .side-bar-row .login-wrap, .side-bar .side-bar-row .register-wrap {
   clear: both;
   display: none;
+}
+.side-bar .side-bar-row .login-wrap hr, .side-bar .side-bar-row .register-wrap hr {
+  border: none;
+  border-top: 1px dashed white;
+  height: 1px;
+  margin: 10px auto;
+}
+.side-bar .side-bar-row .login-wrap .email-wrap, .side-bar .side-bar-row .register-wrap .email-wrap {
+  margin-bottom: 10px;
+}
+.side-bar .side-bar-row .login-wrap .login-submit-wrap {
+  text-align: right;
+  margin-top: 25px;
+  cursor: pointer;
 }
 .side-bar .side-bar-row .email-submit-wrap {
   display: none;
