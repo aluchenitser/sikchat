@@ -261,6 +261,8 @@ app.route('/')
     })
     .post((req, res) => {
         if (req.session.user && req.cookies.sik_sid) {
+            
+            // register new login
             if(req.body.register == true) {
 
                 if(userRepo.hasOwnProperty(req.body.email)) {
@@ -272,6 +274,18 @@ app.route('/')
                     req.session.user.username = req.body.username
                     userRepo[req.body.email] = req.session.user
                     res.send("success")
+                }
+            }
+
+            // existing login (session likely expired)
+            else {
+
+                if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
+                    req.session.user = userRepo[req.body.email]
+                    res.send("success")
+                }
+                else {
+                    res.send("failed login")
                 }
             }
         }

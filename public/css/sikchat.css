@@ -326,6 +326,12 @@ body.show-header .chat-bar {
   margin-top: 25px;
   cursor: pointer;
 }
+.side-bar .side-bar-row .login-wrap .login-submit-wrap .login-submit {
+  opacity: 0.6;
+}
+.side-bar .side-bar-row .login-wrap .login-submit-wrap .login-submit.valid {
+  opacity: 1;
+}
 .side-bar .side-bar-row .register-wrap .email-wrap input {
   border-radius: 0 0 6px 0;
 }

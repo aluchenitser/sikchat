@@ -239,8 +239,11 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
 /* ------------------- SIDE BAR --------------------- */
 
 var emailInputLoginElement = document.getElementById("email-input-login")
-var emailInputRegisterElement = document.getElementById("email-input-register")
 var passwordLoginElement = document.getElementById("password-login")
+var loginSubmitElement = document.querySelector(".login-submit-wrap .login-submit")
+ 
+
+var emailInputRegisterElement = document.getElementById("email-input-register")
 var passwordRegisterElement = document.getElementById("password-register")
 var retypePasswordRegisterElement = document.getElementById("retype-password-register")
 
@@ -325,7 +328,7 @@ userInputElement.addEventListener("blur", e => {
     }
 })
 
-// just whoah
+// just whoah email regex
 var validEmailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
 
@@ -376,7 +379,7 @@ registerSubmitElement.addEventListener("click", e => {
             url: '/',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, register: true, username: gameState.session.data.username}),
+            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.data.username, register: true}),
             success: function(response){
                 if(response == "success") {
                     // registerSubmitStatusElement.value = ""
@@ -395,6 +398,67 @@ registerSubmitElement.addEventListener("click", e => {
         })
     }
 })
+
+emailInputLoginElement.addEventListener("keyup", (e)=> {
+    // console.log('tap')
+
+    if(validEmailPattern.test(e.target.value)) {
+        // console.log("valid")
+        if(passwordLoginElement.value.length > 0) {
+            // console.log("valid and long")
+            loginSubmitElement.classList.add('valid')
+        }
+    }
+    else {
+        loginSubmitElement.classList.remove('valid')
+    }
+})
+
+passwordLoginElement.addEventListener("keyup", (e)=> {
+    console.log('tap')
+    
+    if(validEmailPattern.test(emailInputLoginElement.value) && e.target.value.length > 0) {
+        console.log('valid & long')
+        loginSubmitElement.classList.add('valid')
+    }
+    else {
+        console.log('bogus')
+        loginSubmitElement.classList.remove('valid')
+    }
+})
+
+loginSubmitElement.addEventListener("click", e => {
+    if(loginSubmitElement.classList.contains('valid')) {
+        console.log(emailInputLoginElement.value,passwordLoginElement.value)
+        loginSubmitElement.textContent = "checking.."
+        loginSubmitElement.setAttribute("disabled", true)
+        
+
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, register: false }),
+            success: function(response){
+                if(response == "success") {
+                    // registerSubmitStatusElement.value = ""
+                    setTimeout(() => {
+                        loginSubmitElement.textContent="success!"
+                        setTimeout(() => {
+                            loginSubmitElement.removeAttribute("disabled")
+                            document.querySelectorAll(".toggles").forEach( el => el.checked = false )
+                           
+                        }, 2000)
+                    }, 2000)
+                }
+                else {
+
+                }
+            }
+        })
+    }
+
+
 
 
 // function resetChangeControl() {

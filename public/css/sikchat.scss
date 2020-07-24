@@ -449,6 +449,14 @@ h1, p {
                 text-align: right;
                 margin-top: 25px;
                 cursor: pointer;
+
+                .login-submit {
+                    opacity: 0.6;
+
+                    &.valid {
+                        opacity: 1;
+                    }
+                }
             }
         }
 
