@@ -340,10 +340,15 @@ body.show-header .chat-bar {
   display: none;
   text-align: right;
   margin-top: 25px;
+  overflow: hidden;
+}
+.side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit-status {
+  float: left;
 }
 .side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit {
   opacity: 0.6;
   user-select: none;
+  float: right;
 }
 .side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit.valid {
   opacity: 1;

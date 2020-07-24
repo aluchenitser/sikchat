@@ -472,10 +472,16 @@ h1, p {
                 display: none;
                 text-align: right;
                 margin-top: 25px;
+                overflow: hidden;
+
+                .register-submit-status {
+                    float: left;
+                }
 
                 .register-submit {
                     opacity: 0.6;
                     user-select: none;
+                    float: right;
                     
                     &.valid {
                         opacity: 1;

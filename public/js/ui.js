@@ -247,6 +247,7 @@ var retypePasswordRegisterElement = document.getElementById("retype-password-reg
 var registerPasswordToggleElement = document.getElementById("register-password-toggle")
 
 var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
+var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
 // var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 
 // registerTogglerElement = document.getElementById("register-toggle")
@@ -367,21 +368,45 @@ retypePasswordRegisterElement.addEventListener("keyup", passwordsAreValid)
 registerSubmitElement.addEventListener("click", e => {
     if(registerSubmitElement.classList.contains('valid')) {
         console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
+        registerSubmitElement.textContent = "checking.."
+        registerSubmitElement.setAttribute("disabled", true)
+        
 
         $.ajax({
             url: '/',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, register: true, username}),
+            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, register: true, username: gameState.session.data.username}),
             success: function(response){
                 if(response == "success") {
-                    
+                    // registerSubmitStatusElement.value = ""
+                    setTimeout(() => {
+                        registerSubmitElement.textContent="success!"
+                        setTimeout(() => {
+                            document.querySelectorAll(".toggles").forEach( el => el.checked = false )
+                            sideBarElement.classList.remove("square")
+                        }, 2000)
+                    }, 2000)
+                }
+                else {
+
                 }
             }
         })
     }
 })
 
+
+// function resetChangeControl() {
+//     clearTimeout(timeout_user)
+//     timeout_user = setTimeout(()=> {
+//         if(document.activeElement != userInputElement) {
+//             changeControlElement.textContent = 'change'
+//             changeControlElement.classList.remove("save")
+
+//         }
+//     }, 2000)
+// }
 
 
 
