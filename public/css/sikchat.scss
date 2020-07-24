@@ -359,6 +359,10 @@ h1, p {
             .password-wrap, .retype-password-wrap, .register-submit-wrap {
                 display: block;
             }
+
+            .email-wrap input {
+                border-radius: 0;
+            }
         }
     }
 
@@ -468,10 +472,10 @@ h1, p {
                 display: none;
                 text-align: right;
                 margin-top: 25px;
-                cursor: pointer;
 
                 .register-submit {
                     opacity: 0.6;
+                    user-select: none;
                     
                     &.valid {
                         opacity: 1;
@@ -541,7 +545,7 @@ h1, p {
             position: absolute;
             display: inline-block;
             right: 11px;
-            top: 13px;
+            top: 11px;
             cursor: pointer;
             opacity: 0.6;
             transition: opacity .2s;

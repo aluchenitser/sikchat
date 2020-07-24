@@ -7,10 +7,10 @@ var submitButtonElement = document.getElementById('submit-button')
 var drawerHandleElement = document.querySelector('.drawer-handle')
 
 var userInputElement = document.getElementById('username')
-var bogusUsernameElement = document.querySelector('.bogus-username')
-var inUseUsernameElement = document.querySelector('.in-use-username')
-var checkingUsernameElement = document.querySelector('.checking-username')
-var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
+// var bogusUsernameElement = document.querySelector('.bogus-username')
+// var inUseUsernameElement = document.querySelector('.in-use-username')
+// var checkingUsernameElement = document.querySelector('.checking-username')
+// var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
 // var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
 var gameWindowElement = document.getElementById("game-window")
 var messagesElement = document.getElementById("messages")
@@ -49,21 +49,19 @@ var gameState = {
 
 // read session
 !function() {
-    let id = getCookie("sik_id")
     let data = getCookie("sik_data")
     let debug = getCookie("sik_debug")
     
-    if (id == undefined || data == undefined || debug == undefined) {
+    if (data == undefined || debug == undefined) {
         throw "bogus cookies: browser may have cookies disabled"
     }
     else {
-        gameState.session.id = id
+        console.log(data);
+
         gameState.session.data = JSON.parse(data)
         gameState.session.debug = debug
 
         userInputElement.value = gameState.session.data.username
-            ? gameState.session.data.username
-            : "someone"
     }
 }()
 
@@ -242,9 +240,11 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
 
 var emailInputLoginElement = document.getElementById("email-input-login")
 var emailInputRegisterElement = document.getElementById("email-input-register")
-var passwordLoginRegister = document.getElementById("password-login")
+var passwordLoginElement = document.getElementById("password-login")
 var passwordRegisterElement = document.getElementById("password-register")
 var retypePasswordRegisterElement = document.getElementById("retype-password-register")
+
+var registerPasswordToggleElement = document.getElementById("register-password-toggle")
 
 var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 // var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
@@ -280,7 +280,12 @@ registerWrapTogglerElement.addEventListener("click", e => {
     loginWrapToggleElement.checked = false;
     registerWrapToggleElement.checked = !registerWrapToggleElement.checked    
 
-    sideBarElement.classList.remove("square")
+    if(registerPasswordToggleElement.checked == true) {
+        sideBarElement.classList.add("square")
+    }
+    else {
+        sideBarElement.classList.remove("square")
+    }
 })
 
 
@@ -319,7 +324,7 @@ userInputElement.addEventListener("blur", e => {
 
 // just whoah
 var validEmailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-var registerPasswordToggleElement = document.getElementById("register-password-toggle")
+
 
 // --- email input logic
 emailInputRegisterElement.addEventListener("keyup", (e)=> {
@@ -357,12 +362,23 @@ passwordRegisterElement.addEventListener("keyup", passwordsAreValid)
 retypePasswordRegisterElement.addEventListener("keyup", passwordsAreValid)
 
 
+registerSubmitElement.addEventListener("click", e => {
+    if(registerSubmitElement.classList.contains('valid')) {
+        console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
 
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, register: true}),
+            success: function(response){
+                console.log("post callback")
+                console.log(response)
+            }
+        })
+    }
+})
 
-var registerSubmitControlElement = document.querySelector(".register-submit-control");
-// emailSubmitControlElement.addEventListener("click", e => {
-
-// })
 
 
 
@@ -372,29 +388,28 @@ var registerSubmitControlElement = document.querySelector(".register-submit-cont
 var validatePasswordPattern = /^(?=.*\d).{4,8}$/;   
 
 function passwordsAreValid(e) {
-    
+
     if(validatePasswordPattern.test(passwordRegisterElement.value) && 
         validatePasswordPattern.test(retypePasswordRegisterElement.value) &&
         passwordRegisterElement.value == retypePasswordRegisterElement.value) {
 
-        console.log("valid")
         registerSubmitElement.classList.add("valid")
     }
     else {
-        console.log("invalid")
         registerSubmitElement.classList.remove("valid")
     }
 }
 
 function clearSideBar() {
+    loginWrapToggleElement.checked = false
+    registerWrapToggleElement.checked = false
+    emailInputRegisterElement.value = ""
+    emailInputLoginElement.value = ""
+    passwordRegisterElement.value = ""
+    retypePasswordRegisterElement.value = ""
 
-    document.getElementById("register-toggler").checked = false
-    document.getElementById("password-toggler").checked = false
-    emailInputElement.value = ""
-    passwordElement.value = ""
-    retypePasswordElement.value = ""
-    emailSubmitControlElement.classList.remove("valid")
-    userInputElement.value = gameState.session.data.username || "someone"
+    registerSubmitElement.classList.remove("valid")
+    // userInputElement.value = gameState.session.data.username || "someone"
 }
 
 
@@ -422,7 +437,7 @@ function submitUserNameChange(e) {
 
     if(validUserPattern.test(username)) {
         changeControlElement.textContent = "checking.."
-        socket.emit('username_update', {username, id: gameState.session.id})
+        socket.emit('username_update', username)
     }
 }
 

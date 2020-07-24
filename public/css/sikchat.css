@@ -280,6 +280,9 @@ body.show-header .chat-bar {
 .side-bar #register-password-toggle:checked ~ .side-bar-row .password-wrap, .side-bar #register-password-toggle:checked ~ .side-bar-row .retype-password-wrap, .side-bar #register-password-toggle:checked ~ .side-bar-row .register-submit-wrap {
   display: block;
 }
+.side-bar #register-password-toggle:checked ~ .side-bar-row .email-wrap input {
+  border-radius: 0;
+}
 .side-bar .side-bar-row {
   margin-bottom: 10px;
 }
@@ -337,10 +340,10 @@ body.show-header .chat-bar {
   display: none;
   text-align: right;
   margin-top: 25px;
-  cursor: pointer;
 }
 .side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit {
   opacity: 0.6;
+  user-select: none;
 }
 .side-bar .side-bar-row .register-wrap .register-submit-wrap .register-submit.valid {
   opacity: 1;
@@ -374,7 +377,7 @@ body.show-header .chat-bar {
   position: absolute;
   display: inline-block;
   right: 11px;
-  top: 13px;
+  top: 11px;
   cursor: pointer;
   opacity: 0.6;
   transition: opacity 0.2s;
