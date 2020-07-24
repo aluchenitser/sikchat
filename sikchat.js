@@ -247,6 +247,7 @@ app.route('/')
         
         res.cookie("sik_data", JSON.stringify(mapToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
         
+        // strips authentication and some other stuff
         function mapToClientUser(user) {
             let clone = JSON.parse(JSON.stringify(user))
             delete clone.created
@@ -256,15 +257,25 @@ app.route('/')
             delete clone.guid
 
             return clone
-            
         }
     })
     .post((req, res) => {
-        if(req.body.register == true) {
+        if (req.session.user && req.cookies.sik_sid) {
+            if(req.body.register == true) {
 
-            let user = new User(req.body.user, req.body.password)
-            console.log("true!")
+                if(userRepo.hasOwnProperty(eq.body.email)) {
+                    res.send("duplicate email")
+                }
+                else {
+                    req.session.user.email = req.body.email
+                    req.session.user.password = req.body.password
+                    req.session.user.username = req.body.username
+                    userRepo[req.body.email] = req.session.user
+                    res.send("success")
+                }
+            }
         }
+        else { res.statusCode(403) }
     })
 
     // function createUser() {
