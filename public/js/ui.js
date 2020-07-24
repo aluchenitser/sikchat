@@ -263,6 +263,8 @@ loginWrapTogglerElement = document.getElementById("login-wrap-toggler")
 registerWrapToggleElement = document.getElementById("register-wrap-toggle")
 registerWrapTogglerElement = document.getElementById("register-wrap-toggler")
 
+loginChoosersElement = document.querySelector(".login-choosers")
+
 loginWrapTogglerElement.addEventListener("click", e => {
     registerWrapToggleElement.checked = false;
     loginWrapToggleElement.checked = !loginWrapToggleElement.checked
@@ -370,10 +372,11 @@ registerSubmitElement.addEventListener("click", e => {
             url: '/',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, register: true}),
+            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, register: true, username}),
             success: function(response){
-                console.log("post callback")
-                console.log(response)
+                if(response == "success") {
+                    
+                }
             }
         })
     }

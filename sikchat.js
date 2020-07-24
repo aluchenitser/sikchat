@@ -263,7 +263,7 @@ app.route('/')
         if (req.session.user && req.cookies.sik_sid) {
             if(req.body.register == true) {
 
-                if(userRepo.hasOwnProperty(eq.body.email)) {
+                if(userRepo.hasOwnProperty(req.body.email)) {
                     res.send("duplicate email")
                 }
                 else {
