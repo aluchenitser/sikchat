@@ -181,7 +181,7 @@ app.route('/')
                     console.log("--- req.body ---") 
                     console.log(req.body)
 
-                    let user = new User(req.body.email, req.body.password, req.body.username)
+                    let user = new User(req.body.email, req.body.password)   // newly registered user has default username of "someone"
                     
                     // update session and add to user repo
                     req.session.user = user
@@ -308,10 +308,17 @@ io.on('connection', (socket) => {
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
     socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
 
-    socket.on('chat_message', (chatMessage) => {            // { id, text, chatCount }
+    
+
+    socket.on('chat_message', (text) => {           
         
         // chat number allows the client to decorate individual messages with visual effects
-        chatMessage.chatCount = gameState.chatCount; 
+        var chatMessage = {
+            text: text,
+            chatCount: gameState.chatCount,
+            guid: socket.handshake.session.user.guid,
+            username: socket.handshake.session.user.username
+        }
 
         // broadcast to the room
         io.emit('chat_message_response', chatMessage);
@@ -324,11 +331,11 @@ io.on('connection', (socket) => {
             if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.user.lastQuestionAnswered != gameState.questionCount) {
                 
                 // update the userRepo 
-                socket.user.lastQuestionAnswered = gameState.questionCount
-                socket.user.answered++
-                socket.user.lifeTimeAnswered++
-                socket.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
-                socket.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
+                socket.handshake.session.user.lastQuestionAnswered = gameState.questionCount
+                socket.handshake.session.user.answered++
+                socket.handshake.session.user.lifeTimeAnswered++
+                socket.handshake.session.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
+                socket.handshake.session.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
                 //       \___ socket.user is the same memory address as userRepo[sik_id])
 
                 let successReponse = {
@@ -573,7 +580,6 @@ function mapRepoUserToClientUser(user) {
     delete clone.last
     delete clone.email
     delete clone.password
-    delete clone.guid
 
     return clone
 }

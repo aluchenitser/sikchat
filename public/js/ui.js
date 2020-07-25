@@ -71,9 +71,7 @@ var gameState = {
 
 // client states are "intermission", "starting", "started", and "ending"
 // server also has "init"
-var socket = io({
-    id: gameState.session.id
-}) 
+var socket = io() 
 
 if(gameState.session.debug == "host") {
     socket.close()
@@ -164,12 +162,6 @@ socket.on('tick', server => {
     }
 });
 
-socket.on("stats_refresh", ()=> {
-    setCookie(sik_data)
-})
-
-
-
 /* -------------------- CHAT & CHAT INTERACTIONS --------------------- */
 
 document.getElementById('chat-form').addEventListener('submit', e => {
@@ -177,25 +169,26 @@ document.getElementById('chat-form').addEventListener('submit', e => {
     messageInputElement.focus()
     let text = messageInputElement.value
     if(!text) return false
-    let id = gameState.session.id;
-    console.log("egress", id)
     
-    socket.emit('chat_message', { text, id })
+    socket.emit('chat_message', text )
 })
 
+// var chatMessage = {
+//     text: text,
+//     chatCount: gameState.chatCount,
+//     guid: socket.handshake.session.user.guid
+// }
+
 // --- receive chat
-socket.on('chat_message_response', msg => {       // { username, text }
-    console.log(msg)
-    let user = userInputElement.value || 'someone'; 
-    let messageClass = gameState.session.id == msg.id
+socket.on('chat_message_response', chatMessage => {       // { text, chatCount, guid, ADSASusername }
+    let messageClass = gameState.session.data.guid == chatMessage.guid
         ? 'message-output is-current-user'
         : 'message-output'
 
-    
-    let username = msg.username
+    console.log("gameState.session.data.guid", gameState.session.data.guid, "chatMessage.guid", chatMessage.guid)
 
     // add new message to UI
-    const markup = `<div id="chat_${msg.chatCount}" class='${messageClass}'><div class='user-name'><span>${username}</span></div><p class='output-text'>${msg.text}</p></div>`
+    const markup = `<div id="chat_${chatMessage.chatCount}" class='${messageClass}'><div class='user-name'><span>${chatMessage.username}</span></div><p class='output-text'>${chatMessage.text}</p></div>`
     $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })
@@ -305,7 +298,6 @@ changeUsernameElement.addEventListener("click", (e)=> {
         userInputElement.select()
     }
     else if (e.target.textContent == "save") {
-        console.log("submitUserNameChange")
         submitUserNameChange(e)
     }
 })
@@ -314,7 +306,6 @@ userInputElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         e.preventDefault()
         submitUserNameChange(e)
-        userInputElement.removeAttribute("disabled")
     } 
 })
 
