@@ -311,6 +311,12 @@ h1, p {
         visibility: hidden;
     }
 
+    #logout-toggle {
+        &:checked ~ .side-bar-row .logout-wrap {
+            display: block;
+        }
+    }
+
     #register-wrap-toggle, #login-wrap-toggle {
         &:checked ~ .side-bar-row .login-choosers {
             margin-bottom: 10px;
@@ -403,6 +409,12 @@ h1, p {
 
         &:last-of-type {
             margin: 0;
+        }
+
+        .logout-wrap {
+            .logout {
+                display: none;
+            }
         }
 
         .login-choosers {
@@ -554,7 +566,7 @@ h1, p {
 
     .user-label-wrap {
 
-        .change-control {
+        .change-username {
             // font-size: 12px;
             position: absolute;
             display: inline-block;

@@ -16,7 +16,7 @@ var gameWindowElement = document.getElementById("game-window")
 var messagesElement = document.getElementById("messages")
 
 
-var changeControlElement = document.querySelector(".user-label-wrap .change-control")
+var changeUsernameElement = document.querySelector(".user-label-wrap .change-username")
 
 var sideBarElement = document.querySelector(".side-bar")
 
@@ -223,12 +223,12 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
     console.log(data)
 
     if(data.foundDuplicate) {
-        changeControlElement.textContent = 'duplicate'
+        changeUsernameElement.textContent = 'duplicate'
         resetChangeControl()
     }
     else {
         gameState.session.data.username = data.username
-        changeControlElement.textContent = 'changed!'
+        changeUsernameElement.textContent = 'changed!'
         
         resetChangeControl()
         userInputElement.blur()
@@ -296,15 +296,16 @@ registerWrapTogglerElement.addEventListener("click", e => {
 
 
 // -- username mouse logic
-changeControlElement.addEventListener("click", (e)=> {
+changeUsernameElement.addEventListener("click", (e)=> {
     if(e.target.textContent == "change") {
         userInputElement.removeAttribute("disabled")
-        changeControlElement.classList.add("save")
-        changeControlElement.textContent = "save"
+        changeUsernameElement.classList.add("save")
+        changeUsernameElement.textContent = "save"
         userInputElement.focus()
         userInputElement.select()
     }
     else if (e.target.textContent == "save") {
+        console.log("submitUserNameChange")
         submitUserNameChange(e)
     }
 })
@@ -319,11 +320,13 @@ userInputElement.addEventListener("keydown", e => {
     } 
 })
 
-userInputElement.addEventListener("blur", e => {    
+userInputElement.addEventListener("blur", e => { 
+    console.log("blur e")
+    console.log(e)
     userInputElement.setAttribute("disabled", "true")
-    if(changeControlElement.textContent == 'save') {
-        changeControlElement.textContent = 'change'
-        changeControlElement.classList.remove("save")
+    if(changeUsernameElement.textContent == 'save' && e.relatedTarget != changeUsernameElement) {
+        changeUsernameElement.textContent = 'change'
+        changeUsernameElement.classList.remove("save")
         userInputElement.value = gameState.session.data.username
     }
 })
@@ -370,7 +373,7 @@ retypePasswordRegisterElement.addEventListener("keyup", passwordsAreValid)
 
 registerSubmitElement.addEventListener("click", e => {
     if(registerSubmitElement.classList.contains('valid')) {
-        console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
+        // console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
         registerSubmitElement.textContent = "checking.."
         registerSubmitElement.setAttribute("disabled", true)
         
@@ -381,18 +384,26 @@ registerSubmitElement.addEventListener("click", e => {
             contentType: 'application/json',
             data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.data.username, register: true}),
             success: function(response){
-                if(response == "success") {
+                if(response == "registration success") {
                     // registerSubmitStatusElement.value = ""
                     setTimeout(() => {
                         registerSubmitElement.textContent="success!"
                         setTimeout(() => {
                             document.querySelectorAll(".toggles").forEach( el => el.checked = false )
                             sideBarElement.classList.remove("square")
+                            registerSubmitElement.removeAttribute("disabled")
+                            registerSubmitElement.textContent="submit"
+                            registerSubmitElement.classList.remove("valid")
                         }, 2000)
                     }, 2000)
                 }
                 else {
-
+                    registerSubmitElement.textContent="duplicate email"
+                    setTimeout(() => {
+                        registerSubmitElement.textContent="submit"
+                        registerSubmitElement.removeAttribute("disabled")
+                        registerSubmitElement.classList.remove("valid")
+                    })
                 }
             }
         })
@@ -429,16 +440,13 @@ passwordLoginElement.addEventListener("keyup", (e)=> {
 
 loginSubmitElement.addEventListener("click", e => {
     if(loginSubmitElement.classList.contains('valid')) {
+
         console.log(emailInputLoginElement.value,passwordLoginElement.value)
         loginSubmitElement.textContent = "checking.."
         loginSubmitElement.setAttribute("disabled", true)
-        
 
-        $.ajax({
-            url: '/',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, register: false }),
+        $.ajax({ url: '/', type: 'POST', contentType: 'application/json',
+            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, username: gameState.session.data.username, register: false }),
             success: function(response){
                 if(response == "success") {
                     // registerSubmitStatusElement.value = ""
@@ -452,11 +460,16 @@ loginSubmitElement.addEventListener("click", e => {
                     }, 2000)
                 }
                 else {
-
+                    loginSubmitElement.textContent="failed login"
+                    setTimeout(() => {
+                        loginSubmitElement.removeAttribute("disabled")
+                        loginSubmitElement.textContent="submit"
+                    }, 2000)
                 }
             }
         })
     }
+});
 
 
 
@@ -465,8 +478,8 @@ loginSubmitElement.addEventListener("click", e => {
 //     clearTimeout(timeout_user)
 //     timeout_user = setTimeout(()=> {
 //         if(document.activeElement != userInputElement) {
-//             changeControlElement.textContent = 'change'
-//             changeControlElement.classList.remove("save")
+//             changeUsernameElement.textContent = 'change'
+//             changeUsernameElement.classList.remove("save")
 
 //         }
 //     }, 2000)
@@ -523,12 +536,21 @@ function submitUserNameChange(e) {
     // var validUserPattern = /^[a-z0-9_-]{1,16}$/
 
     var validUserPattern = /^[a-zA-Z0-9 ]*$/
-    let username = e.target.value;
+    let username = userInputElement.value;
 
-    if(username == gameState.session.id) return;
+    console.log("username", username)
+    console.log("gameState.session.data.username", gameState.session.data.username)
+    console.log("username == gameState.session.data.username:", username == gameState.session.data.username)
+
+    if(username == gameState.session.data.username) {
+        changeUsernameElement.textContent = 'change'
+        changeUsernameElement.classList.remove("save")
+        userInputElement.setAttribute("disabled", true)
+        return;
+    }
 
     if(validUserPattern.test(username)) {
-        changeControlElement.textContent = "checking.."
+        changeUsernameElement.textContent = "checking.."
         socket.emit('username_update', username)
     }
 }
@@ -538,8 +560,8 @@ function resetChangeControl() {
     clearTimeout(timeout_user)
     timeout_user = setTimeout(()=> {
         if(document.activeElement != userInputElement) {
-            changeControlElement.textContent = 'change'
-            changeControlElement.classList.remove("save")
+            changeUsernameElement.textContent = 'change'
+            changeUsernameElement.classList.remove("save")
 
         }
     }, 2000)

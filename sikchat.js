@@ -140,7 +140,7 @@ var sessionRepo = {}           // for quick lookup of users that have a session 
 /* ----------------- GAME LOOP ----------------- */
 checkWindowIntegrity();
 initialTimeWindow()
-printTimeWindow()
+// printTimeWindow()
 
 // time window starts at intermission
 setInterval(() => {
@@ -188,7 +188,7 @@ setInterval(() => {
     
     // proceed to started
     if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
-        console.log("started");
+        // console.log("started");
         
         // flags
         gameState.time.tick = 0
@@ -245,19 +245,10 @@ app.route('/')
             req.session.user = new User()               // blank account until the user logs in or registers
         }
         
-        res.cookie("sik_data", JSON.stringify(mapToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
+        res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
         
         // strips authentication and some other stuff
-        function mapToClientUser(user) {
-            let clone = JSON.parse(JSON.stringify(user))
-            delete clone.created
-            delete clone.last
-            delete clone.email
-            delete clone.password
-            delete clone.guid
 
-            return clone
-        }
     })
     .post((req, res) => {
         if (req.session.user && req.cookies.sik_sid) {
@@ -266,6 +257,7 @@ app.route('/')
             if(req.body.register == true) {
 
                 if(userRepo.hasOwnProperty(req.body.email)) {
+                    console.log("duplicate email")
                     res.send("duplicate email")
                 }
                 else {
@@ -273,7 +265,9 @@ app.route('/')
                     req.session.user.password = req.body.password
                     req.session.user.username = req.body.username
                     userRepo[req.body.email] = req.session.user
-                    res.send("success")
+                    console.log("registration success")
+                    res.send("registration success")
+                    
                 }
             }
 
@@ -282,6 +276,7 @@ app.route('/')
 
                 if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
                     req.session.user = userRepo[req.body.email]
+                    res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
                     res.send("success")
                 }
                 else {
@@ -368,39 +363,12 @@ app.route('/')
 
 
 
-  
 
-
-// login or register
-
-// app.post('/', (req, res) => {
-    
-//     for (guid in userRepo) {
-//         if(userRepo[guid].email == req.body.email) {
-//             res("duplicate")
-//             return
-//         }
-//     }
-
-//     // new user is guid, a verified user is an email address    
-//     var guid;
-//     do { 
-//         guid = Math.random() 
-//     } while (userRepo.hasOwnProperty(guid) == true)  // just in case we're unlucky, TODO: better guid than Math.random()
-
-//     // add user
-//     userRepo[guid] = new User(req.body.username, req.body.email)
-//     res
-
-//     // send user to the client
-//     // res.cookie("sik_id", guid, {path: "/", expires: dayjs().add(1,"y").toDate()});
-//     // res.cookie("sik_data", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
-// })
 
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', (socket) => {
-    console.log("user connected")
+    // console.log("user connected")
 
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
     socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
@@ -456,17 +424,15 @@ io.on('connection', (socket) => {
         if(foundDuplicate == false) {
             socket.handshake.session.user.username = username
             socket.handshake.session.save()
+            console.log(userRepo)
         }
         
-        console.log("socket.handshake.session");
-        console.log(socket.handshake.session);
-
         socket.emit('username_update_response', { username: username, foundDuplicate });
         console.log(`username_update_response\n\t${username} foundDuplicate: ${foundDuplicate}`);
     })
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        // console.log('user disconnected');
     });
 });
 
@@ -662,6 +628,18 @@ function mapGameStateForEmit() {
 
     return clone;
 }
+
+function mapRepoUserToClientUser(user) {
+    let clone = JSON.parse(JSON.stringify(user))
+    delete clone.created
+    delete clone.last
+    delete clone.email
+    delete clone.password
+    delete clone.guid
+
+    return clone
+}
+
 
 // shuffle array non destructive
 function shuffle(array) {

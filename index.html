@@ -29,6 +29,7 @@
             <input type="checkbox" class="toggles" id="register-wrap-toggle" />
             <input type="checkbox" class="toggles" id="login-wrap-toggle" />
             <input type="checkbox" class="toggles" id="register-password-toggle" />
+            <input type="checkbox" class="toggles" id="logout-toggle" />
             <!-- <input type="checkbox" id="register-toggler" />
             <input type="checkbox" id="login-toggler" />  -->
 
@@ -36,7 +37,7 @@
 
             <div class="side-bar-row">
                 <div class="user-label-wrap">
-                    <label>moniker</label><span class="change-control" tabindex="0">change</span>
+                    <label>moniker</label><span class="change-username" tabindex="0">change</span>
                 </div>
                 <form id="user-bar" class="user-bar">
                     <input id="username" name="username" type="text" disabled autocomplete="off" spellcheck="false" maxlength="16" />
@@ -53,6 +54,9 @@
                 </select>
             </div>
             <div class="side-bar-row">
+                <div class="logout-wrap">
+                    <span class="logout">logout</span>
+                </div>
                 <div class="login-choosers">
                     <div class="register" id="register-wrap-toggler">REGISTER</div>
                     <div class="login" id="login-wrap-toggler">LOGIN</div>
@@ -87,7 +91,7 @@
                         <input id="retype-password-register" type="password" maxlength="8" autocomplete="off" />
                     </div>
                     <div class="register-submit-wrap">
-                        <span class="register-submit-status" tabindex="0"></span>
+                        <span class="register-submit-status"></span>
                         <span class="register-submit" tabindex="0">submit</span>
                     </div>
                 </div>

@@ -250,6 +250,9 @@ body.show-header .chat-bar {
   position: absolute;
   visibility: hidden;
 }
+.side-bar #logout-toggle:checked ~ .side-bar-row .logout-wrap {
+  display: block;
+}
 .side-bar #register-wrap-toggle:checked ~ .side-bar-row .login-choosers, .side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers {
   margin-bottom: 10px;
 }
@@ -288,6 +291,9 @@ body.show-header .chat-bar {
 }
 .side-bar .side-bar-row:last-of-type {
   margin: 0;
+}
+.side-bar .side-bar-row .logout-wrap .logout {
+  display: none;
 }
 .side-bar .side-bar-row .login-choosers {
   overflow: hidden;
@@ -384,7 +390,7 @@ body.show-header .chat-bar {
 .side-bar select option:checked {
   background-color: #90EE90;
 }
-.side-bar .user-label-wrap .change-control {
+.side-bar .user-label-wrap .change-username {
   position: absolute;
   display: inline-block;
   right: 11px;
@@ -393,7 +399,7 @@ body.show-header .chat-bar {
   opacity: 0.6;
   transition: opacity 0.2s;
 }
-.side-bar .user-label-wrap .change-control:hover, .side-bar .user-label-wrap .change-control:focus, .side-bar .user-label-wrap .change-control.save {
+.side-bar .user-label-wrap .change-username:hover, .side-bar .user-label-wrap .change-username:focus, .side-bar .user-label-wrap .change-username.save {
   opacity: 1;
   outline: none;
 }
