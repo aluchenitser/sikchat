@@ -173,12 +173,6 @@ document.getElementById('chat-form').addEventListener('submit', e => {
     socket.emit('chat_message', text )
 })
 
-// var chatMessage = {
-//     text: text,
-//     chatCount: gameState.chatCount,
-//     guid: socket.handshake.session.user.guid
-// }
-
 // --- receive chat
 socket.on('chat_message_response', chatMessage => {       // { text, chatCount, guid, ADSASusername }
     let messageClass = gameState.session.data.guid == chatMessage.guid
@@ -249,41 +243,26 @@ var registerSubmitElement = document.querySelector('.register-submit-wrap .regis
 var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
 
 var loginChoosersElement = document.querySelector(".login-choosers")
+var toggleSideBar = document.querySelector(".toggle-side-bar")
 
-// ----- FUNCTIONS -----
-
-document.querySelector(".show-side-bar").addEventListener("click", e => {
-    clearSideBar()
-})
 
 // --- TOGGLERS
 
-loginWrapTogglerElement.addEventListener("click", e => {
-    registerWrapToggleElement.checked = false;
-    loginWrapToggleElement.checked = !loginWrapToggleElement.checked
-    
-    if(loginWrapToggleElement.checked) {
-        sideBarElement.classList.add("square")
-        emailInputLoginElement.focus()
-    }
-    else {
-        sideBarElement.classList.remove("square")
+toggleSideBar.addEventListener("click", clearSideBar)
+
+loginWrapTogglerElement.addEventListener("click", toggleLogin())
+
+loginWrapTogglerElement.addEventListener("keydown", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
+        toggleLogin()
     }
 })
 
-registerWrapTogglerElement.addEventListener("click", e => {
-    loginWrapToggleElement.checked = false;
-    registerWrapToggleElement.checked = !registerWrapToggleElement.checked    
-    
-    if(registerWrapToggleElement.checked == true) {
-        emailInputRegisterElement.focus()
-    }
+registerWrapTogglerElement.addEventListener("click", toggleRegister)
 
-    if(registerPasswordToggleElement.checked == true) {
-        sideBarElement.classList.add("square")
-    }
-    else {
-        sideBarElement.classList.remove("square")
+registerWrapTogglerElement.addEventListener("keydown", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
+        toggleRegister()
     }
 })
 
@@ -310,8 +289,7 @@ userInputElement.addEventListener("keydown", e => {
 })
 
 userInputElement.addEventListener("blur", e => { 
-    console.log("blur e")
-    console.log(e)
+
     userInputElement.setAttribute("disabled", "true")
     if(changeUsernameElement.textContent == 'save' && e.relatedTarget != changeUsernameElement) {
         changeUsernameElement.textContent = 'change'
@@ -338,16 +316,6 @@ emailInputRegisterElement.addEventListener("keydown", e => {
         submitRegistration()
     } 
 })
-
-
-// emailInputRegisterElement.addEventListener("blur", e => {
-//     if(emailInputRegisterElement.value == "") {
-//         registerPasswordElement.value = ""
-//         registerRetypePasswordElement.value = ""
-//         document.getElementById("register-toggler").checked = false
-//         document.getElementById("password-toggler").checked = false
-//     }
-// })
 
 passwordRegisterElement.addEventListener("keyup", registerPasswordsAreValid)
 passwordRegisterElement.addEventListener("keydown", e => {
@@ -457,6 +425,35 @@ function resetChangeControl() {
 
         }
     }, 2000)
+}
+
+function toggleLogin() {
+    registerWrapToggleElement.checked = false;
+    loginWrapToggleElement.checked = !loginWrapToggleElement.checked
+
+    if(loginWrapToggleElement.checked) {
+        sideBarElement.classList.add("square")
+        emailInputLoginElement.focus()
+    }
+    else {
+        sideBarElement.classList.remove("square")
+    }
+}
+
+function toggleRegister() {
+    loginWrapToggleElement.checked = false;
+    registerWrapToggleElement.checked = !registerWrapToggleElement.checked    
+    
+    if(registerWrapToggleElement.checked == true) {
+        emailInputRegisterElement.focus()
+    }
+    
+    if(registerPasswordToggleElement.checked == true) {
+        sideBarElement.classList.add("square")
+    }
+    else {
+        sideBarElement.classList.remove("square")
+    }
 }
 
 function submitLogin() {

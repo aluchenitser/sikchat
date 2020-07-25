@@ -194,16 +194,16 @@ body.show-header .chat-bar {
   left: -260px;
   transition: left 0.2s;
 }
-#side-bar-toggler:checked ~ .show-side-bar {
+#side-bar-toggler:checked ~ .toggle-side-bar {
   left: -35px;
   transition: left 0.2s;
 }
-#side-bar-toggler:not(:checked) ~ .show-side-bar {
+#side-bar-toggler:not(:checked) ~ .toggle-side-bar {
   left: 0;
   transition: left 0.2s 0.25s;
 }
 
-.show-side-bar {
+.toggle-side-bar {
   position: fixed;
   top: 10px;
   border-radius: 0 4px 4px 0px;
@@ -226,7 +226,7 @@ body.show-header .chat-bar {
   -webkit-tap-highlight-color: transparent;
   z-index: 1;
 }
-.show-side-bar > .fa {
+.toggle-side-bar > .fa {
   top: 1px;
   position: relative;
 }
@@ -370,6 +370,7 @@ body.show-header .chat-bar {
   position: absolute;
   top: 5px;
   cursor: pointer;
+  padding-right: 15px;
 }
 .side-bar input, .side-bar select {
   width: 100%;
@@ -401,7 +402,6 @@ body.show-header .chat-bar {
 }
 .side-bar .user-label-wrap .change-username:hover, .side-bar .user-label-wrap .change-username:focus, .side-bar .user-label-wrap .change-username.save {
   opacity: 1;
-  outline: none;
 }
 .side-bar .user-bar {
   position: relative;

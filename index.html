@@ -24,7 +24,7 @@
     </head>
     <body>
         <input id="side-bar-toggler" type="checkbox" />
-        <label class="show-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
+        <label class="toggle-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
         <div class="side-bar">
             <input type="checkbox" class="toggles" id="register-wrap-toggle" />
             <input type="checkbox" class="toggles" id="login-wrap-toggle" />
@@ -58,8 +58,8 @@
                     <span class="logout">logout</span>
                 </div>
                 <div class="login-choosers">
-                    <div class="register" id="register-wrap-toggler">REGISTER</div>
-                    <div class="login" id="login-wrap-toggler">LOGIN</div>
+                    <div class="login" tabindex="0" id="login-wrap-toggler">LOGIN</div>
+                    <div class="register" tabindex="0" id="register-wrap-toggler">REGISTER</div>
                 </div>
                 <div class="login-wrap">
                      <hr />
