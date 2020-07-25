@@ -2,7 +2,7 @@ var dayjs = require('dayjs')
 
 module.exports = {
     User: class User {
-        constructor(email = null, password = null, username = "someone", domain = null) {
+        constructor(email = null, password = null, username = "someone") {
 
             // setup
             let date = new dayjs()

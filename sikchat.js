@@ -47,7 +47,9 @@ var expressSession = session({
 
 app.use(expressSession);
 
-io.use(sharedsession(expressSession))
+io.use(sharedsession(expressSession, {
+    autoSave: true
+}))
 
 /* ------------------- DEBUG MODES ------------------- */
 
@@ -137,7 +139,78 @@ var userRepo = {};             // stores user accounts, { email: user }
 var sessionRepo = {}           // for quick lookup of users that have a session attached { sik_sid: user }
 
 
+/* ------------------- ROUTER ------------------- */
+
+app.route('/')
+    .get(function(req, res) {
+        res.sendFile(__dirname + '/index.html');
+        res.cookie("sik_debug", "false", {path: "/"});
+        
+        if (req.session.user && req.cookies.sik_sid) {
+            console.log("existing user found")
+            console.log(req.session.user)
+            console.log("--- user repo ---")
+            console.log(userRepo)
+        }
+        else {
+            req.session.user = new User()               // blank account until the user logs in or registers
+            console.log(req.session.user)
+            console.log("creating blank user")
+        }
+        
+        res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
+        
+        // strips authentication and some other stuff
+
+    })
+    .post((req, res) => {
+        console.log("------ userRepo ------")
+        console.log(userRepo)
+        console.log("------ userRepo ------")
+
+        if (req.session.user && req.cookies.sik_sid) {
+            
+            // register new login
+            if(req.body.register == true) {
+
+                if(userRepo.hasOwnProperty(req.body.email)) {
+                    console.log("duplicate email")
+                    res.send("duplicate email")
+                }
+                else {
+                    console.log("--- req.body ---") 
+                    console.log(req.body)
+
+                    let user = new User(req.body.email, req.body.password, req.body.username)
+                    
+                    // update session and add to user repo
+                    req.session.user = user
+                    userRepo[req.body.email] = user
+
+                    console.log("registration success")
+                    res.send("registration success")
+                }
+            }
+
+            // existing login (session likely expired)
+            else {
+
+                if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
+                    req.session.user = userRepo[req.body.email]
+                    res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
+                    res.send("success")
+                }
+                else {
+                    res.send("failed login")
+                }
+            }
+        }
+        else { res.statusCode(403) }
+    })
+
+
 /* ----------------- GAME LOOP ----------------- */
+
 checkWindowIntegrity();
 initialTimeWindow()
 // printTimeWindow()
@@ -160,7 +233,7 @@ setInterval(() => {
         // update window
         if(gameState.isEnding) {
             updateTimeWindow()
-            printTimeWindow()
+            // printTimeWindow()
         }
 
         loadQuestionBank()
@@ -226,150 +299,6 @@ setInterval(() => {
     io.emit("tick", gameStateEmit)
 }, 1000)
 
-/* ------------------- ROUTER ------------------- */
-
-
-
-// page request
-app.route('/')
-    .get(function(req, res) {
-        res.sendFile(__dirname + '/index.html');
-        res.cookie("sik_debug", "false", {path: "/"});
-        
-        if (req.session.user && req.cookies.sik_sid) {
-            console.log("existing user found")
-            console.log(req.session.user)
-            console.log("--- user repo ---")
-            console.log(userRepo)
-        }
-        else {
-            console.log("creating blank user")
-            req.session.user = new User()               // blank account until the user logs in or registers
-        }
-        
-        res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
-        
-        // strips authentication and some other stuff
-
-    })
-    .post((req, res) => {
-        console.log("------ userRepo ------")
-        console.log(userRepo)
-        console.log("------ userRepo ------")
-
-        if (req.session.user && req.cookies.sik_sid) {
-            
-            // register new login
-            if(req.body.register == true) {
-
-                if(userRepo.hasOwnProperty(req.body.email)) {
-                    console.log("duplicate email")
-                    res.send("duplicate email")
-                }
-                else {
-                    req.session.user.email = req.body.email
-                    req.session.user.password = req.body.password
-                    req.session.user.username = req.body.username
-                    userRepo[req.body.email] = req.session.user
-                    console.log("registration success")
-                    res.send("registration success")
-                    
-                }
-            }
-
-            // existing login (session likely expired)
-            else {
-
-                if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
-                    req.session.user = userRepo[req.body.email]
-                    res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
-                    res.send("success")
-                }
-                else {
-                    res.send("failed login")
-                }
-            }
-        }
-        else { res.statusCode(403) }
-    })
-
-    // function createUser() {
-    //     // new user is guid, a verified user is an email address    
-    //     var guid;
-
-    //     do { 
-    //         guid = Math.random() 
-    //     } while (userRepo.hasOwnProperty(guid) == true)  // just in case we're unlucky
-
-    //     // add user
-    //     userRepo[guid] = new User()
-    //     req.session.user = 
-
-    //     // send user to the client
-    //     res.cookie("sik_id", guid, {path: "/", expires: dayjs().add(1,"y").toDate()});
-    //     res.cookie("sik_data", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
-    // }
-
-    // // create or detect user & cookie
-    // if(req.cookies.sik_id == undefined) {
-    //     createUser()
-    // }
-    // else {
-    //     let guid = JSON.parse(req.cookies.sik_id)
-        
-    //     // refresh user stats
-    //     if(userRepo.hasOwnProperty(guid)) {
-    //         res.cookie("sik_data", JSON.stringify(userRepo[guid]), {path: "/", expires: dayjs().add(1,"y").toDate()});
-    //     }
-    //     // bunk cookie
-    //     else {
-    //         createUser()
-    //     }
-    // }
-
-
-
-
-// create temp user before user logs in with the side bar int the front end
-
-// console.log(req.session.cookie)
-
-    // return
-
-    // console.log("req.session.user") 
-    // console.log(req.session.user) 
-
-    // console.log("req.session")
-    // req.session.derp = "DERPER"
-    // console.log(req.session) 
-
-
-    // console.log("req.cookies")
-    // console.log(req.cookies) 
-    // consoleLatestUserRepo("simple");
-    
-    // send front end code
-    // console.log("Object.keys(req.session)")
-    // console.log(Object.keys(req.session))
-    // res.sendFile(__dirname + '/index.html');
-
-    // return
-
-    // if(req.session.id) {
-    //     res.cookie("sik_data")
-    // }
-
-    // if(req.session.user) {
-    //     res.cookie("sik_user", )
-    // }
-
-
-    // disable debug mode
-    
-
-
-
-
 
 /* ------------------- SOCKETS ------------------- */
 
@@ -429,8 +358,11 @@ io.on('connection', (socket) => {
 
         if(foundDuplicate == false) {
             socket.handshake.session.user.username = username
-            socket.handshake.session.save()
-            console.log(userRepo)
+
+            // update repo for registered accounts
+            if(userRepo.hasOwnProperty(socket.handshake.session.user.email)) {
+                userRepo[socket.handshake.session.user.email] = socket.handshake.session.user
+            }
         }
         
         socket.emit('username_update_response', { username: username, foundDuplicate });

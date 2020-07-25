@@ -11,11 +11,9 @@ var submitButtonElement = document.getElementById('submit-button')
 var drawerHandleElement = document.querySelector('.drawer-handle')
 
 var userInputElement = document.getElementById('username')
-// var bogusUsernameElement = document.querySelector('.bogus-username')
-// var inUseUsernameElement = document.querySelector('.in-use-username')
-// var checkingUsernameElement = document.querySelector('.checking-username')
-// var usernameLookupSuccessElement = document.querySelector('.username-lookup-success')
+
 // var tinyHeaderUserNameElement = document.querySelector('.tiny-header-user-name')
+
 var gameWindowElement = document.getElementById("game-window")
 var messagesElement = document.getElementById("messages")
 
@@ -68,12 +66,6 @@ var gameState = {
         userInputElement.value = gameState.session.data.username
     }
 }()
-
-// console.log(gameState)
-
-// tinyHeaderUserNameElement.innerHTML = user.username
-
-
 
 /*  --------- GAME LOOP ---------- */
 
@@ -232,6 +224,8 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
     }
     else {
         gameState.session.data.username = data.username
+        setCookie("sik_data", JSON.stringify(gameState.session.data))
+
         changeUsernameElement.textContent = 'changed!'
         
         resetChangeControl()
@@ -269,7 +263,6 @@ document.querySelector(".show-side-bar").addEventListener("click", e => {
     clearSideBar()
 })
 
-
 // --- TOGGLERS
 
 loginWrapTogglerElement.addEventListener("click", e => {
@@ -288,7 +281,7 @@ loginWrapTogglerElement.addEventListener("click", e => {
 registerWrapTogglerElement.addEventListener("click", e => {
     loginWrapToggleElement.checked = false;
     registerWrapToggleElement.checked = !registerWrapToggleElement.checked    
-
+    
     if(registerPasswordToggleElement.checked == true) {
         sideBarElement.classList.add("square")
     }
@@ -297,6 +290,9 @@ registerWrapTogglerElement.addEventListener("click", e => {
     }
 })
 
+
+var registerPasswordElement = document.getElementById("password");
+var registerRetypePasswordElement = document.getElementById("retype-password")
 
 // --- USERNAME
 
@@ -335,8 +331,7 @@ userInputElement.addEventListener("blur", e => {
 
 // --- REGISTER
 
-emailInputRegisterElement.addEventListener("keyup", (e)=> {
-    console.log("tap", e.target.value)
+emailInputRegisterElement.addEventListener("keyup", e => {
     if(validEmailPattern.test(e.target.value)) {
         registerPasswordToggleElement.checked = true;
         sideBarElement.classList.add("square");
@@ -347,45 +342,60 @@ emailInputRegisterElement.addEventListener("keyup", (e)=> {
     }
 })
 
-var passwordElement = document.getElementById("password");
-var retypePasswordElement = document.getElementById("retype-password")
+emailInputRegisterElement.addEventListener("keydown", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitRegistration()
+    } 
+})
 
-emailInputRegisterElement.addEventListener("blur", (e)=> {
+
+emailInputRegisterElement.addEventListener("blur", e => {
     if(emailInputRegisterElement.value == "") {
-        passwordElement.value = ""
-        retypePasswordElement.value = ""
+        registerPasswordElement.value = ""
+        registerRetypePasswordElement.value = ""
         document.getElementById("register-toggler").checked = false
         document.getElementById("password-toggler").checked = false
     }
 })
 
-passwordRegisterElement.addEventListener("keyup", passwordsAreValid)
-retypePasswordRegisterElement.addEventListener("keyup", passwordsAreValid)
+passwordRegisterElement.addEventListener("keyup", registerPasswordsAreValid)
+passwordRegisterElement.addEventListener("keydown", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitRegistration()
+    } 
+})
+
+retypePasswordRegisterElement.addEventListener("keyup", registerPasswordsAreValid)
+retypePasswordRegisterElement.addEventListener("keydown", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitRegistration()
+    } 
+})
 
 registerSubmitElement.addEventListener("click", submitRegistration)
 
 
 // --- LOGIN
 
-emailInputLoginElement.addEventListener("keyup", (e)=> {
+emailInputLoginElement.addEventListener("keyup", e => {
     validEmailPattern.test(e.target.value) && passwordLoginElement.value.length > 0
         ? loginSubmitElement.classList.add('valid')
         : loginSubmitElement.classList.remove('valid')
 })
 
-emailInputLoginElement.addEventListener("keydown", (e)=> {
+emailInputLoginElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         submitLogin()
     } 
 })
 
-passwordLoginElement.addEventListener("keyup", (e)=> {
-    validEmailPattern.test(emailInputLoginElement.value) && passwordLoginElementvalue.length > 0
+passwordLoginElement.addEventListener("keyup", e => {
+    validEmailPattern.test(emailInputLoginElement.value) && passwordLoginElement.value.length > 0
        ? loginSubmitElement.classList.add('valid')
        : loginSubmitElement.classList.remove('valid')
 })
 
-passwordLoginElement.addEventListener("keydown", (e)=> {
+passwordLoginElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         submitLogin()
     } 
@@ -397,7 +407,7 @@ loginSubmitElement.addEventListener("click", submitLogin);
 /* -------------------- FUNCTIONS --------------------- */
 
 
-function passwordsAreValid(e) {
+function registerPasswordsAreValid(e) {
 
     if(validatePasswordPattern.test(passwordRegisterElement.value) && 
         validatePasswordPattern.test(retypePasswordRegisterElement.value) &&
