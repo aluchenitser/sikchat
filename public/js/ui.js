@@ -264,6 +264,7 @@ loginWrapTogglerElement.addEventListener("click", e => {
     
     if(loginWrapToggleElement.checked) {
         sideBarElement.classList.add("square")
+        emailInputLoginElement.focus()
     }
     else {
         sideBarElement.classList.remove("square")
@@ -275,6 +276,10 @@ registerWrapTogglerElement.addEventListener("click", e => {
     loginWrapToggleElement.checked = false;
     registerWrapToggleElement.checked = !registerWrapToggleElement.checked    
     
+    if(registerWrapToggleElement.checked == true) {
+        emailInputRegisterElement.focus()
+    }
+
     if(registerPasswordToggleElement.checked == true) {
         sideBarElement.classList.add("square")
     }
@@ -282,10 +287,6 @@ registerWrapTogglerElement.addEventListener("click", e => {
         sideBarElement.classList.remove("square")
     }
 })
-
-
-var registerPasswordElement = document.getElementById("password");
-var registerRetypePasswordElement = document.getElementById("retype-password")
 
 // --- USERNAME
 
@@ -340,14 +341,14 @@ emailInputRegisterElement.addEventListener("keydown", e => {
 })
 
 
-emailInputRegisterElement.addEventListener("blur", e => {
-    if(emailInputRegisterElement.value == "") {
-        registerPasswordElement.value = ""
-        registerRetypePasswordElement.value = ""
-        document.getElementById("register-toggler").checked = false
-        document.getElementById("password-toggler").checked = false
-    }
-})
+// emailInputRegisterElement.addEventListener("blur", e => {
+//     if(emailInputRegisterElement.value == "") {
+//         registerPasswordElement.value = ""
+//         registerRetypePasswordElement.value = ""
+//         document.getElementById("register-toggler").checked = false
+//         document.getElementById("password-toggler").checked = false
+//     }
+// })
 
 passwordRegisterElement.addEventListener("keyup", registerPasswordsAreValid)
 passwordRegisterElement.addEventListener("keydown", e => {
@@ -518,6 +519,10 @@ function submitRegistration() {
                             registerSubmitElement.removeAttribute("disabled")
                             registerSubmitElement.textContent="submit"
                             registerSubmitElement.classList.remove("valid")
+                            
+                            passwordRegisterElement.value = ''
+                            passwordLoginElement.value = ''
+                            emailInputRegisterElement.value = ''
                         }, 2000)
                     }, 2000)
                 }

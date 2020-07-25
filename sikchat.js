@@ -178,8 +178,6 @@ app.route('/')
                     res.send("duplicate email")
                 }
                 else {
-                    console.log("--- req.body ---") 
-                    console.log(req.body)
 
                     let user = new User(req.body.email, req.body.password)   // newly registered user has default username of "someone"
                     
@@ -328,9 +326,9 @@ io.on('connection', (socket) => {
         if(gameState.time.current == "started") {
 
             // correct answer
-            if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.user.lastQuestionAnswered != gameState.questionCount) {
+            if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.handshake.session.user.lastQuestionAnswered != gameState.questionCount) {
                 
-                // update the userRepo 
+                // update the session
                 socket.handshake.session.user.lastQuestionAnswered = gameState.questionCount
                 socket.handshake.session.user.answered++
                 socket.handshake.session.user.lifeTimeAnswered++
@@ -338,10 +336,13 @@ io.on('connection', (socket) => {
                 socket.handshake.session.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
                 //       \___ socket.user is the same memory address as userRepo[sik_id])
 
+                // update the repo
+                userRepo[socket.handshake.session.user.email] = socket.handshake.session.user
+
                 let successReponse = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
                     chatCount: gameState.chatCount,
-                    user: socket.user // update the client
+                    user: socket.handshake.session.user // update the client
                 }
                 
                 console.log("correct!!")
