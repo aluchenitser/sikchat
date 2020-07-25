@@ -268,7 +268,6 @@ loginWrapTogglerElement.addEventListener("click", e => {
     }
     else {
         sideBarElement.classList.remove("square")
-        
     }
 })
 
@@ -501,7 +500,6 @@ function submitRegistration() {
         // console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
         registerSubmitElement.textContent = "checking.."
         registerSubmitElement.setAttribute("disabled", true)
-        
 
         $.ajax({
             url: '/',
@@ -523,6 +521,7 @@ function submitRegistration() {
                             passwordRegisterElement.value = ''
                             passwordLoginElement.value = ''
                             emailInputRegisterElement.value = ''
+                            userInputElement.value = 'someone'
                         }, 2000)
                     }, 2000)
                 }
