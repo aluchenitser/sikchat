@@ -239,6 +239,8 @@ app.route('/')
         if (req.session.user && req.cookies.sik_sid) {
             console.log("existing user found")
             console.log(req.session.user)
+            console.log("--- user repo ---")
+            console.log(userRepo)
         }
         else {
             console.log("creating blank user")
@@ -251,6 +253,10 @@ app.route('/')
 
     })
     .post((req, res) => {
+        console.log("------ userRepo ------")
+        console.log(userRepo)
+        console.log("------ userRepo ------")
+
         if (req.session.user && req.cookies.sik_sid) {
             
             // register new login

@@ -335,7 +335,8 @@ userInputElement.addEventListener("blur", e => {
 var validEmailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
 
-// --- email input logic
+// --- REGISTER
+
 emailInputRegisterElement.addEventListener("keyup", (e)=> {
     console.log("tap", e.target.value)
     if(validEmailPattern.test(e.target.value)) {
@@ -360,131 +361,39 @@ emailInputRegisterElement.addEventListener("blur", (e)=> {
     }
 })
 
-// registerLabelElement = document.querySelector("label.register")
-// registerLabelElement.addEventListener("click", e => {
-//     e.preventDefault()
-//     registerTogglerElement.checked = true
-//     emailInputElement.focus()
-// })
-
 passwordRegisterElement.addEventListener("keyup", passwordsAreValid)
 retypePasswordRegisterElement.addEventListener("keyup", passwordsAreValid)
 
+registerSubmitElement.addEventListener("click", submitRegistration)
 
-registerSubmitElement.addEventListener("click", e => {
-    if(registerSubmitElement.classList.contains('valid')) {
-        // console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
-        registerSubmitElement.textContent = "checking.."
-        registerSubmitElement.setAttribute("disabled", true)
-        
 
-        $.ajax({
-            url: '/',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.data.username, register: true}),
-            success: function(response){
-                if(response == "registration success") {
-                    // registerSubmitStatusElement.value = ""
-                    setTimeout(() => {
-                        registerSubmitElement.textContent="success!"
-                        setTimeout(() => {
-                            document.querySelectorAll(".toggles").forEach( el => el.checked = false )
-                            sideBarElement.classList.remove("square")
-                            registerSubmitElement.removeAttribute("disabled")
-                            registerSubmitElement.textContent="submit"
-                            registerSubmitElement.classList.remove("valid")
-                        }, 2000)
-                    }, 2000)
-                }
-                else {
-                    registerSubmitElement.textContent="duplicate email"
-                    setTimeout(() => {
-                        registerSubmitElement.textContent="submit"
-                        registerSubmitElement.removeAttribute("disabled")
-                        registerSubmitElement.classList.remove("valid")
-                    })
-                }
-            }
-        })
-    }
-})
+// --- LOGIN
 
 emailInputLoginElement.addEventListener("keyup", (e)=> {
-    // console.log('tap')
+    validEmailPattern.test(e.target.value) && passwordLoginElement.value.length > 0
+        ? loginSubmitElement.classList.add('valid')
+        : loginSubmitElement.classList.remove('valid')
+})
 
-    if(validEmailPattern.test(e.target.value)) {
-        // console.log("valid")
-        if(passwordLoginElement.value.length > 0) {
-            // console.log("valid and long")
-            loginSubmitElement.classList.add('valid')
-        }
-    }
-    else {
-        loginSubmitElement.classList.remove('valid')
-    }
+emailInputLoginElement.addEventListener("keydown", (e)=> {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitLogin()
+    } 
 })
 
 passwordLoginElement.addEventListener("keyup", (e)=> {
-    console.log('tap')
-    
-    if(validEmailPattern.test(emailInputLoginElement.value) && e.target.value.length > 0) {
-        console.log('valid & long')
-        loginSubmitElement.classList.add('valid')
-    }
-    else {
-        console.log('bogus')
-        loginSubmitElement.classList.remove('valid')
-    }
+    validEmailPattern.test(emailInputLoginElement.value) && passwordLoginElementvalue.length > 0
+       ? loginSubmitElement.classList.add('valid')
+       : loginSubmitElement.classList.remove('valid')
 })
 
-loginSubmitElement.addEventListener("click", e => {
-    if(loginSubmitElement.classList.contains('valid')) {
+passwordLoginElement.addEventListener("keydown", (e)=> {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitLogin()
+    } 
+})
 
-        console.log(emailInputLoginElement.value,passwordLoginElement.value)
-        loginSubmitElement.textContent = "checking.."
-        loginSubmitElement.setAttribute("disabled", true)
-
-        $.ajax({ url: '/', type: 'POST', contentType: 'application/json',
-            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, username: gameState.session.data.username, register: false }),
-            success: function(response){
-                if(response == "success") {
-                    // registerSubmitStatusElement.value = ""
-                    setTimeout(() => {
-                        loginSubmitElement.textContent="success!"
-                        setTimeout(() => {
-                            loginSubmitElement.removeAttribute("disabled")
-                            document.querySelectorAll(".toggles").forEach( el => el.checked = false )
-                           
-                        }, 2000)
-                    }, 2000)
-                }
-                else {
-                    loginSubmitElement.textContent="failed login"
-                    setTimeout(() => {
-                        loginSubmitElement.removeAttribute("disabled")
-                        loginSubmitElement.textContent="submit"
-                    }, 2000)
-                }
-            }
-        })
-    }
-});
-
-
-
-
-// function resetChangeControl() {
-//     clearTimeout(timeout_user)
-//     timeout_user = setTimeout(()=> {
-//         if(document.activeElement != userInputElement) {
-//             changeUsernameElement.textContent = 'change'
-//             changeUsernameElement.classList.remove("save")
-
-//         }
-//     }, 2000)
-// }
-
+loginSubmitElement.addEventListener("click", submitLogin);
 
 
 /* -------------------- FUNCTIONS --------------------- */
@@ -516,20 +425,6 @@ function clearSideBar() {
     registerSubmitElement.classList.remove("valid")
     // userInputElement.value = gameState.session.data.username || "someone"
 }
-
-
-// email functions 
-function submitEmail(e) {
-    
-    let email = e.target.value;
-
-    if(validUserPattern.test(username)) {
-        
-        // .. open 2 password fields before submission
-
-    }
-}
-
 
 // username functions
 function submitUserNameChange(e) {
@@ -567,7 +462,80 @@ function resetChangeControl() {
     }, 2000)
 }
 
+function submitLogin() {
+    if(loginSubmitElement.classList.contains('valid')) {
+        
+        console.log(emailInputLoginElement.value,passwordLoginElement.value)
+        loginSubmitElement.textContent = "checking.."
+        loginSubmitElement.setAttribute("disabled", true)
+        
+        $.ajax({ url: '/', type: 'POST', contentType: 'application/json',
+            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, username: gameState.session.data.username, register: false }),
+            success: function(response){
+                if(response == "success") {
+                    // registerSubmitStatusElement.value = ""
+                    setTimeout(() => {
+                        loginSubmitElement.textContent="success!"
+                        setTimeout(() => {
+                            loginSubmitElement.removeAttribute("disabled")
+                            document.querySelectorAll(".toggles").forEach( el => el.checked = false )
+                            // emailInputLoginElement.value = ""
+                            passwordLoginElement.value = ""
+                            loginSubmitElement.textContent="submit"
+                            
+                        }, 2000)
+                    }, 2000)
+                }
+                else {
+                    loginSubmitElement.textContent="failed login"
+                    setTimeout(() => {
+                        loginSubmitElement.removeAttribute("disabled")
+                        loginSubmitElement.textContent="submit"
+                    }, 2000)
+                }
+            }
+        })
+    }
+}
 
+function submitRegistration() {
+    if(registerSubmitElement.classList.contains('valid')) {
+        // console.log(emailInputRegisterElement.value,passwordRegisterElement.value)
+        registerSubmitElement.textContent = "checking.."
+        registerSubmitElement.setAttribute("disabled", true)
+        
+
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.data.username, register: true}),
+            success: function(response){
+                if(response == "registration success") {
+                    // registerSubmitStatusElement.value = ""
+                    setTimeout(() => {
+                        registerSubmitElement.textContent="success!"
+                        setTimeout(() => {
+                            document.querySelectorAll(".toggles").forEach( el => el.checked = false )
+                            sideBarElement.classList.remove("square")
+                            registerSubmitElement.removeAttribute("disabled")
+                            registerSubmitElement.textContent="submit"
+                            registerSubmitElement.classList.remove("valid")
+                        }, 2000)
+                    }, 2000)
+                }
+                else {
+                    registerSubmitElement.textContent="duplicate email"
+                    setTimeout(() => {
+                        registerSubmitElement.textContent="submit"
+                        registerSubmitElement.removeAttribute("disabled")
+                        registerSubmitElement.classList.remove("valid")
+                    })
+                }
+            }
+        })
+    }
+}
 // cookie functions
 function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
