@@ -1,6 +1,10 @@
 
 /* ------------------ SETUP -------------------- */
 
+// validator regex
+var validEmailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+var validatePasswordPattern = /^(?=.*\d).{4,8}$/;   
+
 // DOM objects
 var messageInputElement = document.getElementById('message-input')
 var submitButtonElement = document.getElementById('submit-button')
@@ -238,47 +242,46 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
 
 /* ------------------- SIDE BAR --------------------- */
 
+// --- DOM OBJECTS
+
+var registerPasswordToggleElement = document.getElementById("register-password-toggle")
+var loginWrapToggleElement = document.getElementById("login-wrap-toggle")
+var loginWrapTogglerElement = document.getElementById("login-wrap-toggler")
+var registerWrapToggleElement = document.getElementById("register-wrap-toggle")
+var registerWrapTogglerElement = document.getElementById("register-wrap-toggler")
+
 var emailInputLoginElement = document.getElementById("email-input-login")
 var passwordLoginElement = document.getElementById("password-login")
 var loginSubmitElement = document.querySelector(".login-submit-wrap .login-submit")
  
-
 var emailInputRegisterElement = document.getElementById("email-input-register")
 var passwordRegisterElement = document.getElementById("password-register")
 var retypePasswordRegisterElement = document.getElementById("retype-password-register")
 
-var registerPasswordToggleElement = document.getElementById("register-password-toggle")
-
 var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
-// var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 
-// registerTogglerElement = document.getElementById("register-toggle")
+var loginChoosersElement = document.querySelector(".login-choosers")
 
-// clear side bar when opening it
+// ----- FUNCTIONS -----
+
 document.querySelector(".show-side-bar").addEventListener("click", e => {
     clearSideBar()
 })
 
 
-loginWrapToggleElement = document.getElementById("login-wrap-toggle")
-loginWrapTogglerElement = document.getElementById("login-wrap-toggler")
-
-registerWrapToggleElement = document.getElementById("register-wrap-toggle")
-registerWrapTogglerElement = document.getElementById("register-wrap-toggler")
-
-loginChoosersElement = document.querySelector(".login-choosers")
+// --- TOGGLERS
 
 loginWrapTogglerElement.addEventListener("click", e => {
     registerWrapToggleElement.checked = false;
     loginWrapToggleElement.checked = !loginWrapToggleElement.checked
-
+    
     if(loginWrapToggleElement.checked) {
         sideBarElement.classList.add("square")
     }
     else {
         sideBarElement.classList.remove("square")
-
+        
     }
 })
 
@@ -295,7 +298,8 @@ registerWrapTogglerElement.addEventListener("click", e => {
 })
 
 
-// -- username mouse logic
+// --- USERNAME
+
 changeUsernameElement.addEventListener("click", (e)=> {
     if(e.target.textContent == "change") {
         userInputElement.removeAttribute("disabled")
@@ -310,8 +314,6 @@ changeUsernameElement.addEventListener("click", (e)=> {
     }
 })
 
-
-// --- username keyboard logic
 userInputElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         e.preventDefault()
@@ -330,10 +332,6 @@ userInputElement.addEventListener("blur", e => {
         userInputElement.value = gameState.session.data.username
     }
 })
-
-// just whoah email regex
-var validEmailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-
 
 // --- REGISTER
 
@@ -397,9 +395,7 @@ loginSubmitElement.addEventListener("click", submitLogin);
 
 
 /* -------------------- FUNCTIONS --------------------- */
-// sidebar functions
 
-var validatePasswordPattern = /^(?=.*\d).{4,8}$/;   
 
 function passwordsAreValid(e) {
 
