@@ -289,14 +289,15 @@ body.show-header .chat-bar {
 .side-bar .side-bar-row {
   margin-bottom: 10px;
 }
+.side-bar .side-bar-row.side-bar-row-username {
+  display: flex;
+  flex-flow: column-reverse;
+}
 .side-bar .side-bar-row:last-of-type {
   margin: 0;
 }
 .side-bar .side-bar-row .logout-wrap .logout {
   display: none;
-}
-.side-bar .side-bar-row .login-choosers {
-  overflow: hidden;
 }
 .side-bar .side-bar-row .login-choosers .login, .side-bar .side-bar-row .login-choosers .register {
   display: block;
@@ -305,7 +306,7 @@ body.show-header .chat-bar {
   user-select: none;
   transition: opacity 0.2s;
 }
-.side-bar .side-bar-row .login-choosers .login:hover, .side-bar .side-bar-row .login-choosers .register:hover {
+.side-bar .side-bar-row .login-choosers .login:hover, .side-bar .side-bar-row .login-choosers .login:focus, .side-bar .side-bar-row .login-choosers .register:hover, .side-bar .side-bar-row .login-choosers .register:focus {
   opacity: 1 !important;
 }
 .side-bar .side-bar-row .login-choosers .login {
@@ -375,7 +376,6 @@ body.show-header .chat-bar {
 .side-bar input, .side-bar select {
   width: 100%;
   border: none;
-  outline: none;
 }
 .side-bar select {
   overflow: hidden;
@@ -383,7 +383,6 @@ body.show-header .chat-bar {
   padding: 5px;
   cursor: pointer;
   border: none;
-  outline: none;
 }
 .side-bar select option {
   padding: 5px;
@@ -400,7 +399,7 @@ body.show-header .chat-bar {
   opacity: 0.6;
   transition: opacity 0.2s;
 }
-.side-bar .user-label-wrap .change-username:hover, .side-bar .user-label-wrap .change-username:focus, .side-bar .user-label-wrap .change-username.save {
+.side-bar .user-label-wrap .change-username.active {
   opacity: 1;
 }
 .side-bar .user-bar {

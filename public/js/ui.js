@@ -202,23 +202,25 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 
 var timeout_user;    
 socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
-    console.log("username_update_response")
-    console.log(data)
 
-    if(data.foundDuplicate) {
-        changeUsernameElement.textContent = 'duplicate'
-        resetChangeControl()
-    }
-    else {
-        gameState.session.data.username = data.username
-        setCookie("sik_data", JSON.stringify(gameState.session.data))
+    changeUsernameElement.textContent = 'checking..'
 
-        changeUsernameElement.textContent = 'changed!'
-        
-        resetChangeControl()
-        userInputElement.blur()
-        
-    }
+    setTimeout(() => {
+        if(data.foundDuplicate) {
+            changeUsernameElement.textContent = 'duplicate'
+        }
+        else {
+            gameState.session.data.username = data.username
+            setCookie("sik_data", JSON.stringify(gameState.session.data))
+            changeUsernameElement.textContent = 'changed!'
+        }
+
+        setTimeout(() => {
+            changeUsernameElement.textContent = 'save'
+            changeUsernameElement.classList.remove('active')
+        }, 2000)
+    }, 2000)
+
 })
 
 /* ------------------- SIDE BAR --------------------- */
@@ -250,7 +252,7 @@ var toggleSideBar = document.querySelector(".toggle-side-bar")
 
 toggleSideBar.addEventListener("click", clearSideBar)
 
-loginWrapTogglerElement.addEventListener("click", toggleLogin())
+loginWrapTogglerElement.addEventListener("click", toggleLogin)
 
 loginWrapTogglerElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
@@ -268,17 +270,30 @@ registerWrapTogglerElement.addEventListener("keydown", e => {
 
 // --- USERNAME
 
-changeUsernameElement.addEventListener("click", (e)=> {
-    if(e.target.textContent == "change") {
-        userInputElement.removeAttribute("disabled")
-        changeUsernameElement.classList.add("save")
-        changeUsernameElement.textContent = "save"
-        userInputElement.focus()
-        userInputElement.select()
-    }
-    else if (e.target.textContent == "save") {
+changeUsernameElement.addEventListener("click", e => {
+    if(changeUsernameElement.classList.contains("active")) {
         submitUserNameChange(e)
     }
+})
+
+changeUsernameElement.addEventListener("keyup", e => {
+    if(changeUsernameElement.classList.contains("active") && e.key == "Enter" || e.key == "NumpadEnter") {
+        submitUserNameChange(e)
+    }
+})
+
+changeUsernameElement.addEventListener("blur", e => {
+    if(changeUsernameElement.textContent == 'save' && e.relatedTarget != userInputElement) {
+        changeUsernameElement.classList.remove("active")
+        userInputElement.value = gameState.session.data.username
+    }
+})
+
+
+var originalValue = userInputElement.value
+
+userInputElement.addEventListener("focus", e => { 
+    originalValue = userInputElement.value
 })
 
 userInputElement.addEventListener("keydown", e => {
@@ -286,14 +301,22 @@ userInputElement.addEventListener("keydown", e => {
         e.preventDefault()
         submitUserNameChange(e)
     } 
+    // else {
+    //     console.log("KEYDOWN: e.target.value", e.target.value, "userInputElement.value", userInputElement.value);
+    // }
+})
+
+userInputElement.addEventListener("keyup", e => { 
+    if(originalValue != e.target.value) {
+        changeUsernameElement.classList.add("active")
+    }
+    console.log("KEYUP: e.target.value", e.target.value, "userInputElement.value", userInputElement.value);
 })
 
 userInputElement.addEventListener("blur", e => { 
 
-    userInputElement.setAttribute("disabled", "true")
     if(changeUsernameElement.textContent == 'save' && e.relatedTarget != changeUsernameElement) {
-        changeUsernameElement.textContent = 'change'
-        changeUsernameElement.classList.remove("save")
+        changeUsernameElement.classList.remove("active")
         userInputElement.value = gameState.session.data.username
     }
 })
@@ -386,6 +409,7 @@ function clearSideBar() {
     emailInputLoginElement.value = ""
     passwordRegisterElement.value = ""
     retypePasswordRegisterElement.value = ""
+    userInputElement.value = gameState.session.data.username
 
     registerSubmitElement.classList.remove("valid")
     // userInputElement.value = gameState.session.data.username || "someone"
@@ -398,33 +422,10 @@ function submitUserNameChange(e) {
     var validUserPattern = /^[a-zA-Z0-9 ]*$/
     let username = userInputElement.value;
 
-    console.log("username", username)
-    console.log("gameState.session.data.username", gameState.session.data.username)
-    console.log("username == gameState.session.data.username:", username == gameState.session.data.username)
-
-    if(username == gameState.session.data.username) {
-        changeUsernameElement.textContent = 'change'
-        changeUsernameElement.classList.remove("save")
-        userInputElement.setAttribute("disabled", true)
-        return;
-    }
-
-    if(validUserPattern.test(username)) {
+    if(validUserPattern.test(username) && username != gameState.session.data.username) {
         changeUsernameElement.textContent = "checking.."
         socket.emit('username_update', username)
     }
-}
-
-
-function resetChangeControl() {
-    clearTimeout(timeout_user)
-    timeout_user = setTimeout(()=> {
-        if(document.activeElement != userInputElement) {
-            changeUsernameElement.textContent = 'change'
-            changeUsernameElement.classList.remove("save")
-
-        }
-    }, 2000)
 }
 
 function toggleLogin() {

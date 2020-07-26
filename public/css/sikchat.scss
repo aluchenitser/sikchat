@@ -241,19 +241,19 @@ h1, p {
         transition: left .2s;
     }
 
-    &:checked ~ .show-side-bar {
+    &:checked ~ .toggle-side-bar {
         left: -35px;
         transition: left .2s; 
     }
     
-    &:not(:checked) ~ .show-side-bar {
+    &:not(:checked) ~ .toggle-side-bar {
         left: 0;
         transition: left .2s .25s; 
     }    
 }
 
 
-.show-side-bar {
+.toggle-side-bar {
     position: fixed;
     top: 10px;
     border-radius: 0 4px 4px 0px;
@@ -407,6 +407,11 @@ h1, p {
     .side-bar-row {
         margin-bottom: 10px;
 
+        &.side-bar-row-username {
+            display: flex;
+            flex-flow: column-reverse;
+        }
+
         &:last-of-type {
             margin: 0;
         }
@@ -418,7 +423,6 @@ h1, p {
         }
 
         .login-choosers {
-            overflow: hidden;
 
             .login, .register {
                 display: block;
@@ -427,7 +431,7 @@ h1, p {
                 user-select: none;
                 transition: opacity .2s;
 
-                &:hover {
+                &:hover, &:focus {
                     opacity: 1 !important;
                 }
             }
@@ -545,7 +549,6 @@ h1, p {
     input, select {
         width: 100%;
         border: none;
-        outline: none;
     }
 
     select{
@@ -554,8 +557,6 @@ h1, p {
         padding: 5px;
         cursor: pointer;
         border: none;
-        outline: none;
-
         
         option {
             padding: 5px;
@@ -577,7 +578,7 @@ h1, p {
             opacity: 0.6;
             transition: opacity .2s;
 
-            &:hover, &:focus, &.save {
+            &.active {
                 opacity: 1;
             }
         }

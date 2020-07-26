@@ -33,15 +33,15 @@
             <!-- <input type="checkbox" id="register-toggler" />
             <input type="checkbox" id="login-toggler" />  -->
 
-            <label class="close" for="side-bar-toggler"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
+            <label class="close" for="side-bar-toggler" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
 
-            <div class="side-bar-row">
-                <div class="user-label-wrap">
-                    <label>moniker</label><span class="change-username" tabindex="0">change</span>
-                </div>
+            <div class="side-bar-row side-bar-row-username">
                 <form id="user-bar" class="user-bar">
-                    <input id="username" name="username" type="text" disabled autocomplete="off" spellcheck="false" maxlength="16" />
+                    <input id="username" tabindex="0" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" />
                 </form> 
+                <div class="user-label-wrap">
+                    <label>moniker</label><span class="change-username" tabindex="0">save</span>
+                </div>
             </div>
             <div class="side-bar-row">
                 <label>rooms</label><br />
