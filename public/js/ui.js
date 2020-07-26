@@ -311,6 +311,9 @@ loginWrapTogglerElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
         toggleLogin()
     }
+    else if (e.key == "ArrowRight") {
+        registerWrapTogglerElement.focus()
+    }
 })
 
 registerWrapTogglerElement.addEventListener("click", toggleRegister)
@@ -319,6 +322,9 @@ registerWrapTogglerElement.addEventListener("keydown", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
         toggleRegister()
     }
+    else if (e.key == "ArrowLeft") {
+        loginWrapTogglerElement.focus()
+    }    
 })
 
 // --- USERNAME
