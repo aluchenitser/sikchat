@@ -67,8 +67,8 @@ body.show-header .chat-bar {
   padding-left: 15px;
   margin-right: -1px;
 }
-.chat-bar .form-column #message-input:focus, .chat-bar .form-column #message-input:focus + #submit-button {
-  border-bottom: 1px solid #d875d8;
+.chat-bar .form-column #message-input:focus {
+  background-color: #ffffde;
 }
 .chat-bar .form-column #submit-button {
   color: white;

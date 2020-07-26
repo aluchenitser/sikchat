@@ -85,8 +85,8 @@ h1, p {
             padding-left: 15px;
             margin-right: -1px;
 
-            &:focus, &:focus + #submit-button {
-                border-bottom: 1px solid #d875d8;
+            &:focus{
+                background-color: #ffffde;
             }
         }
 

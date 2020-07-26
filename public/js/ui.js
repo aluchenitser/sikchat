@@ -356,6 +356,12 @@ retypePasswordRegisterElement.addEventListener("keydown", e => {
 
 registerSubmitElement.addEventListener("click", submitRegistration)
 
+registerSubmitElement.addEventListener("keyup", () => {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitRegistration()
+    } 
+})
+
 
 // --- LOGIN
 
@@ -384,6 +390,12 @@ passwordLoginElement.addEventListener("keydown", e => {
 })
 
 loginSubmitElement.addEventListener("click", submitLogin);
+loginSubmitElement.addEventListener("click", ()=> {
+
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        submitLogin()
+    }
+})
 
 
 /* -------------------- FUNCTIONS --------------------- */
