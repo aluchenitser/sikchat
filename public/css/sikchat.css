@@ -9,6 +9,7 @@ html, body {
 
 * {
   box-sizing: border-box;
+  outline-color: black;
 }
 
 body {
@@ -384,6 +385,9 @@ body.show-header .chat-bar {
 }
 .side-bar select option:checked {
   background-color: #90EE90;
+}
+.side-bar select:focus {
+  border-radius: 0;
 }
 .side-bar .user-label-wrap .change-username {
   position: absolute;

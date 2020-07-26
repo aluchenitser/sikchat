@@ -25,9 +25,6 @@ var openSideBar = document.querySelector(".open-side-bar")
 var closeSideBar = document.querySelector(".close-side-bar")
 var sideBarToggle = document.getElementById("side-bar-toggle")
 var tabSegue1 = document.getElementById("tab-segue-1")
-// var tabSegue2 = document.getElementById("tab-segue-2")
-
-
 
 // game state
 var gameState = {
@@ -170,7 +167,6 @@ socket.on('tick', server => {
 
 /* -------------------- CHAT & CHAT INTERACTIONS --------------------- */
 
-
 document.getElementById('chat-form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
@@ -205,7 +201,6 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 })
 
 /* -------------------- SESSION --------------------- */
-
 
 var timeout_user;    
 socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
@@ -348,9 +343,7 @@ changeUsernameElement.addEventListener("blur", e => {
     }
 })
 
-
 var originalValue = userInputElement.value
-
 userInputElement.addEventListener("focus", e => { 
     originalValue = userInputElement.value
 })
@@ -360,9 +353,6 @@ userInputElement.addEventListener("keydown", e => {
         e.preventDefault()
         submitUserNameChange(e)
     } 
-    // else {
-    //     console.log("KEYDOWN: e.target.value", e.target.value, "userInputElement.value", userInputElement.value);
-    // }
 })
 
 userInputElement.addEventListener("keyup", e => { 
@@ -606,6 +596,7 @@ function submitRegistration() {
         })
     }
 }
+
 // cookie functions
 function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
