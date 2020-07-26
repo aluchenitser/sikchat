@@ -23,8 +23,8 @@
         <script src="https://use.fontawesome.com/4d7207fa33.js"></script>
     </head>
     <body>
-        <input id="side-bar-toggler" type="checkbox" />
-        <label class="open-side-bar" for="side-bar-toggler" tabindex="0" ><i class="fa fa-bars"></i></label>
+        <input id="side-bar-toggle" type="checkbox" />
+        <label class="open-side-bar" for="side-bar-toggle" tabindex="0" ><i class="fa fa-bars"></i></label>
         <div class="side-bar">
             <input type="checkbox" class="toggles" id="register-wrap-toggle" />
             <input type="checkbox" class="toggles" id="login-wrap-toggle" />
@@ -32,8 +32,8 @@
             <input type="checkbox" class="toggles" id="logout-toggle" />
             <!-- <input type="checkbox" id="register-toggler" />
             <input type="checkbox" id="login-toggler" />  -->
-
-            <label class="close-side-bar" for="side-bar-toggler" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
+            <!-- <label tabindex="0" id="tab-segue-2" style="position: absolute">&nbsp</label> -->
+            <label class="close-side-bar" for="side-bar-toggle" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
 
             <div class="side-bar-row side-bar-row-username">
                 <form id="user-bar" class="user-bar">
@@ -108,11 +108,12 @@
         
         <div class="chat-bar">
             <form id="chat-form" class="form-column">
+                <label tabindex="0" id="tab-segue-1" style="position: absolute">&nbsp</label>
+
                 <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button" tabindex="-1"></button>
                 <div class="next-game-in-wrapper">
                     <span>next game:</span><br /><span class="next-game-in">10</span>s
                 </div>
-                <!-- <label tabindex="0" style="position: absolute">&nbsp</label> -->
             </form>
 
             <div class="spacer-column"></div>
@@ -202,7 +203,7 @@
             window.addEventListener("keyup", function(e) {
                 // console.log(e)
                 if(e.key == "Escape" && e.target.id != "message-input") {
-                    document.getElementById("side-bar-toggler").checked = false
+                    document.getElementById("side-bar-toggle").checked = false
                 }
             })
 

@@ -181,24 +181,24 @@ body.show-header .chat-bar {
 }
 
 /* ---------------- SIDE PANEL ---------------- */
-#side-bar-toggler {
+#side-bar-toggle {
   visibility: hidden;
   position: absolute;
   font-size: 16px;
 }
-#side-bar-toggler:checked ~ .side-bar {
+#side-bar-toggle:checked ~ .side-bar {
   left: 0;
   transition: left 0.2s 0.25s, border-radius 0.2s;
 }
-#side-bar-toggler:not(:checked) ~ .side-bar {
+#side-bar-toggle:not(:checked) ~ .side-bar {
   left: -260px;
   transition: left 0.2s;
 }
-#side-bar-toggler:checked ~ .open-side-bar {
+#side-bar-toggle:checked ~ .open-side-bar {
   left: -35px;
   transition: left 0.2s;
 }
-#side-bar-toggler:not(:checked) ~ .open-side-bar {
+#side-bar-toggle:not(:checked) ~ .open-side-bar {
   left: 0;
   transition: left 0.2s 0.25s;
 }

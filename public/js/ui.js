@@ -23,7 +23,10 @@ var changeUsernameElement = document.querySelector(".user-label-wrap .change-use
 var sideBarElement = document.querySelector(".side-bar")
 var openSideBar = document.querySelector(".open-side-bar")
 var closeSideBar = document.querySelector(".close-side-bar")
-var sideBarToggler = document.getElementById("side-bar-toggler")
+var sideBarToggle = document.getElementById("side-bar-toggle")
+var tabSegue1 = document.getElementById("tab-segue-1")
+// var tabSegue2 = document.getElementById("tab-segue-2")
+
 
 
 // game state
@@ -167,57 +170,6 @@ socket.on('tick', server => {
 
 /* -------------------- CHAT & CHAT INTERACTIONS --------------------- */
 
-// document.body.addEventListener("focus", e => {
-    //     console.log("body focus")
-    
-    //     sideBarToggler.checked == true
-    //         ? closeSideBar.focus()
-    //         : openSideBar.focus()
-    // })
-
-messageInputElement.addEventListener("blur", e => {
-    console.log("blur")
-    console.log(e)
-
-    if(e.shiftKey && sideBarToggler.checked == false) {
-        openSideBar.focus()
-    }
-})
-    
-messageInputElement.addEventListener("focusout", e => {
-    console.log("focusout")
-    console.log(e)
-
-    if(e.shiftKey && sideBarToggler.checked == false) {
-        openSideBar.focus()
-    }
-})
-
-openSideBar.addEventListener("focus", e => {
-    console.log("openSideBar")
-    console.log(e.relatedTarget)
-
-    if(e.relatedTarget == closeSideBar) {
-        messageInputElement.focus()
-    }
-})
-
-openSideBar.addEventListener("blur", e => {
-    console.log("openSideBar blur")
-    messageInputElement.focus()
-})
-
-openSideBar.addEventListener("keyup", e => {
-    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
-        sideBarToggler.checked = true
-    }
-})
-
-closeSideBar.addEventListener("focus", e => {
-    if (e.relatedTarget == openSideBar) {
-        messageInputElement.focus()
-    }
-})
 
 document.getElementById('chat-form').addEventListener('submit', e => {
     e.preventDefault()
@@ -302,8 +254,54 @@ var registerSubmitStatusElement = document.querySelector('.register-submit-wrap 
 var loginChoosersElement = document.querySelector(".login-choosers")
 
 
+// --- TABBING & TOGGLERS
 
-// --- TOGGLERS
+openSideBar.addEventListener("focus", e => {
+    if(sideBarToggle.checked == true && e.relatedTarget == closeSideBar) {
+        messageInputElement.focus()
+    }
+    else if(sideBarToggle.checked == true) {
+       closeSideBar.focus()
+    }
+})
+
+tabSegue1.addEventListener("focus", e => {
+    if(e.relatedTarget == messageInputElement && sideBarToggle.checked == false) {
+        openSideBar.focus()
+    }
+    else if (e.relatedTarget == messageInputElement && sideBarToggle.checked == true) {
+        closeSideBar.focus()
+    }
+    else {
+        messageInputElement.focus()
+    }
+})
+
+messageInputElement.addEventListener("blur", e => {
+    if(e.shiftKey && sideBarToggle.checked == false) {
+        openSideBar.focus()
+    }
+})
+
+openSideBar.addEventListener("keyup", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
+        sideBarToggle.checked = true
+        closeSideBar.focus()
+    }
+})
+
+closeSideBar.addEventListener("focus", e => {
+    if (e.relatedTarget == openSideBar && sideBarToggle.checked == false) {
+        messageInputElement.focus()
+    }
+})
+
+closeSideBar.addEventListener("keyup", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
+        sideBarToggle.checked = false
+        openSideBar.focus()
+    }
+})
 
 openSideBar.addEventListener("click", clearSideBar)
 
