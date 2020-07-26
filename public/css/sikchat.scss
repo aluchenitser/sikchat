@@ -241,19 +241,19 @@ h1, p {
         transition: left .2s;
     }
 
-    &:checked ~ .toggle-side-bar {
+    &:checked ~ .open-side-bar {
         left: -35px;
         transition: left .2s; 
     }
     
-    &:not(:checked) ~ .toggle-side-bar {
+    &:not(:checked) ~ .open-side-bar {
         left: 0;
         transition: left .2s .25s; 
     }    
 }
 
 
-.toggle-side-bar {
+.open-side-bar {
     position: fixed;
     top: 10px;
     border-radius: 0 4px 4px 0px;
@@ -533,7 +533,7 @@ h1, p {
         
     }
 
-    label.close {
+    label.close-side-bar {
         position: absolute;
         top: 5px;
         cursor: pointer;

@@ -21,6 +21,9 @@ var messagesElement = document.getElementById("messages")
 var changeUsernameElement = document.querySelector(".user-label-wrap .change-username")
 
 var sideBarElement = document.querySelector(".side-bar")
+var openSideBar = document.querySelector(".open-side-bar")
+var closeSideBar = document.querySelector(".close-side-bar")
+var sideBarToggler = document.getElementById("side-bar-toggler")
 
 
 // game state
@@ -164,6 +167,58 @@ socket.on('tick', server => {
 
 /* -------------------- CHAT & CHAT INTERACTIONS --------------------- */
 
+// document.body.addEventListener("focus", e => {
+    //     console.log("body focus")
+    
+    //     sideBarToggler.checked == true
+    //         ? closeSideBar.focus()
+    //         : openSideBar.focus()
+    // })
+
+messageInputElement.addEventListener("blur", e => {
+    console.log("blur")
+    console.log(e)
+
+    if(e.shiftKey && sideBarToggler.checked == false) {
+        openSideBar.focus()
+    }
+})
+    
+messageInputElement.addEventListener("focusout", e => {
+    console.log("focusout")
+    console.log(e)
+
+    if(e.shiftKey && sideBarToggler.checked == false) {
+        openSideBar.focus()
+    }
+})
+
+openSideBar.addEventListener("focus", e => {
+    console.log("openSideBar")
+    console.log(e.relatedTarget)
+
+    if(e.relatedTarget == closeSideBar) {
+        messageInputElement.focus()
+    }
+})
+
+openSideBar.addEventListener("blur", e => {
+    console.log("openSideBar blur")
+    messageInputElement.focus()
+})
+
+openSideBar.addEventListener("keyup", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
+        sideBarToggler.checked = true
+    }
+})
+
+closeSideBar.addEventListener("focus", e => {
+    if (e.relatedTarget == openSideBar) {
+        messageInputElement.focus()
+    }
+})
+
 document.getElementById('chat-form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
@@ -245,12 +300,12 @@ var registerSubmitElement = document.querySelector('.register-submit-wrap .regis
 var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
 
 var loginChoosersElement = document.querySelector(".login-choosers")
-var toggleSideBar = document.querySelector(".toggle-side-bar")
+
 
 
 // --- TOGGLERS
 
-toggleSideBar.addEventListener("click", clearSideBar)
+openSideBar.addEventListener("click", clearSideBar)
 
 loginWrapTogglerElement.addEventListener("click", toggleLogin)
 

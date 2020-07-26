@@ -24,7 +24,7 @@
     </head>
     <body>
         <input id="side-bar-toggler" type="checkbox" />
-        <label class="toggle-side-bar" for="side-bar-toggler"><i class="fa fa-bars"></i></label>
+        <label class="open-side-bar" for="side-bar-toggler" tabindex="0" ><i class="fa fa-bars"></i></label>
         <div class="side-bar">
             <input type="checkbox" class="toggles" id="register-wrap-toggle" />
             <input type="checkbox" class="toggles" id="login-wrap-toggle" />
@@ -33,7 +33,7 @@
             <!-- <input type="checkbox" id="register-toggler" />
             <input type="checkbox" id="login-toggler" />  -->
 
-            <label class="close" for="side-bar-toggler" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
+            <label class="close-side-bar" for="side-bar-toggler" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
 
             <div class="side-bar-row side-bar-row-username">
                 <form id="user-bar" class="user-bar">
@@ -112,6 +112,7 @@
                 <div class="next-game-in-wrapper">
                     <span>next game:</span><br /><span class="next-game-in">10</span>s
                 </div>
+                <!-- <label tabindex="0" style="position: absolute">&nbsp</label> -->
             </form>
 
             <div class="spacer-column"></div>
@@ -205,7 +206,17 @@
                 }
             })
 
-            
+            /* ----------- UTILITY FOR DEV TOOLS ----------- */
+            function activeElement(bool) {
+                if(bool) {
+                    t = setInterval(() => {
+                        console.log(document.activeElement)
+                    }, 500)
+                }
+                else {
+                    clearTimeout(t)
+                }
+            }
         </script>
     </body>
 </html>
