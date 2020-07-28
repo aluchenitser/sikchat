@@ -254,6 +254,9 @@ body.show-header .chat-bar {
 .side-bar #logout-toggle:checked ~ .side-bar-row .logout-wrap {
   display: block;
 }
+.side-bar #logout-toggle:checked ~ .side-bar-row .login-choosers {
+  display: none;
+}
 .side-bar #register-wrap-toggle:checked ~ .side-bar-row .login-choosers, .side-bar #login-wrap-toggle:checked ~ .side-bar-row .login-choosers {
   margin-bottom: 10px;
 }
@@ -297,8 +300,15 @@ body.show-header .chat-bar {
 .side-bar .side-bar-row:last-of-type {
   margin: 0;
 }
-.side-bar .side-bar-row .logout-wrap .logout {
+.side-bar .side-bar-row .logout-wrap {
   display: none;
+}
+.side-bar .side-bar-row .logout-wrap .logout {
+  cursor: pointer;
+  opacity: 0.6;
+}
+.side-bar .side-bar-row .logout-wrap .logout:hover, .side-bar .side-bar-row .logout-wrap .logout:focus {
+  opacity: 1;
 }
 .side-bar .side-bar-row .login-choosers .login, .side-bar .side-bar-row .login-choosers .register {
   display: block;

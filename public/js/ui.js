@@ -26,6 +26,13 @@ var closeSideBar = document.querySelector(".close-side-bar")
 var sideBarToggle = document.getElementById("side-bar-toggle")
 var tabSegue1 = document.getElementById("tab-segue-1")
 
+var logOutWrapElement = document.querySelector(".logout-wrap")
+var logOutElement = document.querySelector(".logout-wrap .logout")
+var logOutToggleElement = document.getElementById("logout-toggle")
+
+var loginChoosersElement = document.querySelector(".login-choosers")
+var loginChoosersToggleElement = document.getElementById("login-choosers-toggle")
+
 // game state
 var gameState = {
 
@@ -67,6 +74,10 @@ var gameState = {
         gameState.session.debug = debug
 
         userInputElement.value = gameState.session.data.username
+
+        logOutToggleElement.checked = gameState.session.data.isRegistered
+            ? true
+            : false
     }
 }()
 
@@ -227,13 +238,11 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
 
 /* ------------------- SIDE BAR --------------------- */
 
-// --- DOM OBJECTS
-
 var registerPasswordToggleElement = document.getElementById("register-password-toggle")
 var loginWrapToggleElement = document.getElementById("login-wrap-toggle")
 var loginWrapTogglerElement = document.getElementById("login-wrap-toggler")
-var registerWrapToggleElement = document.getElementById("register-wrap-toggle")
 var registerWrapTogglerElement = document.getElementById("register-wrap-toggler")
+var registerWrapToggleElement = document.getElementById("register-wrap-toggle")
 
 var emailInputLoginElement = document.getElementById("email-input-login")
 var passwordLoginElement = document.getElementById("password-login")
@@ -246,7 +255,7 @@ var retypePasswordRegisterElement = document.getElementById("retype-password-reg
 var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
 
-var loginChoosersElement = document.querySelector(".login-choosers")
+
 
 
 // --- TABBING & TOGGLERS
@@ -405,7 +414,7 @@ retypePasswordRegisterElement.addEventListener("keydown", e => {
 
 registerSubmitElement.addEventListener("click", submitRegistration)
 
-registerSubmitElement.addEventListener("keyup", () => {
+registerSubmitElement.addEventListener("keyup", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         submitRegistration()
     } 
@@ -439,10 +448,23 @@ passwordLoginElement.addEventListener("keydown", e => {
 })
 
 loginSubmitElement.addEventListener("click", submitLogin);
-loginSubmitElement.addEventListener("click", ()=> {
+loginSubmitElement.addEventListener("keyup", e => {
 
     if(e.key == "Enter" || e.key == "NumpadEnter") {
         submitLogin()
+    }
+})
+
+// --- 
+
+
+logOutElement.addEventListener("click", e => {
+    window.location.href = window.location.href + "logout"
+})
+
+logOutElement.addEventListener("keyup", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter") {
+        window.location.href = window.location.href + "logout"
     }
 })
 
@@ -538,6 +560,8 @@ function submitLogin() {
                             // emailInputLoginElement.value = ""
                             passwordLoginElement.value = ""
                             loginSubmitElement.textContent="submit"
+                            logOutToggleElement.checked = true;
+                            sideBarElement.classList.remove("square")
                             
                         }, 2000)
                     }, 2000)
@@ -576,6 +600,7 @@ function submitRegistration() {
                             registerSubmitElement.removeAttribute("disabled")
                             registerSubmitElement.textContent="submit"
                             registerSubmitElement.classList.remove("valid")
+                            logOutToggleElement.checked = true;
                             
                             passwordRegisterElement.value = ''
                             passwordLoginElement.value = ''
@@ -585,12 +610,18 @@ function submitRegistration() {
                     }, 2000)
                 }
                 else {
-                    registerSubmitElement.textContent="duplicate email"
+                    registerSubmitElement.textContent="duplicate email!"
                     setTimeout(() => {
                         registerSubmitElement.textContent="submit"
                         registerSubmitElement.removeAttribute("disabled")
                         registerSubmitElement.classList.remove("valid")
-                    })
+
+                        emailInputRegisterElement.value = ''
+                        passwordRegisterElement.value = ''
+                        retypePasswordRegisterElement.value = ''
+
+                        emailInputRegisterElement.focus()
+                    }, 2000)
                 }
             }
         })

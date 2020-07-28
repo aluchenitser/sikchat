@@ -317,6 +317,9 @@ h1, p {
         &:checked ~ .side-bar-row .logout-wrap {
             display: block;
         }
+        &:checked ~ .side-bar-row .login-choosers {
+            display: none;
+        }
     }
 
     #register-wrap-toggle, #login-wrap-toggle {
@@ -419,8 +422,15 @@ h1, p {
         }
 
         .logout-wrap {
+            display: none;
+
             .logout {
-                display: none;
+                cursor: pointer;
+                opacity: 0.6;
+
+                &:hover, &:focus {
+                    opacity: 1;
+                }
             }
         }
 

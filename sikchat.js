@@ -143,6 +143,10 @@ var sessionRepo = {}           // for quick lookup of users that have a session 
 
 app.route('/')
     .get(function(req, res) {
+
+        console.log("req.query")
+        console.log(req.query)
+
         res.sendFile(__dirname + '/index.html');
         res.cookie("sik_debug", "false", {path: "/"});
         
@@ -150,14 +154,14 @@ app.route('/')
             console.log("existing user found")
             console.log(req.session.user)
             console.log("--- user repo ---")
-            console.log(userRepo)
+            printUserRepo()
         }
         else {
             req.session.user = new User()               // blank account until the user logs in or registers
-            console.log(req.session.user)
             console.log("creating blank user")
+            console.log(req.session.user)
         }
-        
+
         res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
         
         // strips authentication and some other stuff
@@ -205,6 +209,14 @@ app.route('/')
         }
         else { res.statusCode(403) }
     })
+
+    app.get('/logout', (req, res) => {
+        req.session.destroy((err) => {
+            res.redirect('/')
+        })
+    })
+
+
 
 
 /* ----------------- GAME LOOP ----------------- */
@@ -293,7 +305,7 @@ setInterval(() => {
     // console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
     gameState.time.tick++               // used to help client know where in window we are
 
-    let gameStateEmit = mapGameStateForEmit()
+    let gameStateEmit = mapGameStateForClient()
     io.emit("tick", gameStateEmit)
 }, 1000)
 
@@ -555,11 +567,18 @@ function consoleLatestUserRepo(mode)
     }
 }
 
+function printUserRepo() {
+    for(var email in userRepo) {
+        user = userRepo[email]
+        console.log(user.username, user.email, user.password, user.guid)
+    }
+}
+
 /* ------------------ UTILITY FUNCTIONS ------------------- */
 
 // snips the more repo esque properties to save bandwidth
 // look at a questions_xyz.json file to see what the object looks like
-function mapGameStateForEmit() {
+function mapGameStateForClient() {
     let clone = JSON.parse(JSON.stringify(gameState))
 
     delete clone.qBank.loaded.questions
@@ -581,6 +600,8 @@ function mapRepoUserToClientUser(user) {
     delete clone.last
     delete clone.email
     delete clone.password
+    
+    clone.isRegistered = user.email == null ? false : true              // toggles whether they see logout or register/login
 
     return clone
 }
