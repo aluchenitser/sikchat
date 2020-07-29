@@ -196,7 +196,7 @@ socket.on('tick', server => {
         if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
             startedWrapStartedElement.classList.add("answered")
         }
-        else {
+        else if(startedWrapStartedElement) {
             startedWrapStartedElement.classList.remove("answered")
         }
         
