@@ -165,6 +165,7 @@ body.show-header .chat-bar {
   flex: 0 0 auto;
   left: -17px;
   position: relative;
+  margin-right: -17px;
 }
 .chat-body .handler::before {
   content: "";

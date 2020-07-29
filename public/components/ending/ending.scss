@@ -1,47 +1,83 @@
-.ending {
-    h1, h2 {
-        position: relative;
-    }
 
-    padding: 0 15px;
-
-    position: relative;
-    animation: fadeIn .5s;
-    transition: opacity 0.5s;
-    margin: auto 0;
-    transform: translate(0, -15%);
-
+.ending-wrap {
+    height: 100%;
+    display: flex;
+    width: 100%;
+    flex-flow: column nowrap;
+        
     .complete {
+        margin: 10px auto 5px auto;
         text-align: center;
-        margin-bottom: 5px;
-    }
+        width: 100%;
 
-    .topic-wrap {
-        font-size: 1.2rem;
-        font-style: underline;
-        text-align: center;
-    }
-
-    .ending-quip {
-        margin-top: 40px;
-        font-size: 1.6rem;
-        font-style: italic;
-        letter-spacing: -2.6px;
-    }
-
-    .stats-wrap {
-        text-align: center;
-
-        .stats {
+        .inner-complete {
             display: inline-block;
-            margin-top: 50px;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
+            text-decoration: underline;
+        }
+    }
 
-            border: 2px dashed black;
-            /* border-radius: 50%; */
-            padding: 25px;
+    .winner {
+        text-align: center;
+        margin: auto;
+    }
+    
+    .ending-quip {
+        margin-bottom: auto;
+        flex: 1.5;
+
+        justify-content: center;
+        display: flex;
+        align-items: center;
+    }
+
+    .ending {
+        flex: 3;
+        width: 80%;
+        margin: auto;
+        padding: 0 15px;
+        left: -2px;
+        position: relative;
+        animation: fadeIn .5s;
+        transition: opacity 0.5s;
+        // margin: auto 0;
+        // transform: translate(0, -15%);
+
+        * {
+            font-size: 1.6rem;
+            font-style: italic;
+            letter-spacing: -2.6px;
+        }
+
+        .you-header {
+            text-align: center;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .stats-header {
+            border-bottom: 1px solid #90ee90;
+            margin-bottom: 4px;
+
+            text-shadow: 1px 1px black, -1px -1px black;
+            animation: _90EEEE 5s infinite;
+            letter-spacing: 0;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
+        @keyframes _90EEEE {
+            0% { color:  #90EEEE  }
+            33% { color: #EEEE90   }
+            66% { color:  #EE90EE }
+            100% { color:  #90EEEE  }
+        }
+
+        .stats-wrap {
+            margin-bottom: 30px;
+            
+            .stats-row {
+                display: flex;
+                justify-content: space-between;
+            }
         }
     }
 }

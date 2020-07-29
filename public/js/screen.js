@@ -87,7 +87,8 @@ var Screen = {
             "answered": null,
             "points": null,
             "lifeTimeAnswered": null,
-            "lifeTimePoints": null
+            "lifeTimePoints": null,
+            "winner": null
         },
         debug: {
 

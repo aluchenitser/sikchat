@@ -1,41 +1,77 @@
-.ending {
+.ending-wrap {
+  height: 100%;
+  display: flex;
+  width: 100%;
+  flex-flow: column nowrap;
+}
+.ending-wrap .complete {
+  margin: 10px auto 5px auto;
+  text-align: center;
+  width: 100%;
+}
+.ending-wrap .complete .inner-complete {
+  display: inline-block;
+  text-decoration: underline;
+}
+.ending-wrap .winner {
+  text-align: center;
+  margin: auto;
+}
+.ending-wrap .ending-quip {
+  margin-bottom: auto;
+  flex: 1.5;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+.ending-wrap .ending {
+  flex: 3;
+  width: 80%;
+  margin: auto;
   padding: 0 15px;
+  left: -2px;
   position: relative;
   animation: fadeIn 0.5s;
   transition: opacity 0.5s;
-  margin: auto 0;
-  transform: translate(0, -15%);
 }
-.ending h1, .ending h2 {
-  position: relative;
-}
-.ending .complete {
-  text-align: center;
-  margin-bottom: 5px;
-}
-.ending .topic-wrap {
-  font-size: 1.2rem;
-  font-style: underline;
-  text-align: center;
-}
-.ending .ending-quip {
-  margin-top: 40px;
+.ending-wrap .ending * {
   font-size: 1.6rem;
   font-style: italic;
   letter-spacing: -2.6px;
 }
-.ending .stats-wrap {
+.ending-wrap .ending .you-header {
   text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
 }
-.ending .stats-wrap .stats {
-  display: inline-block;
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
-  border: 2px dashed black;
-  /* border-radius: 50%; */
-  padding: 25px;
+.ending-wrap .ending .stats-header {
+  border-bottom: 1px solid #90ee90;
+  margin-bottom: 4px;
+  text-shadow: 1px 1px black, -1px -1px black;
+  animation: _90EEEE 5s infinite;
+  letter-spacing: 0;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+@keyframes _90EEEE {
+  0% {
+    color: #90EEEE;
+  }
+  33% {
+    color: #EEEE90;
+  }
+  66% {
+    color: #EE90EE;
+  }
+  100% {
+    color: #90EEEE;
+  }
+}
+.ending-wrap .ending .stats-wrap {
+  margin-bottom: 30px;
+}
+.ending-wrap .ending .stats-wrap .stats-row {
+  display: flex;
+  justify-content: space-between;
 }
 
 /*# sourceMappingURL=ending.css.map */
