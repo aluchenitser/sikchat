@@ -143,37 +143,30 @@ var sessionRepo = {}           // for quick lookup of users that have a session 
 
 app.route('/')
     .get(function(req, res) {
-
-        console.log("req.query")
-        console.log(req.query)
+        console.log("get /")
 
         res.sendFile(__dirname + '/index.html');
         res.cookie("sik_debug", "false", {path: "/"});
         
         if (req.session.user && req.cookies.sik_sid) {
-            console.log("existing user found")
-            console.log(req.session.user)
-            console.log("--- user repo ---")
+            console.log("-- existing user found --")
+            printUser(req.session.user)
             printUserRepo()
         }
         else {
             req.session.user = new User()               // blank account until the user logs in or registers
-            console.log("creating blank user")
-            console.log(req.session.user)
+            console.log("-- created blank user --")
+            printUser(req.session.user)
         }
 
         res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
-        
-        // strips authentication and some other stuff
 
     })
     .post((req, res) => {
-        console.log("------ userRepo ------")
-        console.log(userRepo)
-        console.log("------ userRepo ------")
+        console.log("post /")
 
         if (req.session.user && req.cookies.sik_sid) {
-            
+            console.log(" -- login attempt --")
             // register new login
             if(req.body.register == true) {
 
@@ -210,13 +203,13 @@ app.route('/')
         else { res.statusCode(403) }
     })
 
-    app.get('/logout', (req, res) => {
-        req.session.destroy((err) => {
-            res.redirect('/')
-        })
+app.get('/logout', (req, res) => {
+    console.log("-- logout attempt --")
+
+    req.session.destroy((err) => {
+        res.redirect('/')
     })
-
-
+})
 
 
 /* ----------------- GAME LOOP ----------------- */
@@ -302,7 +295,7 @@ setInterval(() => {
         gameState.time.current = "ending";
         gameState.isEnding = true;
     }    
-    // console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
+    console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
     gameState.time.tick++               // used to help client know where in window we are
 
     let gameStateEmit = mapGameStateForClient()
@@ -346,7 +339,6 @@ io.on('connection', (socket) => {
                 socket.handshake.session.user.lifeTimeAnswered++
                 socket.handshake.session.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
                 socket.handshake.session.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
-                //       \___ socket.user is the same memory address as userRepo[sik_id])
 
                 // update the repo
                 userRepo[socket.handshake.session.user.email] = socket.handshake.session.user
@@ -461,7 +453,7 @@ function printTimeWindow() {
 
 /* ------------------- QBANK FUNCTIONS ------------------- */
 
-function loadQuestionBank() {
+function loadQuestionBank() {  // returns original number of questions before question stack 
     console.log("loading question bank...")
 
 
@@ -522,16 +514,23 @@ function loadQuestionBank() {
         // console.log(gameState.qBank.questionStack)
         // let totalSeconds = gameState.qBank.questionStack.reduce((acc, curr) => { return acc + curr.timeAllotted}, 0)
         // console.log(`question bank "${gameState.qBank.loaded.meta.name}" is ${totalSeconds}s long vs a STARTED of ${timeConstants.STARTED}s`)
+
+        return 
     });
 }
 
 function loadQuestion() {
   // load question
-    gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
-    gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
-    gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
+  
+  gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
+  gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
+  gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
+  
+  gameState.qBank.currentQuestion.q = gameState.qBank.questionStack.length + 1
+  gameState.qBank.currentQuestion.of = gameState.qBank.questionStack.originalLength
 
-    // console.log("question chosen\n", gameState.qBank.currentQuestion);
+
+  console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
 
 /* ------------------ USER FUNCTIONS ------------------- */
@@ -568,10 +567,15 @@ function consoleLatestUserRepo(mode)
 }
 
 function printUserRepo() {
+    console.log("--- user repo ---")
     for(var email in userRepo) {
         user = userRepo[email]
         console.log(user.username, user.email, user.password, user.guid)
     }
+}
+
+function printUser(user) {
+    console.log(user.username, user.email, user.password, user.guid)
 }
 
 /* ------------------ UTILITY FUNCTIONS ------------------- */

@@ -32,6 +32,7 @@ var logOutToggleElement = document.getElementById("logout-toggle")
 
 var loginChoosersElement = document.querySelector(".login-choosers")
 var loginChoosersToggleElement = document.getElementById("login-choosers-toggle")
+var progressBarElement
 
 // game state
 var gameState = {
@@ -95,9 +96,12 @@ socket.on('tick', server => {
 
     gameState.time = server.time
     gameState.qBank = server.qBank
-    // console.log(gameState.time)
-    // console.log(gameState.qBank)
 
+    // console.log("gameState.time")
+    // console.log(gameState.time)
+    // console.log("gameState.qBank")
+    // console.log(gameState.qBank)
+    
     if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
         Screen.load("intermission")
@@ -117,18 +121,18 @@ socket.on('tick', server => {
                         
             Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
         })
-
-
+        
+        
         // flags
         gameState.noFlag = false;
         gameState.isIntermission = false;
         gameState.isStarting = true;        
     }
-
+    
     if(server.time.current == "starting" && gameState.isStarting == true && gameState.time.tick > 1) {
         Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
     }
-
+    
     if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag)) {
         console.log("started")
         Screen.load("started").done(() => {
@@ -137,7 +141,12 @@ socket.on('tick', server => {
             Screen.populate("topic", gameState.qBank.loaded.meta.topic)
             Screen.populate("question", gameState.qBank.currentQuestion.question)
             Screen.populate("answer", gameState.qBank.currentQuestion.answer)
-        
+            
+            Screen.populate("q", gameState.qBank.currentQuestion.q)
+            Screen.populate("of", gameState.qBank.currentQuestion.of)
+
+            progressBarElement = document.querySelector(".progress-bar")
+            
             // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
         })
 
@@ -148,11 +157,27 @@ socket.on('tick', server => {
     }
 
     if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1) {
+        console.log("inside")
         
+
         Screen.populate("topic", gameState.qBank.loaded.meta.topic)
         Screen.populate("question", gameState.qBank.currentQuestion.question)
         Screen.populate("answer", gameState.qBank.currentQuestion.answer)
 
+        Screen.populate("q", gameState.qBank.currentQuestion.q)
+        Screen.populate("of", gameState.qBank.currentQuestion.of)
+
+        // progress bar
+        let percent = gameState.qBank.currentQuestion.timeLeft / gameState.qBank.currentQuestion.timeAllotted * 100
+
+        console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
+        console.log("left", gameState.qBank.currentQuestion.timeLeft)
+        console.log("percent", percent)
+
+        if(progressBarElement) {
+            progressBarElement.style.width = "calc(" + percent + "% + 20px)"
+        }
+        
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 

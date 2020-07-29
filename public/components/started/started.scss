@@ -1,17 +1,37 @@
-.started {
-    // position: relative;
-    margin: auto 0;
-    animation: fadeIn .5s;
-    transform: translate(0, -60%);
 
-    h1, h2 {
-        position: relative;
+.started-wrap {
+    height: 100%;
+    display: flex;
+
+    .progress-bar {
+        width: calc(100% + 20px);
+        position: absolute;
+        top: 0;
+        left: -20px;
+        font-family: monospace;
+        position: absolute;
+        transition: width 0.2s;
+        padding: 2px;
+        background-image: linear-gradient(0, #90EEEE, transparent);
+        text-shadow: 1px 1px white;
+        white-space: nowrap;
     }
 
-    .game-text {
-        font-size: 1.5rem;
-        width: 91%;
-        margin: 0 auto;
+    .started {
+        // position: relative;
+        margin: auto 0;
+        animation: fadeIn .5s;
+        transform: translate(0, -60%);
+    
+        h1, h2 {
+            position: relative;
+        }
+    
+        .game-text {
+            font-size: 1.5rem;
+            width: 91%;
+            margin: 0 auto;
+        }
     }
 }
 

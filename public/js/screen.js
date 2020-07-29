@@ -73,7 +73,12 @@ var Screen = {
             "path": "../components/started/started.html",
             "topic": null,
             "question": null,
-            "answer": null
+            "answer": null,
+            
+            // question # of total #
+            "q": null,
+            "of": null
+
         },
         ending: {
             "path": "../components/ending/ending.html",
