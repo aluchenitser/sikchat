@@ -3,10 +3,10 @@
   display: flex;
 }
 .started-wrap .progress-bar {
-  width: calc(100% + 20px);
+  width: calc(100%);
   position: absolute;
   top: 0;
-  left: -20px;
+  left: 0;
   font-family: monospace;
   position: absolute;
   transition: width 0.8s;
@@ -31,7 +31,7 @@
 }
 .started-wrap .started .question-answer-wrap .question-text-wrap .question-text {
   font-size: 1.5rem;
-  width: 91%;
+  width: 80%;
   margin: 0 auto;
   flex: 1;
   display: flex;
@@ -39,7 +39,7 @@
 .started-wrap .started .question-answer-wrap .answer-text-wrap .answer-text {
   font-size: 1.2rem;
   font-style: italic;
-  width: 91%;
+  width: 80%;
   margin: 0 auto;
   visibility: hidden;
   text-align: center;
