@@ -53,7 +53,8 @@ body.show-header .chat-bar {
   width: 100%;
   padding: 12px 0 10px 15px;
   border-radius: 21px 0 0 0;
-  background-color: #EE90EE;
+  background-color: #d431d4;
+  background-image: url("../img/3px-tile.png");
 }
 .chat-bar .form-column #message-input, .chat-bar .form-column button {
   font-size: 16px;
@@ -98,11 +99,13 @@ body.show-header .chat-bar {
   color: white;
 }
 .chat-bar .spacer-column {
-  background-color: #EE90EE;
+  background-color: #d431d4;
+  background-image: url("../img/3px-tile.png");
 }
 .chat-bar .logo-column {
   flex: 0 1 auto;
-  background-color: #EE90EE;
+  background-color: #d431d4;
+  background-image: url("../img/3px-tile.png");
   padding: 12px 15px 10px 0;
   transition: transform 0.5s;
   height: 3rem;
@@ -217,7 +220,7 @@ body.show-header .chat-bar {
   line-height: 1.5;
   cursor: pointer;
   color: white;
-  background-color: #EE90EE;
+  background-color: #d431d4;
   display: inline-block;
   font-weight: 400;
   text-align: center;
@@ -236,7 +239,7 @@ body.show-header .chat-bar {
 
 .side-bar {
   border-radius: 0 0 18px;
-  background-color: #EE90EE;
+  background-color: #d431d4;
   position: fixed;
   width: 260px;
   color: white;
@@ -442,7 +445,7 @@ body.show-header .chat-bar {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: #90EEEE;
+  background-color: #D4D431;
   opacity: 0.6;
   position: absolute;
   top: 0;

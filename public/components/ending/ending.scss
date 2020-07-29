@@ -62,16 +62,16 @@
             margin-bottom: 4px;
 
             text-shadow: 1px 1px black, -1px -1px black;
-            animation: _90EEEE 5s infinite;
+            animation: _31D4D4 5s infinite;
             letter-spacing: 0;
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
         }
 
-        @keyframes _90EEEE {
-            0% { color:  #90EEEE  }
-            33% { color: #EEEE90   }
-            66% { color:  #EE90EE }
-            100% { color:  #90EEEE  }
+        @keyframes _31D4D4 {
+            0% { color:  #31D4D4  }
+            33% { color: #D4D431   }
+            66% { color:  #d431d4 }
+            100% { color:  #31D4D4  }
         }
 
         .stats-wrap {

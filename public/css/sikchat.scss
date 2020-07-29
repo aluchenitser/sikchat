@@ -2,7 +2,11 @@
 
 /* ----------------- VARIABLES ----------------- */
 
-$general-background-color: #EE90EE;
+// $general-background-color: #EE90EE;
+$general-background-color: #d431d4;
+$triad-blue: #31D4D4;
+$triad-yellow: #D4D431;
+
 $label-text-color: gray;
 
 $font-size-message: 16px;
@@ -72,6 +76,7 @@ h1, p {
         border-radius: 21px 0 0 0;
 
         background-color: $general-background-color;
+        background-image: url('../img/3px-tile.png');
 
         #message-input, button {
             font-size: $font-size-message;
@@ -128,11 +133,15 @@ h1, p {
 
     .spacer-column {
         background-color: $general-background-color;
+        background-image: url('../img/3px-tile.png');
+        
     }
 
     .logo-column {
         flex: 0 1 auto;
         background-color: $general-background-color;
+        background-image: url('../img/3px-tile.png');
+
         padding: 12px 15px 10px 0;
         transition: transform 0.5s;
         height: 3rem;
@@ -297,6 +306,7 @@ h1, p {
 
     border-radius: 0 0 18px;
     background-color: $general-background-color;
+    // background-image: url('../img/3px-tile.png');
     position: fixed;
     width: 260px;
     color: white;
@@ -631,7 +641,7 @@ h1, p {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background-color: #90EEEE;
+        background-color: $triad-yellow;
         opacity: 0.6;
         position: absolute;
         top: 0;

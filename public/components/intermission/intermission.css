@@ -18,60 +18,60 @@
   margin: 0 auto 5px auto;
 }
 .intermission .underline-1 {
-  background-color: #EE90EE;
+  background-color: #d431d4;
   animation: _EE90EE_bg 7s infinite;
   width: 90%;
 }
 .intermission .underline-2 {
-  background-color: #90EEEE;
-  animation: _90EEEE_bg 7s infinite;
+  background-color: #31D4D4;
+  animation: _31D4D4_bg 7s infinite;
   width: 100%;
 }
 .intermission .underline-3 {
-  background-color: #EEEE90;
-  animation: _EEEE90_bg 7s infinite;
+  background-color: #D4D431;
+  animation: _D4D431_bg 7s infinite;
   width: 80%;
 }
 @keyframes _EE90EE_bg {
   0% {
-    background-color: #EE90EE;
+    background-color: #d431d4;
   }
   33% {
-    background-color: #90EEEE;
+    background-color: #31D4D4;
   }
   66% {
-    background-color: #EEEE90;
+    background-color: #D4D431;
   }
   100% {
     background-color: #EE90EE;
   }
 }
-@keyframes _90EEEE_bg {
+@keyframes _31D4D4_bg {
   0% {
-    background-color: #90EEEE;
+    background-color: #31D4D4;
   }
   33% {
-    background-color: #EEEE90;
+    background-color: #D4D431;
   }
   66% {
-    background-color: #EE90EE;
+    background-color: #d431d4;
   }
   100% {
-    background-color: #90EEEE;
+    background-color: #31D4D4;
   }
 }
-@keyframes _EEEE90_bg {
+@keyframes _D4D431_bg {
   0% {
-    background-color: #EEEE90;
+    background-color: #D4D431;
   }
   33% {
-    background-color: #EE90EE;
+    background-color: #d431d4;
   }
   66% {
-    background-color: #90EEEE;
+    background-color: #31D4D4;
   }
   100% {
-    background-color: #EEEE90;
+    background-color: #D4D431;
   }
 }
 

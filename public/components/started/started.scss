@@ -5,15 +5,15 @@
     flex-flow: column nowrap;
 
     .progress-bar {
-        width: calc(100%);
+        width: 100%;
         font-family: monospace;
         transition: width 0.8s;
         padding: 2px;
-        background-image: linear-gradient(0, #90EEEE, transparent);
+        background-image: linear-gradient(0, #31D4D4, transparent); 
         text-shadow: 1px 1px white;
-        white-space: nowrap;
+        white-space: nowrap; 
     }
-
+   
     .started {
         display: flex;
         flex-flow: column nowrap;
