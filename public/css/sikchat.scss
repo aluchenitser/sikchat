@@ -225,6 +225,7 @@ h1, p {
         display: flex;
         justify-content: center;
         align-content: center;
+        flex-flow: column nowrap;
     }
 }
 

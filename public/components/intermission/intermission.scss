@@ -1,7 +1,7 @@
 .intermission {
     position: relative;
     animation: fadeIn .5s;
-    margin: auto 0;
+    margin: 0 auto;
     transform: translate(0, -50%);
     
     .intermission-h1 {
@@ -22,41 +22,41 @@
 
     .underline-1 {
         background-color: #EE90EE;
-        animation: _EE90EE 7s infinite;
+        animation: _EE90EE_bg 7s infinite;
         width: 90%;
     }
     .underline-2 {
         background-color: #90EEEE;
-        animation: _90EEEE 7s infinite;
+        animation: _90EEEE_bg 7s infinite;
         width: 100%;
     }
     .underline-3 {
         background-color: #EEEE90;
-        animation: _EEEE90 7s infinite;
+        animation: _EEEE90_bg 7s infinite;
         width: 80%;
     }
 
-    @keyframes _EE90EE {
+    @keyframes _EE90EE_bg {
         
-        0% { background-color:  #EE90EE }
-        33% { background-color: #90EEEE  }
-        66% { background-color: #EEEE90 }
-        100% { background-color:  #EE90EE }
+        0% { background-color:  #EE90EE; }
+        33% { background-color: #90EEEE;  }
+        66% { background-color: #EEEE90; }
+        100% { background-color:  #EE90EE; }
     }
 
-    @keyframes _90EEEE {
-        0% { background-color:  #90EEEE  }
-        33% { background-color: #EEEE90   }
-        66% { background-color:  #EE90EE }
-        100% { background-color:  #90EEEE  }
+    @keyframes _90EEEE_bg {
+        0% { background-color:  #90EEEE;  }
+        33% { background-color: #EEEE90;   }
+        66% { background-color:  #EE90EE; }
+        100% { background-color:  #90EEEE;  }
 
     }
 
-    @keyframes _EEEE90 {
-        0% { background-color: #EEEE90 }
-        33% { background-color:  #EE90EE }
-        66% { background-color:  #90EEEE }
-        100% { background-color: #EEEE90 }
+    @keyframes _EEEE90_bg {
+        0% { background-color: #EEEE90; }
+        33% { background-color:  #EE90EE; }
+        66% { background-color:  #90EEEE; }
+        100% { background-color: #EEEE90; }
     }    
 }
 

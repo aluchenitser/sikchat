@@ -33,7 +33,7 @@ var logOutToggleElement = document.getElementById("logout-toggle")
 var loginChoosersElement = document.querySelector(".login-choosers")
 var loginChoosersToggleElement = document.getElementById("login-choosers-toggle")
 var progressBarElement
-var answerTextElement
+var startedWrapStartedElement
 
 // game state
 var gameState = {
@@ -160,8 +160,7 @@ socket.on('tick', server => {
             Screen.populate("of", gameState.qBank.currentQuestion.of)
 
             progressBarElement = document.querySelector(".progress-bar")
-            answerTextElement = document.querySelector(".answer-text")
-            answerTextElement.style.visibility = "hidden"
+            startedWrapStartedElement = document.querySelector(".started-wrap .started")
             
             // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
         })
@@ -194,10 +193,11 @@ socket.on('tick', server => {
             progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
         }
 
-        answerTextElement.style.visibility = "hidden"
-        if(answerTextElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
-            answerTextElement.style.visibility = "visible"
-            answerTextElement.style.height = "auto"
+        if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
+            startedWrapStartedElement.classList.add("answered")
+        }
+        else {
+            startedWrapStartedElement.classList.remove("answered")
         }
         
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)

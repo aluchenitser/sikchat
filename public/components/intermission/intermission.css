@@ -1,7 +1,7 @@
 .intermission {
   position: relative;
   animation: fadeIn 0.5s;
-  margin: auto 0;
+  margin: 0 auto;
   transform: translate(0, -50%);
 }
 .intermission .intermission-h1 {
@@ -19,20 +19,20 @@
 }
 .intermission .underline-1 {
   background-color: #EE90EE;
-  animation: _EE90EE 7s infinite;
+  animation: _EE90EE_bg 7s infinite;
   width: 90%;
 }
 .intermission .underline-2 {
   background-color: #90EEEE;
-  animation: _90EEEE 7s infinite;
+  animation: _90EEEE_bg 7s infinite;
   width: 100%;
 }
 .intermission .underline-3 {
   background-color: #EEEE90;
-  animation: _EEEE90 7s infinite;
+  animation: _EEEE90_bg 7s infinite;
   width: 80%;
 }
-@keyframes _EE90EE {
+@keyframes _EE90EE_bg {
   0% {
     background-color: #EE90EE;
   }
@@ -46,7 +46,7 @@
     background-color: #EE90EE;
   }
 }
-@keyframes _90EEEE {
+@keyframes _90EEEE_bg {
   0% {
     background-color: #90EEEE;
   }
@@ -60,7 +60,7 @@
     background-color: #90EEEE;
   }
 }
-@keyframes _EEEE90 {
+@keyframes _EEEE90_bg {
   0% {
     background-color: #EEEE90;
   }
@@ -72,15 +72,6 @@
   }
   100% {
     background-color: #EEEE90;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
   }
 }
 

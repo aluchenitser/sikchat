@@ -2,14 +2,11 @@
 .started-wrap {
     height: 100%;
     display: flex;
+    flex-flow: column nowrap;
 
     .progress-bar {
         width: calc(100%);
-        position: absolute;
-        top: 0;
-        left: 0;
         font-family: monospace;
-        position: absolute;
         transition: width 0.8s;
         padding: 2px;
         background-image: linear-gradient(0, #90EEEE, transparent);
@@ -18,46 +15,73 @@
     }
 
     .started {
-        // position: relative;
-        margin: auto 0;
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        width: 80%;
+        margin: 0 auto;
+        align-items: center;
+        
         animation: fadeIn .5s;
-        transform: translate(0, -60%);
-    
-        h1, h2 {
-            position: relative;
-        }
-    
+
         .question-answer-wrap {
             display: flex;
-            flex-flow: column nowrap;
-            justify-content: space-around;
             align-items: center;
+            flex-flow: column nowrap;
+            margin: auto 0;
+            min-height: 25%;
+            transform: translateY(-50%);
+        }
 
-            .question-text-wrap {
-                .question-text {
-                    font-size: 1.5rem;
-                    width: 80%;
-                    margin: 0 auto;
-                    flex: 1;
-                    display: flex;
-                }
+        .question-text-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex: 1;
+
+            .question-text {
+                font-size: 1.5rem;
+                width: 80%;
+                opacity: 1;
             }
+        }
 
+        .answer-text-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0;
+            transition: flex .5s;
+         
+            
+            .answer-text {
+                font-size: 1.8rem;
+                font-style: italic;
+                width: 80%;
+                text-align: center;
+                opacity: 0;
+                position: absolute;
+            }
+        }
 
+        &.answered {
+            
+             .question-text-wrap {
+                flex: 1;
+
+                .question-text {
+                    opacity: 0.4;
+                    transition: opacity .5s;
+                }
+             }
             .answer-text-wrap {
+                flex: 2;
+
                 .answer-text {
-                    font-size: 1.2rem;
-                    font-style: italic;
-                    width: 80%;
-                    margin: 0 auto;
-                    visibility: hidden;
-                    text-align: center;
-                    flex: 0;
-                    
-                    &.answered {
-                        visibility: visible;
-                        flex: 1;
-                    }
+                    opacity: 1;
+                    position: relative;
+                    transition: opacity .5s;
                 }
             }
         }
