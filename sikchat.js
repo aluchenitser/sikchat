@@ -275,7 +275,7 @@ setInterval(() => {
     }
     
     // detect question, then select new ones as old ones expire
-    if(gameState.qBank.questionStack.length > 0 && gameState.isStarted) {
+    if(gameState.qBank.questionStack.length >= 0 && gameState.isStarted) {
         if(gameState.qBank.currentQuestion.timeLeft == 0 && gameState.qBank.questionStack.length > 0 || gameState.qBank.questionStack.length == gameState.qBank.questionStack.originalLength) 
         {
             loadQuestion();
@@ -528,6 +528,7 @@ function loadQuestion() {
   
   gameState.qBank.currentQuestion.q = gameState.qBank.questionStack.length + 1
   gameState.qBank.currentQuestion.of = gameState.qBank.questionStack.originalLength
+
 
 
   console.log("question chosen\n", gameState.qBank.currentQuestion);

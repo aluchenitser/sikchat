@@ -168,14 +168,14 @@ socket.on('tick', server => {
         Screen.populate("of", gameState.qBank.currentQuestion.of)
 
         // progress bar
-        let percent = gameState.qBank.currentQuestion.timeLeft / gameState.qBank.currentQuestion.timeAllotted * 100
+        let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAllotted - 1) * 100
 
         console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
         console.log("left", gameState.qBank.currentQuestion.timeLeft)
         console.log("percent", percent)
 
         if(progressBarElement) {
-            progressBarElement.style.width = "calc(" + percent + "% + 20px)"
+            progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
         }
         
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)

@@ -9,7 +9,7 @@
   left: -20px;
   font-family: monospace;
   position: absolute;
-  transition: width 0.2s;
+  transition: width 0.8s;
   padding: 2px;
   background-image: linear-gradient(0, #90EEEE, transparent);
   text-shadow: 1px 1px white;
