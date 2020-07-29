@@ -33,6 +33,7 @@ var logOutToggleElement = document.getElementById("logout-toggle")
 var loginChoosersElement = document.querySelector(".login-choosers")
 var loginChoosersToggleElement = document.getElementById("login-choosers-toggle")
 var progressBarElement
+var answerTextElement
 
 // game state
 var gameState = {
@@ -97,11 +98,20 @@ socket.on('tick', server => {
     gameState.time = server.time
     gameState.qBank = server.qBank
 
+    console.log(server.time.current)
+
     // console.log("gameState.time")
     // console.log(gameState.time)
     // console.log("gameState.qBank")
     // console.log(gameState.qBank)
     
+    if(server.time.current == "init") {
+        document.body.classList.add("init")
+    }
+    else {
+        document.body.classList.remove("init")
+    }
+
     if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
         Screen.load("intermission")
@@ -110,10 +120,12 @@ socket.on('tick', server => {
         gameState.noFlag = false;
         gameState.isEnding = false;
         gameState.isIntermission = true;
+
     }
 
     if(server.time.current == "starting" && (gameState.isIntermission || gameState.noFlag)) {
         console.log("starting")
+
         Screen.load("starting").done(() => {
             Screen.populate("starting-h1", gameState.qBank.loaded.meta["starting-h1"])
             Screen.populate("starting-h2", gameState.qBank.loaded.meta["starting-h2"])
@@ -130,10 +142,12 @@ socket.on('tick', server => {
     }
     
     if(server.time.current == "starting" && gameState.isStarting == true && gameState.time.tick > 1) {
+
         Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
     }
     
     if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag)) {
+
         console.log("started")
         Screen.load("started").done(() => {
             
@@ -146,6 +160,8 @@ socket.on('tick', server => {
             Screen.populate("of", gameState.qBank.currentQuestion.of)
 
             progressBarElement = document.querySelector(".progress-bar")
+            answerTextElement = document.querySelector(".answer-text")
+            answerTextElement.style.visibility = "hidden"
             
             // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
         })
@@ -157,9 +173,9 @@ socket.on('tick', server => {
     }
 
     if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1) {
+
         console.log("inside")
         
-
         Screen.populate("topic", gameState.qBank.loaded.meta.topic)
         Screen.populate("question", gameState.qBank.currentQuestion.question)
         Screen.populate("answer", gameState.qBank.currentQuestion.answer)
@@ -170,18 +186,25 @@ socket.on('tick', server => {
         // progress bar
         let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAllotted - 1) * 100
 
-        console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
-        console.log("left", gameState.qBank.currentQuestion.timeLeft)
-        console.log("percent", percent)
+        // console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
+        // console.log("left", gameState.qBank.currentQuestion.timeLeft)
+        // console.log("percent", percent)
 
         if(progressBarElement) {
             progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
+        }
+
+        answerTextElement.style.visibility = "hidden"
+        if(answerTextElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
+            answerTextElement.style.visibility = "visible"
+            answerTextElement.style.height = "auto"
         }
         
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
     if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag)) {
+
         console.log("ending")
         Screen.load("ending").done(() => {
             Screen.populate("topic", gameState.qBank.loaded.meta.topic)

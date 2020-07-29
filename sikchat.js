@@ -216,6 +216,7 @@ app.get('/logout', (req, res) => {
 
 checkWindowIntegrity();
 initialTimeWindow()
+    printIntermissionStartTime()
 // printTimeWindow()
 
 // time window starts at intermission
@@ -449,6 +450,10 @@ function printTimeWindow() {
     console.log(`\tstarted\t\t: ${gameState.time.started.format("h[h] m[m] s[s]")}`)
     console.log(`\tending\t\t: ${gameState.time.ending.format("h[h] m[m] s[s]")}`)
     console.log(`\tnext\t\t: ${gameState.time.next.format("h[h] m[m] s[s]")}`)
+}
+
+function printIntermissionStartTime() {
+    console.log(`intermission begins at ${gameState.time.intermission.format("h[h] m[m] s[s]")}`)
 }
 
 /* ------------------- QBANK FUNCTIONS ------------------- */

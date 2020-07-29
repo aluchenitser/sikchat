@@ -23,10 +23,31 @@
 .started-wrap .started h1, .started-wrap .started h2 {
   position: relative;
 }
-.started-wrap .started .game-text {
+.started-wrap .started .question-answer-wrap {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: center;
+}
+.started-wrap .started .question-answer-wrap .question-text-wrap .question-text {
   font-size: 1.5rem;
   width: 91%;
   margin: 0 auto;
+  flex: 1;
+  display: flex;
+}
+.started-wrap .started .question-answer-wrap .answer-text-wrap .answer-text {
+  font-size: 1.2rem;
+  font-style: italic;
+  width: 91%;
+  margin: 0 auto;
+  visibility: hidden;
+  text-align: center;
+  flex: 0;
+}
+.started-wrap .started .question-answer-wrap .answer-text-wrap .answer-text.answered {
+  visibility: visible;
+  flex: 1;
 }
 
 /*# sourceMappingURL=started.css.map */

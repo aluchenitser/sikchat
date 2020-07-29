@@ -423,6 +423,58 @@ body.show-header .chat-bar {
   user-select: none;
 }
 
+/* ---------------- INIT SPINNER ----------------- */
+.sik-spinner {
+  display: none;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  margin: auto;
+  transform: translateY(-200%);
+}
+.sik-spinner span {
+  position: relative;
+  z-index: 1;
+}
+.sik-spinner .double-bounce1, .sik-spinner .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #90EEEE;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: sk-bounce 2s infinite ease-in-out;
+  animation: sk-bounce 2s infinite ease-in-out;
+}
+.sik-spinner .double-bounce2 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+body.init .sik-spinner {
+  display: block;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
 /* ---------------- RESPONSIVE ----------------- */
 @media (max-width: 991px) {
   .header .form-column, .chat-bar .form-column, .chat-body .form-column {

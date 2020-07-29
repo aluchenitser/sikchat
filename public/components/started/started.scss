@@ -27,10 +27,39 @@
             position: relative;
         }
     
-        .game-text {
-            font-size: 1.5rem;
-            width: 91%;
-            margin: 0 auto;
+        .question-answer-wrap {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-around;
+            align-items: center;
+
+            .question-text-wrap {
+                .question-text {
+                    font-size: 1.5rem;
+                    width: 91%;
+                    margin: 0 auto;
+                    flex: 1;
+                    display: flex;
+                }
+            }
+
+
+            .answer-text-wrap {
+                .answer-text {
+                    font-size: 1.2rem;
+                    font-style: italic;
+                    width: 91%;
+                    margin: 0 auto;
+                    visibility: hidden;
+                    text-align: center;
+                    flex: 0;
+                    
+                    &.answered {
+                        visibility: visible;
+                        flex: 1;
+                    }
+                }
+            }
         }
     }
 }
