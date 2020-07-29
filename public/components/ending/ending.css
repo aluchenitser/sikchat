@@ -18,7 +18,8 @@
   margin: auto;
 }
 .ending-wrap .ending-quip {
-  margin-bottom: auto;
+  width: 80%;
+  margin: 0 auto;
   flex: 1.5;
   justify-content: center;
   display: flex;
@@ -47,7 +48,7 @@
   margin-bottom: 10px;
 }
 .ending-wrap .ending .stats-header {
-  border-bottom: 1px solid #90ee90;
+  border-bottom: 1px solid;
   margin-bottom: 4px;
   text-shadow: 1px 1px black, -1px -1px black;
   animation: _31D4D4 5s infinite;

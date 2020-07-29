@@ -189,15 +189,15 @@ h1, p {
 
             // question answered successfully 
             &.easy {
-                background-color: #fff9bc;
+                background-color: #D4D431;
             }
 
             &.medium {
-                background-color: #fff482;
+                background-color: #D4D431;
             }
 
             &.hard {
-                background-color: #ffea0d;
+                background-color: #D4D431;
             }
         }
 
@@ -305,7 +305,8 @@ h1, p {
 
 
     border-radius: 0 0 18px;
-    background-color: $general-background-color;
+    // background-color: $general-background-color;
+    background-color: #d84cd8;
     // background-image: url('../img/3px-tile.png');
     position: fixed;
     width: 260px;

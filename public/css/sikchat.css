@@ -145,13 +145,13 @@ body.show-header .chat-bar {
   text-align: right;
 }
 .chat-body #messages .message-output.easy {
-  background-color: #fff9bc;
+  background-color: #D4D431;
 }
 .chat-body #messages .message-output.medium {
-  background-color: #fff482;
+  background-color: #D4D431;
 }
 .chat-body #messages .message-output.hard {
-  background-color: #ffea0d;
+  background-color: #D4D431;
 }
 @keyframes scrollpaper {
   0% {
@@ -239,7 +239,7 @@ body.show-header .chat-bar {
 
 .side-bar {
   border-radius: 0 0 18px;
-  background-color: #d431d4;
+  background-color: #d84cd8;
   position: fixed;
   width: 260px;
   color: white;
