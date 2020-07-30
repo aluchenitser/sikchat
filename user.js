@@ -13,6 +13,7 @@ module.exports = {
             this.email = email
             this.password = password
             this.guid = Math.random()
+            this.isRegistered = email === null ? false : true
             
             /* items sent to client */
 

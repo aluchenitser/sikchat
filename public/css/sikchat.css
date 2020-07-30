@@ -144,12 +144,45 @@ body.show-header .chat-bar {
   height: calc(100% - 3rem);
 }
 .chat-body #messages {
+  position: relative;
   flex: 1 1 auto;
   padding: 0 15px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
   background-image: url("../img/notebook-dark.png");
+}
+.chat-body #messages .success-overlay {
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  opacity: 0;
+  z-index: -1;
+  position: absolute;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+}
+.chat-body #messages .success-overlay.success {
+  z-index: 0;
+  background-color: black;
+  animation: success 0.5s;
+}
+.chat-body #messages .success-overlay span {
+  font-size: 3rem;
+}
+@keyframes success {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 .chat-body #messages .message-output {
   margin-top: 11px;

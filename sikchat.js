@@ -70,8 +70,8 @@ const timeConstants = {
     // in seconds
     INTERMISSION: 10,
     STARTING: 10,
-    STARTED: 90,
-    ENDING: 10,
+    STARTED: 60,
+    ENDING: 40,
 
     // question length
     QUESTION_EASY: 10,
@@ -87,6 +87,8 @@ const scoreConstants = {
 
 // game state
 var gameState = {
+
+    winners:[],
 
     // live time checkpoints
     time: {
@@ -135,8 +137,7 @@ var gameState = {
 }
 
 
-var userRepo = {};             // stores user accounts, { email: user }
-var sessionRepo = {}           // for quick lookup of users that have a session attached { sik_sid: user }
+var userRepo = {};             // stores user accounts, { email: user } for registered and { guid: user } for free
 
 
 /* ------------------- ROUTER ------------------- */
@@ -154,7 +155,9 @@ app.route('/')
             printUserRepo()
         }
         else {
-            req.session.user = new User()               // blank account until the user logs in or registers
+            req.session.user = new User()                           // blank account until the user logs in or registers
+            userRepo[req.session.user.guid] = req.session.user
+
             console.log("-- created blank user --")
             printUser(req.session.user)
         }
@@ -177,7 +180,7 @@ app.route('/')
                 else {
 
                     let user = new User(req.body.email, req.body.password)   // newly registered user has default username of "someone"
-                    
+
                     // update session and add to user repo
                     req.session.user = user
                     userRepo[req.body.email] = user
@@ -295,12 +298,32 @@ setInterval(() => {
         gameState.isStarted = false;
         gameState.time.current = "ending";
         gameState.isEnding = true;
+
+        // announce winner
+        if(gameState.winners.length === 0) {
+            let highest = 0
+            for(user in userRepo) {
+                if(userRepo[user].points > highest) {
+                    highest = userRepo[user].points
+                    gameState.winners = [user]
+                }
+                else if(userRepo[user].points === highest && highest > 0) {
+                    gameState.winners.push(user.username)
+                }
+            }
+
+            if(highest === 0) {
+                gameState.winners = ["nobody??"]
+            }
+
+        }
     }    
     console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
     gameState.time.tick++               // used to help client know where in window we are
 
     let gameStateEmit = mapGameStateForClient()
     io.emit("tick", gameStateEmit)
+
 }, 1000)
 
 
@@ -310,18 +333,24 @@ io.on('connection', (socket) => {
     // console.log("user connected")
 
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
-    socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
+    // socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
 
     
 
     socket.on('chat_message', (text) => {           
         
         // chat number allows the client to decorate individual messages with visual effects
-        var chatMessage = {
-            text: text,
-            chatCount: gameState.chatCount,
-            guid: socket.handshake.session.user.guid,
-            username: socket.handshake.session.user.username
+        try {
+            var chatMessage = {
+                text: text,
+                chatCount: gameState.chatCount,
+                guid: socket.handshake.session.user.guid,
+                username: socket.handshake.session.user.username
+            }
+        } catch(e) {
+            console.log("--- socket.handshake.session.user.guid error, session is: --- ")
+            console.log(socket.handshake.session)
+            return
         }
 
         // broadcast to the room
@@ -342,7 +371,11 @@ io.on('connection', (socket) => {
                 socket.handshake.session.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
 
                 // update the repo
-                userRepo[socket.handshake.session.user.email] = socket.handshake.session.user
+                let lookup = socket.handshake.session.user.isRegistered
+                    ? socket.handshake.session.user.email
+                    : socket.handshake.session.user.guid
+
+                userRepo[lookup] = socket.handshake.session.user
 
                 let successReponse = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
@@ -550,6 +583,8 @@ function clearUserStatistics() {
             userRepo[user].points = 0
         }
     }
+
+    gameState.winners = []
 }
 
 

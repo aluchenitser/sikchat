@@ -5,6 +5,7 @@
     flex-flow: column nowrap;
 
     .progress-bar {
+        position: absolute;
         width: 100%;
         font-family: monospace;
         transition: width 0.8s;

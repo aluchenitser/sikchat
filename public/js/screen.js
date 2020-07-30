@@ -37,8 +37,19 @@ var Screen = {
         if(this.vm.hasOwnProperty(property)) {
             this.vm[property] = value
            
-            document.querySelectorAll(`[sik=${property}]`).forEach((markup)=> {
-                markup.textContent = value
+            document.querySelectorAll(`[sik=${property}]`).forEach((element)=> {
+                element.textContent = value
+            })
+        } else { throw "bogus model property" }
+    },
+    
+    // property should read xyz_container (for example: winners_container)
+    insertMarkup(property, markup) {
+        if(this.vm.hasOwnProperty(property)) {
+            this.vm[property] = markup
+           
+            document.querySelectorAll(`[sik=${property}]`).forEach((element)=> {
+                element.innerHTML += markup
             })
         } else { throw "bogus model property" }
     },
@@ -88,7 +99,8 @@ var Screen = {
             "points": null,
             "lifeTimeAnswered": null,
             "lifeTimePoints": null,
-            "winner": null
+
+            "winners_container": null
         },
         debug: {
 

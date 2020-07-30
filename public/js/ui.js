@@ -57,7 +57,8 @@ var gameState = {
     isStarting: false,          // countdown
     isStarted: false,           // game is in session
     isEnding: false,            // outro
-    noFlag: true                // similar to isInit on the backend, but doesn't explicitly receive a signal
+    noFlag: true,                // similar to isInit on the backend, but doesn't explicitly receive a signal
+    winners: []
 }
 
 
@@ -97,6 +98,7 @@ socket.on('tick', server => {
 
     gameState.time = server.time
     gameState.qBank = server.qBank
+    gameState.winners = server.winners
 
     console.log(server.time.current)
 
@@ -215,6 +217,11 @@ socket.on('tick', server => {
             Screen.populate("lifeTimeAnswered", gameState.session.data.lifeTimeAnswered)
             Screen.populate("lifeTimePoints", gameState.session.data.lifeTimePoints)
 
+            for(user in gameState.winners) {
+                let markup = "<div class='winner'>WINNER: <span>" + gameState.winners[user] + "</span></div>"
+                Screen.insertMarkup("winners_container", markup)
+            }
+
         })
 
         // flags
@@ -259,18 +266,9 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
     document.getElementById("chat_" + successResponse.chatCount).classList.add(className)
     
     // shine effect
-    
-
-
-    let logoElement = document.getElementById("logo")
-    let newLogoElement = logoElement.cloneNode(true)
-    logoElement.parentNode.replaceChild(newLogoElement, logoElement)
-
-    let chatBarElement = document.querySelector(".chat-bar")
-    chatBarElement.style.animation = 'none'
-    setTimeout(() => {
-        chatBarElement.style.animation = ''
-    }, 10)
+    animateOrRepeat(document.getElementById("logo"))
+    animateOrRepeat(document.querySelector(".chat-bar"))
+    animateOrRepeat(document.querySelector(".success-overlay"), "success")
 })
 
 /* -------------------- SESSION --------------------- */
@@ -635,6 +633,10 @@ function submitLogin() {
                         loginSubmitElement.textContent="submit"
                     }, 2000)
                 }
+            },
+            error: function(err) {
+                console.log("error returned from login")
+                console.log(err);
             }
         })
     }
@@ -689,6 +691,20 @@ function submitRegistration() {
         })
     }
 }
+
+//UI functions
+function animateOrRepeat(element, addOnClass = null) {
+    if(addOnClass == null || element.classList.contains(addOnClass)) {
+        element.style.animation = 'none'
+        setTimeout(() => {
+            element.style.animation = ''
+        }, 15)
+    }
+    else {
+        element.classList.add(addOnClass)
+    }
+}
+
 
 // cookie functions
 function getCookie(name) {

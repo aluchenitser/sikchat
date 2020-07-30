@@ -191,6 +191,45 @@ h1, p {
     height: calc(100% - 3rem);
 
     #messages {
+        position: relative;
+
+        .success-overlay {
+            height: 100%;
+            width: 100%;
+            background-color: transparent;
+            opacity: 0;
+            z-index: -1;
+            position: absolute;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            left: 0;
+
+            &.success {
+                z-index: 0;
+                background-color: black;
+
+                animation: success 0.5s;
+            }
+
+            span {
+                font-size: 3rem;
+            }
+        }
+
+        @keyframes success {
+            0% {
+                opacity: 0;
+            }
+            30% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
         flex: 1 1 auto;
 
         padding: 0 15px;
