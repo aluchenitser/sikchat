@@ -257,6 +257,20 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
     gameState.session.data.lifeTimePoints = successResponse.user.lifeTimePoints
 
     document.getElementById("chat_" + successResponse.chatCount).classList.add(className)
+    
+    // shine effect
+    
+
+
+    let logoElement = document.getElementById("logo")
+    let newLogoElement = logoElement.cloneNode(true)
+    logoElement.parentNode.replaceChild(newLogoElement, logoElement)
+
+    let chatBarElement = document.querySelector(".chat-bar")
+    chatBarElement.style.animation = 'none'
+    setTimeout(() => {
+        chatBarElement.style.animation = ''
+    }, 10)
 })
 
 /* -------------------- SESSION --------------------- */

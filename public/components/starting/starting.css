@@ -9,11 +9,15 @@
   text-align: center;
 }
 .starting .starting-h1 {
+  font-weight: 300;
+  font-size: 1.8rem;
   text-align: center;
   margin: 0 0 5px 0;
   animation: raise 1s;
 }
 .starting .starting-h2 {
+  font-weight: 300;
+  font-size: 1.8rem;
   margin-top: 0;
   text-align: center;
   font-style: italic;
@@ -23,6 +27,7 @@
 .starting .count-down-wrapper {
   text-align: center;
   margin-bottom: 0;
+  font-weight: 300;
 }
 
 /* ---- KEYFRAMES ---- */

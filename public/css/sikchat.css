@@ -42,6 +42,11 @@ body.drawer-is-open .tiny-header-user-name {
   display: flex;
   justify-content: space-between;
   color: white;
+  border-radius: 21px 0 0 0;
+  overflow: hidden;
+  background-color: #d431d4;
+  background-image: url("../img/3px-tile.png");
+  animation: barshine 1s;
 }
 body.show-header .chat-bar {
   margin-bottom: -3rem;
@@ -52,9 +57,6 @@ body.show-header .chat-bar {
   position: relative;
   width: 100%;
   padding: 12px 0 10px 15px;
-  border-radius: 21px 0 0 0;
-  background-color: #d431d4;
-  background-image: url("../img/3px-tile.png");
 }
 .chat-bar .form-column #message-input, .chat-bar .form-column button {
   font-size: 16px;
@@ -95,14 +97,8 @@ body.show-header .chat-bar {
 .chat-bar .form-column .next-game-in-wrapper > span {
   color: white;
 }
-.chat-bar .spacer-column {
-  background-color: #d431d4;
-  background-image: url("../img/3px-tile.png");
-}
 .chat-bar .logo-column {
   flex: 0 1 auto;
-  background-color: #d431d4;
-  background-image: url("../img/3px-tile.png");
   padding: 12px 15px 10px 0;
   transition: transform 0.5s;
   height: 3rem;
@@ -112,6 +108,34 @@ body.show-header .chat-bar {
   font-size: 22px;
   text-align: right;
   font-style: italic;
+}
+.chat-bar .logo-column #logo {
+  animation: logoshine 1s;
+}
+@keyframes logoshine {
+  0% {
+    text-shadow: 0 0 0 white;
+  }
+  30% {
+    text-shadow: 0 0 6px white;
+  }
+  10% {
+    text-shadow: 0 0 0 white;
+  }
+}
+@keyframes barshine {
+  0% {
+    box-shadow: 0px 0 0 #d431d4;
+    background-color: #d431d4;
+  }
+  30% {
+    box-shadow: 0px 0 10px #ff00ff;
+    background-color: #ff00ff;
+  }
+  10% {
+    box-shadow: 0px 0 0 #d431d4;
+    background-color: #d431d4;
+  }
 }
 
 /* ----------------- BODY ----------------- */
@@ -125,6 +149,7 @@ body.show-header .chat-bar {
   overflow-y: scroll;
   display: flex;
   flex-direction: column-reverse;
+  background-image: url("../img/notebook-dark.png");
 }
 .chat-body #messages .message-output {
   margin-top: 11px;
@@ -247,7 +272,7 @@ body.show-header .chat-bar {
 
 .side-bar {
   border-radius: 0 0 18px;
-  background-color: #d84cd8;
+  background-color: #d431d4;
   position: fixed;
   width: 260px;
   color: white;

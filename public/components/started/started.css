@@ -27,7 +27,6 @@
   flex-flow: column nowrap;
   margin: auto 0;
   min-height: 25%;
-  transform: translateY(-50%);
 }
 .started-wrap .started .question-text-wrap {
   display: flex;
@@ -38,6 +37,7 @@
 .started-wrap .started .question-text-wrap .question-text {
   font-size: 1.5rem;
   opacity: 1;
+  text-align: justify;
 }
 .started-wrap .started .answer-text-wrap {
   display: flex;
@@ -53,6 +53,7 @@
   text-align: center;
   opacity: 0;
   position: absolute;
+  text-align: justify;
 }
 .started-wrap .started.answered .question-text-wrap {
   flex: 1;
