@@ -244,7 +244,7 @@ socket.on('chat_message_response', chatMessage => {       // { text, chatCount, 
     console.log("gameState.session.data.guid", gameState.session.data.guid, "chatMessage.guid", chatMessage.guid)
 
     // add new message to UI
-    const markup = `<div id="chat_${chatMessage.chatCount}" class='${messageClass}'><div class='user-name'><span>${chatMessage.username}</span></div><p class='output-text'>${chatMessage.text}</p></div>`
+    const markup = `<div id="chat_${chatMessage.chatCount}" class='${messageClass}'><div class='user-name'><span>${chatMessage.username}</span></div><p class='output-text'>${chatMessage.text}</p><div class="stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div></div>`
     $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })

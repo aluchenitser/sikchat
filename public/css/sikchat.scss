@@ -92,9 +92,9 @@ h1, p {
             padding-left: 15px;
             margin-right: -1px;
 
-            &:focus{
-                background-color: #ffffde;
-            }
+            // &:focus{
+            //     background-color: #ffffde;
+            // }
         }
 
         #submit-button {
@@ -173,6 +173,7 @@ h1, p {
             margin-top: 11px;
             letter-spacing: -1.5px;
             animation: scrollpaper .2s;
+            position: relative;
 
             .user-name {
                 font-size: 12px;
@@ -187,18 +188,37 @@ h1, p {
                 text-align: right;
             }
 
-            // question answered successfully 
-            &.easy {
-                background-color: #D4D431;
+            .stars {
+                position: absolute;
+                right: -10px;
+                top: -13px;
+
+                i {
+                    display: none;
+                    color: $triad-blue;
+                    text-shadow: 1px 1px black;
+                }
             }
 
-            &.medium {
-                background-color: #D4D431;
+            // question answered successfully 
+            &.easy, &.medium, &.hard {
+                .stars i:nth-child(1) {
+                    display: inline;
+                }
+            }
+
+            &.medium, &.hard {
+                .stars i:nth-child(2) {
+                    display: inline;
+                }
             }
 
             &.hard {
-                background-color: #D4D431;
+                .stars i:nth-child(3) {
+                    display: inline;
+                }
             }
+
         }
 
         @keyframes scrollpaper {
@@ -391,38 +411,6 @@ h1, p {
         }
     }
 
-
-    // #register-toggler {
-    //     position: absolute;
-    //     visibility: hidden;
-
-    //     &:checked ~ .side-bar-row-login .register {
-    //         display: none;
-    //     }
-        
-    //     &:checked ~ .side-bar-row-login .email-wrap {
-    //         display: block;
-    //     }
-
-    //     &:checked ~ .side-bar-row select {
-    //         border-radius: 0;
-    //     }
-    // }
-    
- 
-    // #password-toggler {
-    //     visibility: hidden;
-    //     position: absolute;
-
-    //     &:checked ~ .side-bar-row-login .password-wrap, &:checked ~ .side-bar-row-login .retype-password-wrap, &:checked ~ .side-bar-row-login .email-submit-wrap {
-    //         display: block;
-    //     }
-
-    //     &:checked ~ .side-bar-row-login .email-wrap #email-input-element {
-    //         border-radius: 0;
-    //     }
-    // }
-
     .side-bar-row {
         margin-bottom: 10px;
 
@@ -534,29 +522,6 @@ h1, p {
                 }
             }
         }
-
-        // .email-wrap {
-        //     display: none;
-        //     position: relative;
-        //     margin-bottom: 10px;
-                            
-        //     input.email {
-        //         border-radius: 0 0 13px 0;
-        //     }
-
-        // }
-
-        // .password-wrap {
-        //     display: none;
-        // }
-
-        // .retype-password-wrap {
-        //     display: none;
-        //     margin-bottom: 10px;
-        //     position: relative;
-        // }
-        
-        
     }
 
     label.close-side-bar {

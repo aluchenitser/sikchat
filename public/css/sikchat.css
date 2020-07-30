@@ -69,9 +69,6 @@ body.show-header .chat-bar {
   padding-left: 15px;
   margin-right: -1px;
 }
-.chat-bar .form-column #message-input:focus {
-  background-color: #ffffde;
-}
 .chat-bar .form-column #submit-button {
   color: white;
   flex: 0 0 35px;
@@ -133,6 +130,7 @@ body.show-header .chat-bar {
   margin-top: 11px;
   letter-spacing: -1.5px;
   animation: scrollpaper 0.2s;
+  position: relative;
 }
 .chat-body #messages .message-output .user-name {
   font-size: 12px;
@@ -144,14 +142,24 @@ body.show-header .chat-bar {
 .chat-body #messages .message-output.is-current-user {
   text-align: right;
 }
-.chat-body #messages .message-output.easy {
-  background-color: #D4D431;
+.chat-body #messages .message-output .stars {
+  position: absolute;
+  right: -10px;
+  top: -13px;
 }
-.chat-body #messages .message-output.medium {
-  background-color: #D4D431;
+.chat-body #messages .message-output .stars i {
+  display: none;
+  color: #31D4D4;
+  text-shadow: 1px 1px black;
 }
-.chat-body #messages .message-output.hard {
-  background-color: #D4D431;
+.chat-body #messages .message-output.easy .stars i:nth-child(1), .chat-body #messages .message-output.medium .stars i:nth-child(1), .chat-body #messages .message-output.hard .stars i:nth-child(1) {
+  display: inline;
+}
+.chat-body #messages .message-output.medium .stars i:nth-child(2), .chat-body #messages .message-output.hard .stars i:nth-child(2) {
+  display: inline;
+}
+.chat-body #messages .message-output.hard .stars i:nth-child(3) {
+  display: inline;
 }
 @keyframes scrollpaper {
   0% {
