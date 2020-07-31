@@ -42,7 +42,8 @@ var gameState = {
     time: {
         current: "",
         tick: null,
-        ticks: null
+        ticks: null,
+        secondsUntilNextGame: null
     },
 
     //user 
@@ -100,19 +101,18 @@ socket.on('tick', server => {
     gameState.qBank = server.qBank
     gameState.winners = server.winners
 
-    console.log(server.time.current)
-
+    Screen.nextGameIn(server.time.secondsUntilNextGame)
+   
     // console.log("gameState.time")
     // console.log(gameState.time)
     // console.log("gameState.qBank")
     // console.log(gameState.qBank)
-    
-    if(server.time.current == "init") {
-        document.body.classList.add("init")
-    }
-    else {
-        document.body.classList.remove("init")
-    }
+    // console.log("tick",server.time.tick)
+    // console.log("ticks",server.time.ticks)
+
+    console.log("secondsUntilNextGame", server.time.secondsUntilNextGame)
+
+    setBodyClass(server.time.current)
 
     if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
@@ -122,7 +122,6 @@ socket.on('tick', server => {
         gameState.noFlag = false;
         gameState.isEnding = false;
         gameState.isIntermission = true;
-
     }
 
     if(server.time.current == "starting" && (gameState.isIntermission || gameState.noFlag)) {
@@ -702,6 +701,13 @@ function animateOrRepeat(element, addOnClass = null) {
     }
     else {
         element.classList.add(addOnClass)
+    }
+}
+
+function setBodyClass(current) {
+    if(document.body.classList.contains(current) == false) {
+        document.body.classList.remove('init', 'intermission', 'starting', 'started', 'ending')
+        document.body.classList.add(current)
     }
 }
 

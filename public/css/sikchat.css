@@ -86,17 +86,22 @@ body.show-header .chat-bar {
   cursor: pointer;
 }
 .chat-bar .form-column .next-game-in-wrapper {
-  visibility: hidden;
-  right: -96px;
+  background-color: rgba(0, 0, 0, 0.7);
+  right: 0;
   position: absolute;
-  font-size: 13px;
-  bottom: 11px;
-  line-height: 1;
-  letter-spacing: -0.1px;
-}
-.chat-bar .form-column .next-game-in-wrapper > span {
+  font-size: 14px;
   color: white;
+  transform: translate(110%, 10px);
+  opacity: 0;
 }
+body.intermission .next-game-in-wrapper {
+  opacity: 1 !important;
+}
+
+body.ending .next-game-in-wrapper {
+  opacity: 1 !important;
+}
+
 .chat-bar .logo-column {
   flex: 0 1 auto;
   padding: 12px 15px 10px 0;

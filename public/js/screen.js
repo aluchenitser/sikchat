@@ -67,6 +67,9 @@ var Screen = {
             windowElement.appendChild(this.markup)
         } else { throw "nothing to display"}
     },
+    nextGameIn(seconds) {
+        document.getElementById("next-game-in").textContent = seconds
+    },
 
     // properties here match [sik] attributes in view files
     _models: {

@@ -116,21 +116,26 @@ h1, p {
             }
         }
 
-        // #next-game-in
         .next-game-in-wrapper {
-            visibility: hidden;
-            right: -96px;
+            background-color: rgb(0,0,0,0.7);
+            right: 0;
             position: absolute;
-            font-size: 13px;
-            bottom: 11px;
-            line-height: 1;
-            letter-spacing: -0.1px;
-
-            > span {
-                // font-size: 12px;
-                color: white;
-            }
+            font-size: 14px;
+            color: white;
+            transform: translate(110%, 10px);
+            opacity: 0;
         }
+
+
+        // #next-game-in
+        @at-root body.intermission .next-game-in-wrapper {
+            opacity: 1 !important;
+        }
+
+        @at-root body.ending .next-game-in-wrapper {
+            opacity: 1 !important;
+        }
+
     }
 
     .spacer-column {

@@ -2,7 +2,6 @@
   animation: fadeIn 0.5s;
   position: relative;
   margin: auto 0;
-  transform: translate(0, -5%);
 }
 .starting h1, .starting h2 {
   position: relative;

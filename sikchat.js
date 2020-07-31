@@ -12,11 +12,13 @@ const fs = require('fs');
 // var bodyParser = require('body-parser');
 
 // requires with extra shit
+
+// dayjs and extensions
 var dayjs = require('dayjs')
-var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-dayjs.extend(isSameOrAfter)
-
-
+    var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+    var advancedFormat = require('dayjs/plugin/advancedFormat')
+    dayjs.extend(isSameOrAfter)
+    dayjs.extend(advancedFormat)
 
 
 const cookieParser = require('cookie-parser')       // make cookie available in req.cookie
@@ -99,7 +101,9 @@ var gameState = {
         next: null,
         current: "",
         tick: null,
-        ticks: null
+        ticks: null,
+        secondsUntilNextGame: null
+
     },
 
     // game loop flags
@@ -172,12 +176,12 @@ app.route('/')
         if (req.session.user && req.cookies.sik_sid) {
             // register new login
             if(req.body.register == true) {
-                console.log(" -- registration attempt --")
+                console.log(" -- registration attempt -- ")
 
                 if(userRepo.hasOwnProperty(req.body.email)) {
                     console.log("duplicate email")
                     res.send("duplicate email")
-                    console.log(" -- registration failed --")
+                    console.log(" -- registration failed -- ")
                 }
                 else {
 
@@ -309,29 +313,19 @@ setInterval(() => {
         gameState.time.current = "ending";
         gameState.isEnding = true;
 
-        // discover winner (most points)
-        if(gameState.winners.length === 0) {
-            let highest = 0
-            for(user in userRepo) {
-                if(userRepo[user].points > highest) {
-                    highest = userRepo[user].points
-                    gameState.winners = [userRepo[user].username]
-                }
-                else if(userRepo[user].points === highest && highest > 0) {
-                    gameState.winners.push(userRepo[user].username)
-                }
-            }
-
-            if(highest === 0) {
-                gameState.winners = ["nobody??"]
-            }
-
-        }
+        calculateWinner()
     }    
-    console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
-    gameState.time.tick++               // used to help client know where in window we are
 
+    console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
+
+    gameState.time.tick++               // used to help the client know where we are in the window
+
+    gameState.time.secondsUntilNextGame = gameState.isIntermission == true
+        ? parseInt(gameState.time.started.format("X")) - parseInt(dayjs().format("X"))
+        : parseInt(gameState.time.next.add(timeConstants.INTERMISSION + timeConstants.STARTING, "s").format("X")) - parseInt(dayjs().format("X"))
+        
     let gameStateEmit = mapGameStateForClient()
+
     io.emit("tick", gameStateEmit)
 
 }, 1000)
@@ -341,11 +335,7 @@ setInterval(() => {
 
 io.on('connection', (socket) => {
     // console.log("user connected")
-
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
-    // socket.user = userRepo[cookie.parse(socket.handshake.headers.cookie).sik_id]
-
-    
 
     socket.on('chat_message', (text) => {           
         
@@ -486,6 +476,25 @@ function updateTimeWindow() {
     gameState.time.next = gameState.time.ending.add(timeConstants.ENDING, "s");
 }
 
+function calculateWinner() {
+    if(gameState.winners.length === 0) {
+        let highest = 0
+        for(user in userRepo) {
+            if(userRepo[user].points > highest) {
+                highest = userRepo[user].points
+                gameState.winners = [userRepo[user].username]
+            }
+            else if(userRepo[user].points === highest && highest > 0) {
+                gameState.winners.push(userRepo[user].username)
+            }
+        }
+
+        if(highest === 0) {
+            gameState.winners = ["nobody??"]
+        }
+    }
+}
+
 function printTimeWindow() {
     console.log("-- time window");
     console.log(`\tintermission\t: ${gameState.time.intermission.format("h[h] m[m] s[s]")}`)
@@ -577,8 +586,6 @@ function loadQuestion() {
   gameState.qBank.currentQuestion.q = gameState.qBank.questionStack.length + 1
   gameState.qBank.currentQuestion.of = gameState.qBank.questionStack.originalLength
 
-
-
 //   console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
 
@@ -595,26 +602,6 @@ function clearUserStatistics() {
     }
 
     gameState.winners = []
-}
-
-
-function consoleLatestUserRepo(mode) 
-{
-    console.log("%cuserRepo", "color: green")
-    switch(mode) {
-        case "simple":
-            if(userRepo.length == 0) {
-                console.log("%cempty", "color: green");
-                return;
-            }
-            userRepo.forEach(item => {    // since userRepo is now an object, this bit of code is fucked
-                console.log("%c" + item.username + " " + item.guid, "color: green");
-            })
-            break;
-        // show whole object
-        default:
-            console.log(userRepo);
-    }
 }
 
 function printUserRepo() {
@@ -644,7 +631,7 @@ function mapGameStateForClient() {
     delete clone.time.starting
     delete clone.time.started
     delete clone.time.ending
-    delete clone.time.next
+    // delete clone.time.next
 
     return clone;
 }
