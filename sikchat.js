@@ -299,16 +299,16 @@ setInterval(() => {
         gameState.time.current = "ending";
         gameState.isEnding = true;
 
-        // announce winner
+        // discover winner (most points)
         if(gameState.winners.length === 0) {
             let highest = 0
             for(user in userRepo) {
                 if(userRepo[user].points > highest) {
                     highest = userRepo[user].points
-                    gameState.winners = [user]
+                    gameState.winners = [userRepo[user].username]
                 }
                 else if(userRepo[user].points === highest && highest > 0) {
-                    gameState.winners.push(user.username)
+                    gameState.winners.push(userRepo[user].username)
                 }
             }
 
