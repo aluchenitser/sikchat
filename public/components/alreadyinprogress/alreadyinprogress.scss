@@ -1,4 +1,4 @@
-.game-in-progress {
+.already-in-progress {
     // background-color: lightblue;
     
     display: flex;
@@ -6,7 +6,7 @@
     position: absolute;
     width: 100%;
 
-    .balls {
+    .balls-wrap {
         display: flex;
         justify-content: space-around;
         width: 100%;
@@ -22,9 +22,6 @@
             justify-content: center;
             align-items: center;
 
-            // animation: bounce-5 2s infinite;
-            // animation-timing-function: ease;
-            
             .ball {
                 z-index: 2;
                 position: absolute;
@@ -49,17 +46,6 @@
                     transform: translate(-50%, -50%);
                 }
             }
-        }
-
-
-        @keyframes bounce-5 {
-            0%   { justify-content: center }
-            10%  { justify-content: end }
-            30%  {  }
-            50%  {  }
-            57%  {  }
-            64%  {  }
-            100% {  }
         }
     }
 }

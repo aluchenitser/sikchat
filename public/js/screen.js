@@ -105,6 +105,9 @@ var Screen = {
 
             "winners_container": null
         },
+        "already-in-progress": {
+            "path": "../components/alreadyinprogress/alreadyinprogress.html",
+        },
         debug: {
 
         }

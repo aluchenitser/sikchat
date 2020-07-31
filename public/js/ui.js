@@ -58,6 +58,7 @@ var gameState = {
     isStarting: false,          // countdown
     isStarted: false,           // game is in session
     isEnding: false,            // outro
+    alreadyInProgress: false,
     noFlag: true,                // similar to isInit on the backend, but doesn't explicitly receive a signal
     winners: []
 }
@@ -110,7 +111,7 @@ socket.on('tick', server => {
     // console.log("tick",server.time.tick)
     // console.log("ticks",server.time.ticks)
 
-    console.log("secondsUntilNextGame", server.time.secondsUntilNextGame)
+    // console.log("secondsUntilNextGame", server.time.secondsUntilNextGame)
 
     setBodyClass(server.time.current)
 
@@ -148,63 +149,77 @@ socket.on('tick', server => {
     }
     
     if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag)) {
+        // console.log("started")
 
-        console.log("started")
-        Screen.load("started").done(() => {
-            
-            // first question
+        if(gameState.noFlag == true) {
+            Screen.load("already-in-progress").done(() => {
+                alreadyInProgressBallsAnimation(true)
+            })
+        }
+        else {
+            Screen.load("started").done(() => {
+                
+                // first question
+                Screen.populate("topic", gameState.qBank.loaded.meta.topic)
+                Screen.populate("question", gameState.qBank.currentQuestion.question)
+                Screen.populate("answer", gameState.qBank.currentQuestion.answer)
+                
+                Screen.populate("q", gameState.qBank.currentQuestion.q)
+                Screen.populate("of", gameState.qBank.currentQuestion.of)
+    
+                progressBarElement = document.querySelector(".progress-bar")
+                startedWrapStartedElement = document.querySelector(".started-wrap .started")
+                
+                // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
+            })
+    
+            // flags
+            gameState.noFlag = false;
+            gameState.isStarting = false;
+            gameState.isStarted = true;        
+        }
+    }
+
+    if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1 && gameState.time.inProgress == false) {
+
+        // console.log("inside")
+        
+        if(gameState.noFlag == true) {
+            Screen.load("already-in-progress").done(() => {
+                alreadyInProgressBallsAnimation(true)
+            })
+        }
+        else {
             Screen.populate("topic", gameState.qBank.loaded.meta.topic)
             Screen.populate("question", gameState.qBank.currentQuestion.question)
             Screen.populate("answer", gameState.qBank.currentQuestion.answer)
-            
+    
             Screen.populate("q", gameState.qBank.currentQuestion.q)
             Screen.populate("of", gameState.qBank.currentQuestion.of)
-
-            progressBarElement = document.querySelector(".progress-bar")
-            startedWrapStartedElement = document.querySelector(".started-wrap .started")
-            
-            // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
-        })
-
-        // flags
-        gameState.noFlag = false;
-        gameState.isStarting = false;
-        gameState.isStarted = true;        
-    }
-
-    if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1) {
-
-        console.log("inside")
-        
-        Screen.populate("topic", gameState.qBank.loaded.meta.topic)
-        Screen.populate("question", gameState.qBank.currentQuestion.question)
-        Screen.populate("answer", gameState.qBank.currentQuestion.answer)
-
-        Screen.populate("q", gameState.qBank.currentQuestion.q)
-        Screen.populate("of", gameState.qBank.currentQuestion.of)
-
-        // progress bar
-        let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAllotted - 1) * 100
-
-        // console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
-        // console.log("left", gameState.qBank.currentQuestion.timeLeft)
-        // console.log("percent", percent)
-
-        if(progressBarElement) {
-            progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
+    
+            // progress bar
+            let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAllotted - 1) * 100
+    
+            // console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
+            // console.log("left", gameState.qBank.currentQuestion.timeLeft)
+            // console.log("percent", percent)
+    
+            if(progressBarElement) {
+                progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
+            }
+    
+            if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
+                startedWrapStartedElement.classList.add("answered")
+            }
+            else if(startedWrapStartedElement) {
+                startedWrapStartedElement.classList.remove("answered")
+            }
         }
-
-        if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
-            startedWrapStartedElement.classList.add("answered")
-        }
-        else if(startedWrapStartedElement) {
-            startedWrapStartedElement.classList.remove("answered")
-        }
-        
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
     if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag)) {
+        alreadyInProgressBallsAnimation(false)
 
         console.log("ending")
         Screen.load("ending").done(() => {
@@ -313,9 +328,6 @@ var retypePasswordRegisterElement = document.getElementById("retype-password-reg
 
 var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
-
-
-
 
 // --- TABBING & TOGGLERS
 
@@ -514,8 +526,7 @@ loginSubmitElement.addEventListener("keyup", e => {
     }
 })
 
-// --- 
-
+// --- LOGOUT
 
 logOutElement.addEventListener("click", e => {
     window.location.href = window.location.href + "logout"
@@ -529,6 +540,51 @@ logOutElement.addEventListener("keyup", e => {
 
 
 /* -------------------- FUNCTIONS --------------------- */
+
+function alreadyInProgressBallsAnimation(bool) {
+    console.log("-- alreadyInProgressBallsAnimation --")
+    if(bool == false) {
+        console.log("cancelling alreadyInProgressBallsAnimation")
+        gameState.time.alreadyInProgress = false
+        return
+    }
+
+    var ballsWrapElement = document.querySelector(".balls-wrap")
+
+    gameState.time.alreadyInProgress = ballsWrapElement instanceof Element && bool == true
+        ? true
+        : false
+
+    if(ballsWrapElement instanceof Element && bool == true) {
+        gameState.time.alreadyInProgress = true
+    }
+    else {
+        gameState.time.alreadyInProgress = false
+        // console.log("cancelling alreadyInProgressBallsAnimation from missing element")
+        return
+    }
+    
+    var propertyValues = ["flex-start", "flex-end", "center", "space-between", "space-around"]
+    
+    var rand;
+    (function loop() {
+        // rand = Math.floor(Math.random() * 3000 + 650);
+        rand = 3000
+        setTimeout(function() {
+            if(ballsWrapElement instanceof Element) {
+                let jcValue = propertyValues[Math.floor(Math.random() * 5)]
+                ballsWrapElement.style.justifyContent = jcValue
+                console.log("inprogress tick, propertyValue", jcValue)
+            }
+            if(gameState.time.alreadyInProgress == false) {
+                console.log("balls loop return??")
+                return;
+            }
+            loop();  
+        }, rand);
+    }());
+}
+
 
 
 function registerPasswordsAreValid(e) {

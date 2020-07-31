@@ -1,16 +1,16 @@
-.game-in-progress {
+.already-in-progress {
   display: flex;
   flex-flow: column nowrap;
   position: absolute;
   width: 100%;
 }
-.game-in-progress .balls {
+.already-in-progress .balls-wrap {
   display: flex;
   justify-content: space-around;
   width: 100%;
   padding: 15px;
 }
-.game-in-progress .balls .ball-border {
+.already-in-progress .balls-wrap .ball-border {
   position: relative;
   width: 10%;
   padding-bottom: 10%;
@@ -20,7 +20,7 @@
   justify-content: center;
   align-items: center;
 }
-.game-in-progress .balls .ball-border .ball {
+.already-in-progress .balls-wrap .ball-border .ball {
   z-index: 2;
   position: absolute;
   width: 90%;
@@ -31,7 +31,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
-.game-in-progress .balls .ball-border .ball span {
+.already-in-progress .balls-wrap .ball-border .ball span {
   background-color: white;
   display: inline-block;
   position: absolute;
@@ -41,13 +41,5 @@
   top: 50%;
   transform: translate(-50%, -50%);
 }
-@keyframes bounce-5 {
-  0% {
-    justify-content: center;
-  }
-  10% {
-    justify-content: end;
-  }
-}
 
-/*# sourceMappingURL=gamealreadyinprogress.css.map */
+/*# sourceMappingURL=alreadyinprogress.css.map */
