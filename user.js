@@ -2,7 +2,7 @@ var dayjs = require('dayjs')
 
 module.exports = {
     User: class User {
-        constructor(email = null, password = null, username = "someone") {
+        constructor(email = null, password = null, username = "someone", isRegistered = false) {
 
             // setup
             let date = new dayjs()
@@ -13,7 +13,7 @@ module.exports = {
             this.email = email
             this.password = password
             this.guid = Math.random()
-            this.isRegistered = email === null ? false : true
+            this.isRegistered = isRegistered
             
             /* items sent to client */
 

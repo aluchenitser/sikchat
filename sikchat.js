@@ -160,6 +160,7 @@ app.route('/')
 
             console.log("-- created blank user --")
             printUser(req.session.user)
+            printUserRepo()
         }
 
         res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
@@ -169,37 +170,46 @@ app.route('/')
         console.log("post /")
 
         if (req.session.user && req.cookies.sik_sid) {
-            console.log(" -- login attempt --")
             // register new login
             if(req.body.register == true) {
+                console.log(" -- registration attempt --")
 
                 if(userRepo.hasOwnProperty(req.body.email)) {
                     console.log("duplicate email")
                     res.send("duplicate email")
+                    console.log(" -- registration failed --")
                 }
                 else {
 
-                    let user = new User(req.body.email, req.body.password)   // newly registered user has default username of "someone"
+                    let user = new User(req.body.email, req.body.password, req.body.username, true)   // newly registered user has default username of "someone"
+                    delete userRepo[req.session.user.guid]
 
                     // update session and add to user repo
                     req.session.user = user
                     userRepo[req.body.email] = user
 
                     console.log("registration success")
-                    res.send("registration success")
+                    printUserRepo()
+
+                    
+                    res.send({ username: user.username, msg: "registration success" })
+                    console.log(" -- registration success --")
                 }
             }
 
             // existing login (session likely expired)
             else {
-
+                console.log(" -- login attempt -- ")
                 if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
-                    req.session.user = userRepo[req.body.email]
+                    let user = userRepo[req.body.email]
+                    req.session.user = user
                     res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
-                    res.send("success")
+                    res.send({ username: user.username, msg: "success" })
+                    console.log(" -- login success -- ")
                 }
                 else {
                     res.send("failed login")
+                    console.log(" -- login failed -- ")
                 }
             }
         }
@@ -569,7 +579,7 @@ function loadQuestion() {
 
 
 
-  console.log("question chosen\n", gameState.qBank.currentQuestion);
+//   console.log("question chosen\n", gameState.qBank.currentQuestion);
 }
 
 /* ------------------ USER FUNCTIONS ------------------- */

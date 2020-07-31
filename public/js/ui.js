@@ -609,20 +609,20 @@ function submitLogin() {
         
         $.ajax({ url: '/', type: 'POST', contentType: 'application/json',
             data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, username: gameState.session.data.username, register: false }),
-            success: function(response){
-                if(response == "success") {
+            success: function(response){                // {msg, username}
+                if(response.msg == "success") {
                     // registerSubmitStatusElement.value = ""
                     setTimeout(() => {
                         loginSubmitElement.textContent="success!"
                         setTimeout(() => {
                             loginSubmitElement.removeAttribute("disabled")
                             document.querySelectorAll(".toggles").forEach( el => el.checked = false )
-                            // emailInputLoginElement.value = ""
+                            emailInputLoginElement.value = ""
                             passwordLoginElement.value = ""
                             loginSubmitElement.textContent="submit"
                             logOutToggleElement.checked = true;
                             sideBarElement.classList.remove("square")
-                            
+                            userInputElement.value = response.username
                         }, 2000)
                     }, 2000)
                 }
@@ -654,7 +654,7 @@ function submitRegistration() {
             contentType: 'application/json',
             data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.data.username, register: true}),
             success: function(response){
-                if(response == "registration success") {
+                if(response.msg == "registration success") {
                     // registerSubmitStatusElement.value = ""
                     setTimeout(() => {
                         registerSubmitElement.textContent="success!"
@@ -669,7 +669,7 @@ function submitRegistration() {
                             passwordRegisterElement.value = ''
                             passwordLoginElement.value = ''
                             emailInputRegisterElement.value = ''
-                            userInputElement.value = 'someone'
+                            userInputElement.value = response.username
                         }, 2000)
                     }, 2000)
                 }
