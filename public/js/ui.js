@@ -88,7 +88,7 @@ var gameState = {
 
 /*  --------- GAME LOOP ---------- */
 
-// client states are "intermission", "starting", "started", and "ending"
+// client states are "intermission", "starting", "started", "ending", and "inprogress"
 // server also has "init"
 var socket = io() 
 
@@ -117,6 +117,8 @@ socket.on('tick', server => {
 
     if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
+
+        alreadyInProgressBallsAnimation(false)
         Screen.load("intermission")
 
         // flags
@@ -148,12 +150,14 @@ socket.on('tick', server => {
         Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
     }
     
-    if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag)) {
+    if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag) && gameState.alreadyInProgress == false) {
         // console.log("started")
 
         if(gameState.noFlag == true) {
             Screen.load("already-in-progress").done(() => {
                 alreadyInProgressBallsAnimation(true)
+                gameState.isStarting = false;
+                gameState.isStarted = true;      
             })
         }
         else {
@@ -180,7 +184,7 @@ socket.on('tick', server => {
         }
     }
 
-    if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1 && gameState.time.inProgress == false) {
+    if(server.time.current == "started" && gameState.isStarted == true && gameState.time.tick > 1 && gameState.alreadyInProgress == false) {
 
         // console.log("inside")
         
@@ -200,10 +204,6 @@ socket.on('tick', server => {
             // progress bar
             let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAllotted - 1) * 100
     
-            // console.log("allotted", gameState.qBank.currentQuestion.timeAllotted )
-            // console.log("left", gameState.qBank.currentQuestion.timeLeft)
-            // console.log("percent", percent)
-    
             if(progressBarElement) {
                 progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
             }
@@ -218,30 +218,40 @@ socket.on('tick', server => {
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
-    if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag)) {
-        alreadyInProgressBallsAnimation(false)
+    if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag) && gameState.alreadyInProgress == false) {
+        
 
         console.log("ending")
-        Screen.load("ending").done(() => {
-            Screen.populate("topic", gameState.qBank.loaded.meta.topic)
-            Screen.populate("ending-quip", gameState.qBank.loaded.meta["ending-quip"])
-            
-            Screen.populate("answered", gameState.session.data.answered)
-            Screen.populate("points", gameState.session.data.points)
-            Screen.populate("lifeTimeAnswered", gameState.session.data.lifeTimeAnswered)
-            Screen.populate("lifeTimePoints", gameState.session.data.lifeTimePoints)
 
-            for(user in gameState.winners) {
-                let markup = "<div class='winner'>WINNER: <span>" + gameState.winners[user] + "</span></div>"
-                Screen.insertMarkup("winners_container", markup)
-            }
+        if(gameState.noFlag == true) {
+            Screen.load("already-in-progress").done(() => {
+                alreadyInProgressBallsAnimation(true)
+                gameState.isStarted = false;
+                gameState.isEnding = true;
+            })
+        }
+        else {
+            Screen.load("ending").done(() => {
+                Screen.populate("topic", gameState.qBank.loaded.meta.topic)
+                Screen.populate("ending-quip", gameState.qBank.loaded.meta["ending-quip"])
+                
+                Screen.populate("answered", gameState.session.data.answered)
+                Screen.populate("points", gameState.session.data.points)
+                Screen.populate("lifeTimeAnswered", gameState.session.data.lifeTimeAnswered)
+                Screen.populate("lifeTimePoints", gameState.session.data.lifeTimePoints)
 
-        })
+                for(user in gameState.winners) {
+                    let markup = "<div class='winner'>WINNER: <span>" + gameState.winners[user] + "</span></div>"
+                    Screen.insertMarkup("winners_container", markup)
+                }
 
-        // flags
-        gameState.noFlag = false;
-        gameState.isStarted = false;
-        gameState.isEnding = true;
+            })
+
+            // flags
+            gameState.noFlag = false;
+            gameState.isStarted = false;
+            gameState.isEnding = true;
+        }
     }
 });
 
@@ -545,22 +555,17 @@ function alreadyInProgressBallsAnimation(bool) {
     console.log("-- alreadyInProgressBallsAnimation --")
     if(bool == false) {
         console.log("cancelling alreadyInProgressBallsAnimation")
-        gameState.time.alreadyInProgress = false
+        gameState.alreadyInProgress = false
         return
     }
 
     var ballsWrapElement = document.querySelector(".balls-wrap")
 
-    gameState.time.alreadyInProgress = ballsWrapElement instanceof Element && bool == true
-        ? true
-        : false
-
     if(ballsWrapElement instanceof Element && bool == true) {
-        gameState.time.alreadyInProgress = true
+        gameState.alreadyInProgress = true
     }
     else {
-        gameState.time.alreadyInProgress = false
-        // console.log("cancelling alreadyInProgressBallsAnimation from missing element")
+        gameState.alreadyInProgress = false
         return
     }
     
@@ -568,16 +573,13 @@ function alreadyInProgressBallsAnimation(bool) {
     
     var rand;
     (function loop() {
-        // rand = Math.floor(Math.random() * 3000 + 650);
-        rand = 3000
+        rand = Math.floor(Math.random() * 3000 + 250);
         setTimeout(function() {
             if(ballsWrapElement instanceof Element) {
                 let jcValue = propertyValues[Math.floor(Math.random() * 5)]
                 ballsWrapElement.style.justifyContent = jcValue
-                console.log("inprogress tick, propertyValue", jcValue)
             }
-            if(gameState.time.alreadyInProgress == false) {
-                console.log("balls loop return??")
+            if(gameState.alreadyInProgress == false) {
                 return;
             }
             loop();  
