@@ -5,6 +5,13 @@
     margin: auto 0;
     // transform: translate(0, -5%);
     
+    @media (max-height: 720px) {
+        top: -15px;
+    }
+    @media (min-height: 721px) {
+        top: -45px;
+    }
+
     h1, h2 {
         position: relative;
         text-align: center;

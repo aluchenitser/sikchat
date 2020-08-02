@@ -1,15 +1,4 @@
-.ending-wrap .ending-quip {
-  width: 80%;
-  margin: 0 auto;
-  flex: 1.5;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  font-size: 1.8rem;
-  letter-spacing: -2px;
-}
-.ending-wrap .ending {
-  flex: 3;
+.ending {
   width: 80%;
   margin: auto;
   padding: 0 15px;
@@ -17,39 +6,50 @@
   position: relative;
   animation: fadeIn 0.5s;
   transition: opacity 0.5s;
+  max-width: 600px;
 }
-.ending-wrap .ending * {
+.ending * {
   font-size: 1.6rem;
   font-style: italic;
   letter-spacing: -2.6px;
 }
-.ending-wrap .ending .lights-action {
+@media (max-height: 720px) {
+  .ending {
+    top: -15px;
+  }
+}
+@media (min-height: 721px) {
+  .ending {
+    top: -45px;
+  }
+}
+.ending .lights-action {
   width: 70%;
   margin: 0 auto 70px auto;
   text-align: center;
 }
-.ending-wrap .ending .lights-action .wrap-1 {
+.ending .lights-action .wrap-1 {
   animation: _31D4D4 5s infinite;
   border: 3px dashed #D4D431;
 }
-.ending-wrap .ending .lights-action .wrap-3 {
+.ending .lights-action .wrap-3 {
   padding: 20px;
   border: 3px dashed black;
   color: black !important;
 }
-.ending-wrap .ending .lights-action .round {
+.ending .lights-action .round {
   text-decoration: underline;
   margin-bottom: 10px;
 }
-.ending-wrap .ending .lights-action .winner {
+.ending .lights-action .winner {
   margin-bottom: 10px;
 }
-.ending-wrap .ending .you-header {
+.ending .you-header {
   text-align: center;
   font-size: 1.3rem;
   margin-bottom: 10px;
 }
-.ending-wrap .ending .stats-header {
+.ending .stats-header {
   border-bottom: 1px solid;
   margin-bottom: 4px;
   text-shadow: 1px 1px black, -1px -1px black;
@@ -57,7 +57,7 @@
   letter-spacing: 0;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
-.ending-wrap .ending .stats-header.round-complete {
+.ending .stats-header.round-complete {
   text-align: center;
 }
 @keyframes _31D4D4 {
@@ -74,10 +74,10 @@
     border-color: #31D4D4;
   }
 }
-.ending-wrap .ending .stats-wrap {
+.ending .stats-wrap {
   margin-bottom: 30px;
 }
-.ending-wrap .ending .stats-wrap .stats-row {
+.ending .stats-wrap .stats-row {
   display: flex;
   justify-content: space-between;
 }

@@ -378,6 +378,10 @@ h1, p {
     border-radius: 0 4px 4px 0px;
     width: 35px;
     border: none;
+
+    &.shine {
+        animation: barshine 1s;
+    }
     
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
@@ -409,7 +413,9 @@ h1, p {
 
 .side-bar {
 
-
+    &.shine {
+        animation: barshine 1s;
+    }
     border-radius: 0 0 18px;
     // background-color: $general-background-color;
     background-color: #d431d4;

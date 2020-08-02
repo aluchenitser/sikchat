@@ -2,7 +2,13 @@
     position: relative;
     animation: fadeIn .5s;
     margin: 0 auto;
-    // transform: translate(0, -50%);
+
+    @media (max-height: 720px) {
+        top: -30px;
+    }
+    @media (min-height: 721px) {
+        top: -75px;
+    }
     
     .intermission-h1 {
         // font-family: 'Modak', cursive;

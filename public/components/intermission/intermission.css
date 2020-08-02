@@ -3,6 +3,16 @@
   animation: fadeIn 0.5s;
   margin: 0 auto;
 }
+@media (max-height: 720px) {
+  .intermission {
+    top: -30px;
+  }
+}
+@media (min-height: 721px) {
+  .intermission {
+    top: -75px;
+  }
+}
 .intermission .intermission-h1 {
   font-family: "Lobster", cursive;
   color: black;

@@ -1,22 +1,6 @@
 
-.ending-wrap {
-    
-    .ending-quip {
-        
-        width: 80%;
-        margin: 0 auto;
-        flex: 1.5;
-
-        justify-content: center;
-        display: flex;
-        align-items: center;
-
-        font-size: 1.8rem;
-        letter-spacing: -2px;
-    }
 
     .ending {
-        flex: 3;
         width: 80%;
         margin: auto;
         padding: 0 15px;
@@ -24,11 +8,19 @@
         position: relative;
         animation: fadeIn .5s;
         transition: opacity 0.5s;
+        max-width: 600px;
 
         * {
             font-size: 1.6rem;
             font-style: italic;
             letter-spacing: -2.6px;
+        }
+
+        @media (max-height: 720px) {
+            top: -15px;
+        }
+        @media (min-height: 721px) {
+            top: -45px;
         }
 
         .lights-action {
@@ -113,4 +105,3 @@
             }
         }
     }
-}

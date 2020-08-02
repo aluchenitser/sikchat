@@ -3,6 +3,16 @@
   position: relative;
   margin: auto 0;
 }
+@media (max-height: 720px) {
+  .starting {
+    top: -15px;
+  }
+}
+@media (min-height: 721px) {
+  .starting {
+    top: -45px;
+  }
+}
 .starting h1, .starting h2 {
   position: relative;
   text-align: center;

@@ -298,6 +298,13 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
     animateOrRepeat(document.getElementById("logo"))
     animateOrRepeat(document.querySelector(".chat-bar"))
     animateOrRepeat(document.querySelector(".success-overlay svg"), "success")
+    
+    let selector = sideBarToggle.checked 
+        ? '.side-bar'
+        : '.open-side-bar'
+    
+    animateOrRepeat(document.querySelector(selector), "shine")
+
 })
 
 /* -------------------- SESSION --------------------- */

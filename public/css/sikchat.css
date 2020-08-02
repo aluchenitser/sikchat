@@ -313,6 +313,9 @@ body.ending .next-game-in-wrapper {
   -webkit-tap-highlight-color: transparent;
   z-index: 1;
 }
+.open-side-bar.shine {
+  animation: barshine 1s;
+}
 .open-side-bar > .fa {
   top: 1px;
   position: relative;
@@ -326,6 +329,9 @@ body.ending .next-game-in-wrapper {
   color: white;
   z-index: 1;
   padding: 23px 10px 10px 15px;
+}
+.side-bar.shine {
+  animation: barshine 1s;
 }
 .side-bar * {
   transition: border-radius 0.2s;
