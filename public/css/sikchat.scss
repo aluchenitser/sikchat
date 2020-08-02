@@ -202,7 +202,7 @@ h1, p {
             height: 100%;
             width: 100%;
             background-color: transparent;
-            opacity: 0;
+            // opacity: 0;
             z-index: -1;
             position: absolute;
             color: white;
@@ -210,28 +210,36 @@ h1, p {
             justify-content: center;
             align-items: center;
             left: 0;
-
-            &.success {
-                z-index: 0;
-                background-color: black;
-
-                animation: success 0.5s;
+            overflow: hidden;
+                
+            svg {
+                position: absolute;
+                z-index: 1;
+                transform: scale(2) translateY(-20px);
+                opacity: 0;
+                
+                &.success {
+                    animation: success .8s;
+                }
             }
 
             span {
+                font-family: 'Lobster', cursive;
                 font-size: 3rem;
+                z-index: 1;
+                transform: translate(-2px,-37px);
             }
         }
 
         @keyframes success {
             0% {
-                opacity: 0;
+                transform: scale(0) translateY(-20px); opacity: 0;
             }
-            30% {
-                opacity: 0.6;
+            50% {
+                transform: scale(2) translateY(-20px); opacity: 1;
             }
             100% {
-                opacity: 0;
+                transform: scale(0) translateY(-20px); opacity: 0;
             }
         }
 

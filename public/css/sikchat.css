@@ -161,7 +161,6 @@ body.ending .next-game-in-wrapper {
   height: 100%;
   width: 100%;
   background-color: transparent;
-  opacity: 0;
   z-index: -1;
   position: absolute;
   color: white;
@@ -169,23 +168,34 @@ body.ending .next-game-in-wrapper {
   justify-content: center;
   align-items: center;
   left: 0;
+  overflow: hidden;
 }
-.chat-body #messages .success-overlay.success {
-  z-index: 0;
-  background-color: black;
-  animation: success 0.5s;
+.chat-body #messages .success-overlay svg {
+  position: absolute;
+  z-index: 1;
+  transform: scale(2) translateY(-20px);
+  opacity: 0;
+}
+.chat-body #messages .success-overlay svg.success {
+  animation: success 0.8s;
 }
 .chat-body #messages .success-overlay span {
+  font-family: "Lobster", cursive;
   font-size: 3rem;
+  z-index: 1;
+  transform: translate(-2px, -37px);
 }
 @keyframes success {
   0% {
+    transform: scale(0) translateY(-20px);
     opacity: 0;
   }
-  30% {
-    opacity: 0.6;
+  50% {
+    transform: scale(2) translateY(-20px);
+    opacity: 1;
   }
   100% {
+    transform: scale(0) translateY(-20px);
     opacity: 0;
   }
 }

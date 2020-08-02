@@ -96,6 +96,8 @@ if(gameState.session.debug == "host") {
     socket.close()
 }
 
+disableAlreadyInProgress = true           // set to true when developing
+
 socket.on('tick', server => {
 
     gameState.time = server.time
@@ -118,7 +120,10 @@ socket.on('tick', server => {
     if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
 
-        alreadyInProgressBallsAnimation(false)
+        if(disableAlreadyInProgress == false) {
+            alreadyInProgressBallsAnimation(false)
+        }
+
         Screen.load("intermission")
 
         // flags
@@ -153,7 +158,7 @@ socket.on('tick', server => {
     if(server.time.current == "started" && (gameState.isStarting || gameState.noFlag) && gameState.alreadyInProgress == false) {
         // console.log("started")
 
-        if(gameState.noFlag == true) {
+        if(gameState.noFlag == true && disableAlreadyInProgress == false) {
             Screen.load("already-in-progress").done(() => {
                 alreadyInProgressBallsAnimation(true)
                 gameState.isStarting = false;
@@ -188,7 +193,7 @@ socket.on('tick', server => {
 
         // console.log("inside")
         
-        if(gameState.noFlag == true) {
+        if(gameState.noFlag == true && disableAlreadyInProgress == false) {
             Screen.load("already-in-progress").done(() => {
                 alreadyInProgressBallsAnimation(true)
             })
@@ -223,7 +228,7 @@ socket.on('tick', server => {
 
         console.log("ending")
 
-        if(gameState.noFlag == true) {
+        if(gameState.noFlag == true && disableAlreadyInProgress == false) {
             Screen.load("already-in-progress").done(() => {
                 alreadyInProgressBallsAnimation(true)
                 gameState.isStarted = false;
@@ -292,7 +297,7 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
     // shine effect
     animateOrRepeat(document.getElementById("logo"))
     animateOrRepeat(document.querySelector(".chat-bar"))
-    animateOrRepeat(document.querySelector(".success-overlay"), "success")
+    animateOrRepeat(document.querySelector(".success-overlay svg"), "success")
 })
 
 /* -------------------- SESSION --------------------- */
@@ -552,6 +557,7 @@ logOutElement.addEventListener("keyup", e => {
 /* -------------------- FUNCTIONS --------------------- */
 
 function alreadyInProgressBallsAnimation(bool) {
+
     console.log("-- alreadyInProgressBallsAnimation --")
     if(bool == false) {
         console.log("cancelling alreadyInProgressBallsAnimation")

@@ -67,13 +67,13 @@ const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                 
 // time window
 const timeConstants = {
     // in minutes
-    WINDOW: 2,              // components in seconds must add up to this window in minutes
+    WINDOW: 3,              // components in seconds must add up to this window in minutes
 
     // in seconds
     INTERMISSION: 10,
     STARTING: 10,
-    STARTED: 60,
-    ENDING: 40,
+    STARTED: 150,
+    ENDING: 10,
 
     // question length
     QUESTION_EASY: 10,
