@@ -1,36 +1,28 @@
 
-// standard requires
+/* SIKCHAT - THE SIKKEST CHAT AMIRITE */
+
+/* ------------------- DEPENDENCIES ------------------- */
+
 const express = require('express')
 
 var session = require('express-session');
 const app = express()
 
-
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const fs = require('fs');
-// var bodyParser = require('body-parser');
 
-// requires with extra shit
-
-// dayjs and extensions
 var dayjs = require('dayjs')
     var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
     var advancedFormat = require('dayjs/plugin/advancedFormat')
     dayjs.extend(isSameOrAfter)
     dayjs.extend(advancedFormat)
 
-
-const cookieParser = require('cookie-parser')       // make cookie available in req.cookie
-var cookie = require('cookie')                      // read a cookie
-
+const cookieParser = require('cookie-parser')     
 app.use(cookieParser());
 
-// requires that load my stuff
-const User = require('./user.js').User
+const User = require('./user.js')
 app.use(express.static(__dirname + "/public/"));
-
-// replaces deprecated body-parser, so i'm told
 app.use(express.json());
 
 sharedsession = require("express-socket.io-session");
@@ -38,8 +30,6 @@ sharedsession = require("express-socket.io-session");
 var expressSession = session({
     secret: "dajfklhsl&&3fhalskfasfd",
     key: "sik_sid",
-    
-    // TODO: read up on these options more closely
     resave: false,      
     saveUninitialized: false,
     cookie: {
@@ -75,7 +65,7 @@ const timeConstants = {
     STARTED: 150,
     ENDING: 10,
 
-    // question length
+    // seconds given to answer a question
     QUESTION_EASY: 10,
     QUESTION_MEDIUM: 15,
     QUESTION_HARD: 20,
@@ -140,9 +130,7 @@ var gameState = {
     logString: null,
 }
 
-
 var userRepo = {};             // stores user accounts, { email: user } for registered and { guid: user } for free
-
 
 /* ------------------- ROUTER ------------------- */
 
