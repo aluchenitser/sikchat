@@ -93,7 +93,7 @@ var gameState = {
 
         let markup = ""
         gameState.session.rooms.forEach(room => {
-            markup += "<div tabindex='0' class='room'><span class='left'>" + room + "</span><span class='right'>&gt;</span></div>"
+            markup += "<div class='room' tabindex='0'><div class='room-position'>" + room + "</div></div>"
         })
 
         roomsWrapperElement.innerHTML = markup
@@ -377,8 +377,9 @@ $(roomsWrapperElement).on("keydown", ".room", e => {
 })
 
 $(roomsWrapperElement).on("click", ".room", e => {
+
     roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
-    e.target.classList.add('chosen')
+    e.currentTarget.classList.add('chosen')
 })
 
 
