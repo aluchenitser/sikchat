@@ -21,11 +21,11 @@ exports.isValidWindow = (windowLengths) => {
     }
 }
 
-exports.updateTimeWindow = (game) => {
-    game.time.intermission = game.time.next;
+exports.updateTimeWindow = (liveTime, windowLengths) => {
+    liveTime.intermission = liveTime.next;
 
-    game.time.starting = game.time.intermission.add(timeConstants.INTERMISSION, "s");
-    game.time.started = game.time.starting.add(timeConstants.STARTING, "s");
-    game.time.ending = game.time.started.add(timeConstants.STARTED, "s");
-    game.time.next = game.time.ending.add(timeConstants.ENDING, "s");
+    liveTime.starting = liveTime.intermission.add(windowLengths.INTERMISSION, "s");
+    liveTime.started = liveTime.starting.add(windowLengths.STARTING, "s");
+    liveTime.ending = liveTime.started.add(windowLengths.STARTED, "s");
+    liveTime.next = liveTime.ending.add(windowLengths.ENDING, "s");
 }
