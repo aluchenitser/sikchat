@@ -228,6 +228,7 @@ h1, p {
                 font-size: 3rem;
                 z-index: 1;
                 transform: translate(-2px,-37px);
+                user-select: no;
             }
         }
 
@@ -626,6 +627,33 @@ h1, p {
     input, select {
         width: 100%;
         border: none;
+    }
+
+    .rooms-wrapper {
+        background-color: white;
+        color: black;
+        
+        .room {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 5px 8px;
+            cursor: pointer;
+
+            // &:focus {
+            //     background-color: #8effff;
+            //     outline: 3px solid #8effff;
+            // }
+
+            &:focus, &:hover {
+                outline: 3px dashed #8effff;
+            }
+
+            &.chosen {
+                background-color: #8effff;
+                outline: 3px solid #8effff; 
+            }
+        }
     }
 
     select{

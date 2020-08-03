@@ -1,107 +1,105 @@
+div.ending {
+    width: 80%;
+    margin: auto;
+    padding: 0 15px;
+    left: -2px;
+    position: relative;
+    animation: fadeIn .5s;
+    transition: opacity 0.5s;
+    max-width: 600px;
 
+    * {
+        font-size: 1.6rem;
+        font-style: italic;
+        letter-spacing: -2.6px;
+    }
 
-    .ending {
-        width: 80%;
-        margin: auto;
-        padding: 0 15px;
-        left: -2px;
-        position: relative;
-        animation: fadeIn .5s;
-        transition: opacity 0.5s;
-        max-width: 600px;
+    @media (max-height: 720px) {
+        top: -15px;
+    }
+    @media (min-height: 721px) {
+        top: -45px;
+    }
 
-        * {
-            font-size: 1.6rem;
-            font-style: italic;
-            letter-spacing: -2.6px;
+    .lights-action {
+        width: 70%;
+        margin: 0 auto 70px auto;
+        // border: 3px dashed #d431d4;
+        text-align: center;
+        
+        .wrap-1 {
+            animation: _31D4D4 5s infinite;
+            border: 3px dashed #D4D431;
         }
 
-        @media (max-height: 720px) {
-            top: -15px;
+        .wrap-2 {
+            // border: 3px dashed #31D4D4;
         }
-        @media (min-height: 721px) {
-            top: -45px;
-        }
-
-        .lights-action {
-            width: 70%;
-            margin: 0 auto 70px auto;
-            // border: 3px dashed #d431d4;
-            text-align: center;
-            
-            .wrap-1 {
-                animation: _31D4D4 5s infinite;
-                border: 3px dashed #D4D431;
-            }
-
-            .wrap-2 {
-                // border: 3px dashed #31D4D4;
-            }
-            
-            .wrap-3 {
-                padding: 20px;
-                border: 3px dashed black;
-                color: black !important;
-            }
-
-            .round {
-                text-decoration: underline;
-                margin-bottom: 10px;
-            }
-
-            .winner {
-                margin-bottom: 10px;
-            }
-
-            .topic {
-
-            }
-
+        
+        .wrap-3 {
+            padding: 20px;
+            border: 3px dashed black;
+            color: black !important;
         }
 
-        .you-header {
-            text-align: center;
-            font-size: 1.3rem;
+        .round {
+            text-decoration: underline;
             margin-bottom: 10px;
         }
 
-        .stats-header {
-            border-bottom: 1px solid;
-            margin-bottom: 4px;
-
-            text-shadow: 1px 1px black, -1px -1px black;
-            animation: _31D4D4 5s infinite;
-            letter-spacing: 0;
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-
-            &.round-complete {
-                text-align: center;
-            }
+        .winner {
+            margin-bottom: 10px;
         }
 
-        @keyframes _31D4D4 {
-            0% { 
-                color:  #31D4D4;
-                border-color: #31D4D4;
-            }
+        .topic {
 
-            50% { 
-                color: #D4D431;
-                border-color: #D4D431;
-            }
-
-            100% { 
-                color:  #31D4D4;
-                border-color: #31D4D4;
-            }
         }
 
-        .stats-wrap {
-            margin-bottom: 30px;
-            
-            .stats-row {
-                display: flex;
-                justify-content: space-between;
-            }
+    }
+
+    .you-header {
+        text-align: center;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .stats-header {
+        border-bottom: 1px solid;
+        margin-bottom: 4px;
+
+        text-shadow: 1px 1px black, -1px -1px black;
+        animation: _31D4D4 5s infinite;
+        letter-spacing: 0;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+        &.round-complete {
+            text-align: center;
         }
     }
+
+    @keyframes _31D4D4 {
+        0% { 
+            color:  #31D4D4;
+            border-color: #31D4D4;
+        }
+
+        50% { 
+            color: #D4D431;
+            border-color: #D4D431;
+        }
+
+        100% { 
+            color:  #31D4D4;
+            border-color: #31D4D4;
+        }
+    }
+
+    .stats-wrap {
+        margin-bottom: 30px;
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}

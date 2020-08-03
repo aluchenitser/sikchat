@@ -32,6 +32,9 @@ var logOutToggleElement = document.getElementById("logout-toggle")
 
 var loginChoosersElement = document.querySelector(".login-choosers")
 var loginChoosersToggleElement = document.getElementById("login-choosers-toggle")
+
+var roomsWrapperElement = document.querySelector(".rooms-wrapper")
+
 var progressBarElement
 var startedWrapStartedElement
 
@@ -49,7 +52,7 @@ var gameState = {
     //user 
     session: {
         id: null,
-        data: null,
+        user: null,
         debug: false
     },
 
@@ -66,23 +69,36 @@ var gameState = {
 
 // read session
 !function() {
-    let data = getCookie("sik_data")
     let debug = getCookie("sik_debug")
+    let rooms = getCookie("sik_rooms")
+    let data = getCookie("sik_user")
     
-    if (data == undefined || debug == undefined) {
+
+    
+    if (data == undefined || debug == undefined || rooms == undefined) {
         throw "bogus cookies: browser may have cookies disabled"
     }
     else {
         console.log(data);
 
-        gameState.session.data = JSON.parse(data)
+        gameState.session.user = JSON.parse(data)
+        gameState.session.rooms = JSON.parse(rooms)
         gameState.session.debug = debug
 
-        userInputElement.value = gameState.session.data.username
+        userInputElement.value = gameState.session.user.username
 
-        logOutToggleElement.checked = gameState.session.data.isRegistered
+        logOutToggleElement.checked = gameState.session.user.isRegistered
             ? true
             : false
+
+        let markup = ""
+        gameState.session.rooms.forEach(room => {
+            markup += "<div tabindex='0' class='room'><span class='left'>" + room + "</span><span class='right'>&gt;</span></div>"
+        })
+
+        roomsWrapperElement.innerHTML = markup
+
+        console.log(gameState.session.rooms)
     }
 }()
 
@@ -240,10 +256,10 @@ socket.on('tick', server => {
                 Screen.populate("topic", gameState.qBank.loaded.meta.topic)
                 Screen.populate("ending-quip", gameState.qBank.loaded.meta["ending-quip"])
                 
-                Screen.populate("answered", gameState.session.data.answered)
-                Screen.populate("points", gameState.session.data.points)
-                Screen.populate("lifeTimeAnswered", gameState.session.data.lifeTimeAnswered)
-                Screen.populate("lifeTimePoints", gameState.session.data.lifeTimePoints)
+                Screen.populate("answered", gameState.session.user.answered)
+                Screen.populate("points", gameState.session.user.points)
+                Screen.populate("lifeTimeAnswered", gameState.session.user.lifeTimeAnswered)
+                Screen.populate("lifeTimePoints", gameState.session.user.lifeTimePoints)
 
                 for(user in gameState.winners) {
                     let markup = "<div class='winner'>WINNER: <span>" + gameState.winners[user] + "</span></div>"
@@ -273,11 +289,11 @@ document.getElementById('chat-form').addEventListener('submit', e => {
 
 // --- receive chat
 socket.on('chat_message_response', chatMessage => {       // { text, chatCount, guid, ADSASusername }
-    let messageClass = gameState.session.data.guid == chatMessage.guid
+    let messageClass = gameState.session.user.guid == chatMessage.guid
         ? 'message-output is-current-user'
         : 'message-output'
 
-    console.log("gameState.session.data.guid", gameState.session.data.guid, "chatMessage.guid", chatMessage.guid)
+    console.log("gameState.session.user.guid", gameState.session.user.guid, "chatMessage.guid", chatMessage.guid)
 
     // add new message to UI
     const markup = `<div id="chat_${chatMessage.chatCount}" class='${messageClass}'><div class='user-name'><span>${chatMessage.username}</span></div><p class='output-text'>${chatMessage.text}</p><div class="stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div></div>`
@@ -287,10 +303,10 @@ socket.on('chat_message_response', chatMessage => {       // { text, chatCount, 
 
 socket.on("success_response", successResponse => {     // {difficulty, chatCount, user}
     let className = successResponse.difficulty;
-    gameState.session.data.answered = successResponse.user.answered
-    gameState.session.data.points = successResponse.user.points
-    gameState.session.data.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
-    gameState.session.data.lifeTimePoints = successResponse.user.lifeTimePoints
+    gameState.session.user.answered = successResponse.user.answered
+    gameState.session.user.points = successResponse.user.points
+    gameState.session.user.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
+    gameState.session.user.lifeTimePoints = successResponse.user.lifeTimePoints
 
     document.getElementById("chat_" + successResponse.chatCount).classList.add(className)
     
@@ -319,8 +335,8 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
             changeUsernameElement.textContent = 'duplicate'
         }
         else {
-            gameState.session.data.username = data.username
-            setCookie("sik_data", JSON.stringify(gameState.session.data))
+            gameState.session.user.username = data.username
+            setCookie("sik_user", JSON.stringify(gameState.session.user))
             changeUsernameElement.textContent = 'changed!'
         }
 
@@ -350,6 +366,21 @@ var retypePasswordRegisterElement = document.getElementById("retype-password-reg
 
 var registerSubmitElement = document.querySelector('.register-submit-wrap .register-submit')
 var registerSubmitStatusElement = document.querySelector('.register-submit-wrap .register-submit-status')
+
+// --- ROOMS
+
+$(roomsWrapperElement).on("keydown", ".room", e => {
+    if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
+        roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
+        e.target.classList.add('chosen')
+    }
+})
+
+$(roomsWrapperElement).on("click", ".room", e => {
+    roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
+    e.target.classList.add('chosen')
+})
+
 
 // --- TABBING & TOGGLERS
 
@@ -441,7 +472,7 @@ changeUsernameElement.addEventListener("keyup", e => {
 changeUsernameElement.addEventListener("blur", e => {
     if(changeUsernameElement.textContent == 'save' && e.relatedTarget != userInputElement) {
         changeUsernameElement.classList.remove("active")
-        userInputElement.value = gameState.session.data.username
+        userInputElement.value = gameState.session.user.username
     }
 })
 
@@ -468,7 +499,7 @@ userInputElement.addEventListener("blur", e => {
 
     if(changeUsernameElement.textContent == 'save' && e.relatedTarget != changeUsernameElement) {
         changeUsernameElement.classList.remove("active")
-        userInputElement.value = gameState.session.data.username
+        userInputElement.value = gameState.session.user.username
     }
 })
 
@@ -622,10 +653,10 @@ function clearSideBar() {
     emailInputLoginElement.value = ""
     passwordRegisterElement.value = ""
     retypePasswordRegisterElement.value = ""
-    userInputElement.value = gameState.session.data.username
+    userInputElement.value = gameState.session.user.username
 
     registerSubmitElement.classList.remove("valid")
-    // userInputElement.value = gameState.session.data.username || "someone"
+    // userInputElement.value = gameState.session.user.username || "someone"
 }
 
 // username functions
@@ -635,7 +666,7 @@ function submitUserNameChange(e) {
     var validUserPattern = /^[a-zA-Z0-9 ]*$/
     let username = userInputElement.value;
 
-    if(validUserPattern.test(username) && username != gameState.session.data.username) {
+    if(validUserPattern.test(username) && username != gameState.session.user.username) {
         changeUsernameElement.textContent = "checking.."
         socket.emit('username_update', username)
     }
@@ -678,7 +709,7 @@ function submitLogin() {
         loginSubmitElement.setAttribute("disabled", true)
         
         $.ajax({ url: '/', type: 'POST', contentType: 'application/json',
-            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, username: gameState.session.data.username, register: false }),
+            data: JSON.stringify({email: emailInputLoginElement.value, password: passwordLoginElement.value, username: gameState.session.user.username, register: false }),
             success: function(response){                // {msg, username}
                 if(response.msg == "success") {
                     // registerSubmitStatusElement.value = ""
@@ -722,7 +753,7 @@ function submitRegistration() {
             url: '/',
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.data.username, register: true}),
+            data: JSON.stringify({email: emailInputRegisterElement.value, password: passwordRegisterElement.value, username: gameState.session.user.username, register: true}),
             success: function(response){
                 if(response.msg == "registration success") {
                     // registerSubmitStatusElement.value = ""

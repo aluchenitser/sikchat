@@ -184,6 +184,7 @@ body.ending .next-game-in-wrapper {
   font-size: 3rem;
   z-index: 1;
   transform: translate(-2px, -37px);
+  user-select: no;
 }
 @keyframes success {
   0% {
@@ -474,6 +475,24 @@ body.ending .next-game-in-wrapper {
 .side-bar input, .side-bar select {
   width: 100%;
   border: none;
+}
+.side-bar .rooms-wrapper {
+  background-color: white;
+  color: black;
+}
+.side-bar .rooms-wrapper .room {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.side-bar .rooms-wrapper .room:focus, .side-bar .rooms-wrapper .room:hover {
+  outline: 3px dashed #8effff;
+}
+.side-bar .rooms-wrapper .room.chosen {
+  background-color: #8effff;
+  outline: 3px solid #8effff;
 }
 .side-bar select {
   overflow: hidden;

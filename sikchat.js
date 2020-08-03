@@ -130,6 +130,8 @@ var gameState = {
     logString: null,
 }
 
+rooms = ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
+
 var userRepo = {};             // stores user accounts, { email: user } for registered and { guid: user } for free
 
 /* ------------------- ROUTER ------------------- */
@@ -155,7 +157,8 @@ app.route('/')
             printUserRepo()
         }
 
-        res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
+        res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
+        res.cookie("sik_rooms", JSON.stringify(rooms), {path: "/", expires: dayjs().add(7,"d").toDate()});
 
     })
     .post((req, res) => {
@@ -195,7 +198,7 @@ app.route('/')
                 if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
                     let user = userRepo[req.body.email]
                     req.session.user = user
-                    res.cookie("sik_data", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
+                    res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
                     res.send({ username: user.username, msg: "success" })
                     console.log(" -- login success -- ")
                 }
@@ -322,7 +325,6 @@ setInterval(() => {
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', (socket) => {
-    // console.log("user connected")
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
 
     socket.on('chat_message', (text) => {           

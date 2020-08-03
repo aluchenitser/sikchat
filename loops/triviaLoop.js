@@ -1,4 +1,4 @@
-module.exports = function triviaLoop(game) {              
+exports.loopFunction = (game, options) => {              
     return setInterval(() => {
         let topWindowState = this.liveTime.current
     
@@ -91,4 +91,38 @@ module.exports = function triviaLoop(game) {
         io.emit("tick", thisEmit)
     
     }, 1000)
+}
+
+exports.data = {
+    qBank: {
+
+    },
+    defaultQuestionLengths: {
+        QUESTION_EASY: 10,
+        QUESTION_MEDIUM: 15,
+        QUESTION_HARD: 20,
+    },
+    defaultQuestionPoints: {
+        "easy": 4,
+        "medium": 9,
+        "hard": 15
+    },
+    qBank: {                  
+
+        // from JSON file
+        loaded: {
+            meta: {},
+            questions: []
+        },
+        
+        // dynamic
+        currentQuestion: {
+            question: "",
+            answer: "",
+            difficulty: ""
+        },
+        
+        // questions are popped from this stack as they're asked
+        questionStack: []
+    }
 }

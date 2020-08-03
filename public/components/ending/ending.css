@@ -1,4 +1,4 @@
-.ending {
+div.ending {
   width: 80%;
   margin: auto;
   padding: 0 15px;
@@ -8,48 +8,48 @@
   transition: opacity 0.5s;
   max-width: 600px;
 }
-.ending * {
+div.ending * {
   font-size: 1.6rem;
   font-style: italic;
   letter-spacing: -2.6px;
 }
 @media (max-height: 720px) {
-  .ending {
+  div.ending {
     top: -15px;
   }
 }
 @media (min-height: 721px) {
-  .ending {
+  div.ending {
     top: -45px;
   }
 }
-.ending .lights-action {
+div.ending .lights-action {
   width: 70%;
   margin: 0 auto 70px auto;
   text-align: center;
 }
-.ending .lights-action .wrap-1 {
+div.ending .lights-action .wrap-1 {
   animation: _31D4D4 5s infinite;
   border: 3px dashed #D4D431;
 }
-.ending .lights-action .wrap-3 {
+div.ending .lights-action .wrap-3 {
   padding: 20px;
   border: 3px dashed black;
   color: black !important;
 }
-.ending .lights-action .round {
+div.ending .lights-action .round {
   text-decoration: underline;
   margin-bottom: 10px;
 }
-.ending .lights-action .winner {
+div.ending .lights-action .winner {
   margin-bottom: 10px;
 }
-.ending .you-header {
+div.ending .you-header {
   text-align: center;
   font-size: 1.3rem;
   margin-bottom: 10px;
 }
-.ending .stats-header {
+div.ending .stats-header {
   border-bottom: 1px solid;
   margin-bottom: 4px;
   text-shadow: 1px 1px black, -1px -1px black;
@@ -57,7 +57,7 @@
   letter-spacing: 0;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
-.ending .stats-header.round-complete {
+div.ending .stats-header.round-complete {
   text-align: center;
 }
 @keyframes _31D4D4 {
@@ -74,10 +74,10 @@
     border-color: #31D4D4;
   }
 }
-.ending .stats-wrap {
+div.ending .stats-wrap {
   margin-bottom: 30px;
 }
-.ending .stats-wrap .stats-row {
+div.ending .stats-wrap .stats-row {
   display: flex;
   justify-content: space-between;
 }
