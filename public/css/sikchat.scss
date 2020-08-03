@@ -644,7 +644,7 @@ h1, p {
   
             &.chosen {
                 background-color: #8effff;
-                outline: 3px solid #8effff; 
+                outline: 3px solid #8effff !important; 
             }
             
             &:hover, &:focus {
