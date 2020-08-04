@@ -10,13 +10,6 @@ const app = express()
 
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-const fs = require('fs');
-
-var dayjs = require('dayjs')
-    var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-    var advancedFormat = require('dayjs/plugin/advancedFormat')
-    dayjs.extend(isSameOrAfter)
-    dayjs.extend(advancedFormat)
 
 const cookieParser = require('cookie-parser')     
 app.use(cookieParser());
@@ -43,6 +36,15 @@ io.use(sharedsession(expressSession, {
     autoSave: true
 }))
 
+var dayjs = require('dayjs')
+    var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+    var advancedFormat = require('dayjs/plugin/advancedFormat')
+    dayjs.extend(isSameOrAfter)
+    dayjs.extend(advancedFormat)
+
+const Game = require('./game.js')
+
+
 /* ------------------- DEBUG MODES ------------------- */
 
 if(process.argv[2] == "--host" || process.argv[2] == "-h") {
@@ -52,89 +54,10 @@ if(process.argv[2] == "--host" || process.argv[2] == "-h") {
 
 /* ------------------- SETUP ------------------- */
 
-const QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
-
-// time window
-const timeConstants = {
-    // in minutes
-    WINDOW: 3,              // components in seconds must add up to this window in minutes
-
-    // in seconds
-    INTERMISSION: 10,
-    STARTING: 10,
-    STARTED: 150,
-    ENDING: 10,
-
-    // seconds given to answer a question
-    QUESTION_EASY: 10,
-    QUESTION_MEDIUM: 15,
-    QUESTION_HARD: 20,
-}
-
-const scoreConstants = {
-    "easy": 4,
-    "medium": 9,
-    "hard": 15
-}
-
-// game state
-var gameState = {
-
-    winners:[],
-
-    // live time checkpoints
-    time: {
-        intermission: null,
-        starting: null,
-        started: null,
-        ending: null,
-        next: null,
-        current: "",
-        tick: null,
-        ticks: null,
-        secondsUntilNextGame: null
-
-    },
-
-    // game loop flags
-    isPreLoad: true,            // first iteration
-    isInit: false,              // purgatory before first real window
-    isIntermission: false,      // start of time window
-    isStarting: false,          // countdown
-    isStarted: false,           // game is in session
-    isEnding: false,            // outro
-
-    // question bank
-    qBank: {
-
-        // from json
-        loaded: {
-            meta: {},
-            questions: []
-        },
-        
-        // dynamic
-        currentQuestion: {
-            question: "",
-            answer: "",
-            difficulty: ""
-        },
-        questionStack: []
-    },
-
-    // counters
-    chatCount: 0,
-    questionCount: 0,
-
-    // logging
-    logString: null,
-}
-
 rooms = {
     chosen: "lobby",   
     roomList: ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
 }
-
 var userRepo = {};             // stores user accounts, { email: user } for registered and { guid: user } for free
 
 /* ------------------- ROUTER ------------------- */
@@ -225,110 +148,19 @@ app.get('/logout', (req, res) => {
 
 /* ----------------- GAME LOOP ----------------- */
 
-checkWindowIntegrity();
-initialTimeWindow()
-    printIntermissionStartTime()
-// printTimeWindow()
 
-// time window starts at intermission
-setInterval(() => {
-    let topWindowState = gameState.time.current
-
-    // acknowledge limbo period (init) before the first game window has started
-    if(dayjs().isBefore(gameState.time.intermission) && gameState.isPreLoad) {
-
-        // flags
-        gameState.isPreLoad = false;
-        gameState.time.current = "init";
-        gameState.isInit = true;
-    }
-
-    // proceed to intermission, also window update
-    if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
-        // update window
-        if(gameState.isEnding) {
-            updateTimeWindow()
-            // printTimeWindow()
-        }
-
-        loadQuestionBank()
-        clearUserStatistics()
-    
-        //flags
-        gameState.isInit = false
-        gameState.time.tick = 0
-        gameState.time.ticks = timeConstants.INTERMISSION
-        gameState.isEnding = false
-        gameState.time.current = "intermission"
-        gameState.isIntermission = true
-    }
-
-    // proceed to starting
-    if(dayjs().isSameOrAfter(gameState.time.starting) && gameState.isIntermission) { 
-
-        // flags
-        gameState.time.tick = 0
-        gameState.time.ticks = timeConstants.STARTING
-        gameState.isIntermission = false;
-        gameState.time.current = "starting";
-        gameState.isStarting = true;
-    }
-    
-    // proceed to started
-    if(dayjs().isSameOrAfter(gameState.time.started) && gameState.isStarting) { 
-        // console.log("started");
-        
-        // flags
-        gameState.time.tick = 0
-        gameState.time.ticks = timeConstants.STARTED
-        gameState.isStarting = false;
-        gameState.time.current = "started";
-        gameState.isStarted = true;
-    }
-    
-    // detect question, then select new ones as old ones expire
-    if(gameState.qBank.questionStack.length >= 0 && gameState.isStarted) {
-        if(gameState.qBank.currentQuestion.timeLeft == 0 && gameState.qBank.questionStack.length > 0 || gameState.qBank.questionStack.length == gameState.qBank.questionStack.originalLength) 
-        {
-            loadQuestion();
-        }
-        gameState.qBank.currentQuestion.timeLeft--
-       
-        // console.log("current question timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
-    }
-
-    // proceed to ending
-    if(dayjs().isSameOrAfter(gameState.time.ending) && gameState.isStarted) { 
-    
-        // flags
-        gameState.time.tick = 0
-        gameState.time.ticks = timeConstants.ENDING
-        gameState.isStarted = false;
-        gameState.time.current = "ending";
-        gameState.isEnding = true;
-
-        calculateWinner()
-    }    
-
-    console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
-
-    gameState.time.tick++               // used to help the client know where we are in the window
-
-    gameState.time.secondsUntilNextGame = gameState.isIntermission == true
-        ? parseInt(gameState.time.started.format("X")) - parseInt(dayjs().format("X"))
-        : parseInt(gameState.time.next.add(timeConstants.INTERMISSION + timeConstants.STARTING, "s").format("X")) - parseInt(dayjs().format("X"))
-        
-    let gameStateEmit = mapGameStateForClient()
-
-    io.emit("tick", gameStateEmit)
-
-}, 1000)
-
+let slang1 = new Game("slang1", io, userRepo)
+slang1.start()
 
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', (socket) => {
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
+
+    try {
+        socket.join(socket.handshake.session.user.room)
+    }
+    catch(e) { console.log("room lookup failed, likely init")}
 
     socket.on('chat_message', (text) => {           
         
@@ -347,38 +179,20 @@ io.on('connection', (socket) => {
         }
 
         // broadcast to the room
-        io.emit('chat_message_response', chatMessage);
-        console.log(chatMessage)
-
-        // see if they've answered a question correctly
-        if(gameState.time.current == "started") {
-
-            // correct answer
-            if(chatMessage.text.indexOf(gameState.qBank.currentQuestion.answer) >= 0 && socket.handshake.session.user.lastQuestionAnswered != gameState.questionCount) {
-                
-                // update the session
-                socket.handshake.session.user.lastQuestionAnswered = gameState.questionCount
-                socket.handshake.session.user.answered++
-                socket.handshake.session.user.lifeTimeAnswered++
-                socket.handshake.session.user.points += scoreConstants[gameState.qBank.currentQuestion.difficulty]
-                socket.handshake.session.user.lifeTimePoints += scoreConstants[gameState.qBank.currentQuestion.difficulty]
-
-                // update the repo
-                let lookup = socket.handshake.session.user.isRegistered
-                    ? socket.handshake.session.user.email
-                    : socket.handshake.session.user.guid
-
-                userRepo[lookup] = socket.handshake.session.user
-
-                let successReponse = {
-                    difficulty: gameState.qBank.currentQuestion.difficulty,
-                    chatCount: gameState.chatCount,
-                    user: socket.handshake.session.user // update the client
-                }
-                
-                console.log("correct!!")
-                socket.emit("success_response", successReponse)    // { difficulty, chatCount }
-            }
+        
+        // per game behavior
+        let sendChat = true
+        switch(socket.handshake.session.user.room) {
+            case 'slang1': 
+                slang1.submitAnswer(text, socket)
+                break;
+            default:
+        }
+            
+        if(sendChat == true) {
+            console.log(chatMessage)
+            // io.to(socket.handshake.session.user.room).emit('chat_message_response', chatMessage);
+            io.emit('chat_message_response', chatMessage);
         }
 
         gameState.chatCount++

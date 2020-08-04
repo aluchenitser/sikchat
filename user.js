@@ -13,16 +13,15 @@ class User {
         this.password = password
         this.guid = Math.random()
         this.isRegistered = isRegistered
-        
-        /* items sent to client */
-
         this.username = username
 
-        // current round          
+        this.room = "lobby"
+
+
+        // questions
         this.answered = 0
         this.points = 0
         
-        // lifetime achievement
         this.lifeTimeAnswered = 0
         this.lifeTimePoints = 0
 
