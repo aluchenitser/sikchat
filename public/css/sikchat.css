@@ -497,7 +497,7 @@ body.ending .next-game-in-wrapper {
   border-bottom-color: #8effff;
   outline: none;
 }
-.side-bar .rooms-wrapper .room .room-position {
+.side-bar .rooms-wrapper .room .room-inner {
   position: relative;
   top: 3px;
 }

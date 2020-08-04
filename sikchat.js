@@ -130,7 +130,10 @@ var gameState = {
     logString: null,
 }
 
-rooms = ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
+rooms = {
+    chosen: "lobby",   
+    roomList: ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
+}
 
 var userRepo = {};             // stores user accounts, { email: user } for registered and { guid: user } for free
 

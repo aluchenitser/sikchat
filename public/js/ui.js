@@ -92,11 +92,12 @@ var gameState = {
             : false
 
         let markup = ""
-        gameState.session.rooms.forEach(room => {
-            markup += "<div class='room' tabindex='0'><div class='room-position'>" + room + "</div></div>"
+        gameState.session.rooms.roomList.forEach(room => {
+            markup += "<div class='room' tabindex='0' sik-room='" + room + "'><div class='room-inner'>" + room + "</div></div>"
         })
 
         roomsWrapperElement.innerHTML = markup
+        roomsWrapperElement.querySelector("[sik-room=" + gameState.session.rooms.chosen + "]").classList.add("chosen")
 
         console.log(gameState.session.rooms)
     }
