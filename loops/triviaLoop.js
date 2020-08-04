@@ -1,4 +1,4 @@
-exports.loopFunction = (game, options) => {              
+module.exports = (game, options) => {              
     return setInterval(() => {
         let topWindowState = this.liveTime.current
     
