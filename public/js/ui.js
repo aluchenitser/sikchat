@@ -66,14 +66,11 @@ var gameState = {
     winners: []
 }
 
-
 // read session
 !function() {
     let debug = getCookie("sik_debug")
     let rooms = getCookie("sik_rooms")
     let data = getCookie("sik_user")
-    
-
     
     if (data == undefined || debug == undefined || rooms == undefined) {
         throw "bogus cookies: browser may have cookies disabled"
@@ -92,12 +89,12 @@ var gameState = {
             : false
 
         let markup = ""
-        gameState.session.rooms.roomList.forEach(room => {
+        gameState.session.rooms.forEach(room => {
             markup += "<div class='room' tabindex='0' sik-room='" + room + "'><div class='room-inner'>" + room + "</div></div>"
         })
 
         roomsWrapperElement.innerHTML = markup
-        roomsWrapperElement.querySelector("[sik-room=" + gameState.session.rooms.chosen + "]").classList.add("chosen")
+        roomsWrapperElement.querySelector("[sik-room=" + gameState.session.user.room + "]").classList.add("chosen")
 
         console.log(gameState.session.rooms)
     }
@@ -328,7 +325,7 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
 /* -------------------- SESSION --------------------- */
 
 var timeout_user;    
-socket.on('username_update_response', (data)=> {    // {username, foundDuplicate}
+socket.on('username_update_response', data => {    // {username, foundDuplicate}
 
     changeUsernameElement.textContent = 'checking..'
 
@@ -348,6 +345,13 @@ socket.on('username_update_response', (data)=> {    // {username, foundDuplicate
         }, 2000)
     }, 2000)
 
+})
+
+socket.on("room_change_response", new_room => {
+    console.log("room_change_response", new_room)
+
+    roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
+    document.querySelector(`[sik-room='${new_room}']`).classList.add('chosen')
 })
 
 /* ------------------- SIDE BAR --------------------- */
@@ -373,15 +377,18 @@ var registerSubmitStatusElement = document.querySelector('.register-submit-wrap 
 
 $(roomsWrapperElement).on("keydown", ".room", e => {
     if(e.key == "Enter" || e.key == "NumpadEnter" || e.key == ' ' || e.key == 'Spacebar') {
-        roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
-        e.target.classList.add('chosen')
+        socket.emit("room_change", e.target.textContent)
+
+        // roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
+        // e.target.classList.add('chosen')
     }
 })
 
 $(roomsWrapperElement).on("click", ".room", e => {
+    socket.emit("room_change", e.target.textContent)
 
-    roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
-    e.currentTarget.classList.add('chosen')
+    // roomsWrapperElement.querySelectorAll('.room').forEach(el => el.classList.remove('chosen'))
+    // e.currentTarget.classList.add('chosen')
 })
 
 

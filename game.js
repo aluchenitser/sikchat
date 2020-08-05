@@ -218,7 +218,7 @@ module.exports = class Game {
                 this.calculateWinner()
             }    
 
-            console.log(`${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
+            // console.log(`room ${this.room}: ${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
 
             gameState.time.tick++               // used to help the client know where we are in the window
 
@@ -228,8 +228,10 @@ module.exports = class Game {
                 
             let gameStateEmit = this.mapGameStateForClient()
 
-            // this.io.to(this.room).emit("tick", gameStateEmit)
-            this.io.emit("tick", gameStateEmit)
+            // console.log("this.io.to(this.room).emit('tick', gameStateEmit)")
+            this.io.to(this.room).emit("tick", gameStateEmit)
+            
+            // this.io.emit("tick", gameStateEmit)
 
         }, 1000)
     }

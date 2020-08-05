@@ -54,10 +54,8 @@ if(process.argv[2] == "--host" || process.argv[2] == "-h") {
 
 /* ------------------- SETUP ------------------- */
 
-rooms = {
-    chosen: "lobby",   
-    roomList: ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
-}
+roomList = ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
+
 var userRepo = {};             // stores user accounts, { email: user } for registered and { guid: user } for free
 var chatCount = 0
 
@@ -71,7 +69,7 @@ app.route('/')
         res.cookie("sik_debug", "false", {path: "/"});
         
         if (req.session.user && req.cookies.sik_sid) {
-            req.session.user.room = req.query.room || "lobby"
+            req.session.user.room = req.session.user.room || "lobby"
 
             console.log("-- existing user found --")
             printUser(req.session.user)
@@ -87,7 +85,7 @@ app.route('/')
         }
 
         res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
-        res.cookie("sik_rooms", JSON.stringify(rooms), {path: "/", expires: dayjs().add(7,"d").toDate()});
+        res.cookie("sik_rooms", JSON.stringify(roomList), {path: "/", expires: dayjs().add(7,"d").toDate()});
 
     })
     .post((req, res) => {
@@ -154,6 +152,12 @@ app.get('/logout', (req, res) => {
 let lobby = new Game("lobby", io, userRepo)
 lobby.start()
 
+let history = new Game("history", io, userRepo)
+history.start()
+
+// let history = new Game("history", io, userRepo)
+// history.start()
+
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', (socket) => {
@@ -162,10 +166,10 @@ io.on('connection', (socket) => {
     try {
         socket.join(socket.handshake.session.user.room)
     }
-    catch(e) { console.log("room lookup failed, likely init")}
+    catch(e) { console.log("--- room lookup failed ---")}
 
     socket.on('chat_message', (text) => {      
-        console.log(text)     
+        // console.log(text)     
         
         // chat number allows the client to decorate individual messages with visual effects
         try {
@@ -176,9 +180,9 @@ io.on('connection', (socket) => {
                 username: socket.handshake.session.user.username
             }
         } catch(e) {
-            console.log(e)
+            // console.log(e)
             console.log("--- chatMessage error, probably something to do with session & init  --- ")
-            console.log(socket.handshake.session)
+            // console.log(socket.handshake.session)
             return
         }
 
@@ -191,7 +195,11 @@ io.on('connection', (socket) => {
         switch(socket.handshake.session.user.room) {
             case 'lobby': 
                 lobby.submitAnswer(text, socket, chatCount)
-                console.log("entered room switch")
+                console.log("chat switch case: lobby")
+                break;
+            case 'history': 
+                history.submitAnswer(text, socket, chatCount)
+                console.log("chat switch case: history")
                 break;
             default:
         }
@@ -199,6 +207,27 @@ io.on('connection', (socket) => {
         chatCount++
     })
     
+    socket.on('room_change', (room_name_new) => { 
+        console.log("received room_change request:", room_name_new)
+
+        let room_name_old = socket.handshake.session.user.room
+        
+        if(roomList.indexOf(room_name_new) > -1 && room_name_new != room_name_old) {
+
+            console.log("room_change processing")
+            socket.leave(room_name_old, () => {
+                console.log("left room:", room_name_old)
+    
+                socket.join(room_name_new, () => {
+                    socket.handshake.session.user.room = room_name_new
+                    console.log("joined room:", room_name_new)
+                    socket.emit("room_change_response", room_name_new)
+                })
+            })
+        }
+        // Object.keys(socket.rooms).filter(name => name.startsWith("sik"))[0]
+    })
+
     socket.on('username_update', (username) => {         // socket.handshake.session added to the socket by socket.handshake.session
         
         let foundDuplicate = false;
