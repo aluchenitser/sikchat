@@ -84,18 +84,15 @@ module.exports = class Game {
             },
 
             // counters
-            chatCount: 0,
             questionCount: 0,
 
             // logging
             logString: null,
         }
-
-
-
     }
 
-    submitAnswer(answerText, socket) {
+    submitAnswer(answerText, socket, chatCount) {
+
         let gameState = this.gameState
 
         if(gameState.time.current == "started") {
@@ -117,7 +114,7 @@ module.exports = class Game {
 
                 let successReponse = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
-                    chatCount: gameState.chatCount,
+                    chatCount: chatCount,
                     user: socket.handshake.session.user // update the client
                 }
                 
@@ -231,7 +228,8 @@ module.exports = class Game {
                 
             let gameStateEmit = this.mapGameStateForClient()
 
-            this.io.to(this.room).emit("tick", gameStateEmit)
+            // this.io.to(this.room).emit("tick", gameStateEmit)
+            this.io.emit("tick", gameStateEmit)
 
         }, 1000)
     }
@@ -276,6 +274,7 @@ module.exports = class Game {
 
     updateTimeWindow() {
         let gameState = this.gameState
+        let timeConstants = this.timeConstants
 
         gameState.time.intermission = gameState.time.next;
     
@@ -342,7 +341,7 @@ module.exports = class Game {
     
             // --- scrambles then builds questionStack
             let timeLeft = timeConstants.STARTED  // 30
-            let shuffled = tjos/shuffle(gameState.qBank.loaded.questions)
+            let shuffled = this.shuffle(gameState.qBank.loaded.questions)
             
             var i = 0;
             while(timeLeft > 0 && i < shuffled.length) {

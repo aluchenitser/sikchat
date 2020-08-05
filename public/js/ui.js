@@ -116,6 +116,7 @@ if(gameState.session.debug == "host") {
 disableAlreadyInProgress = true           // set to true when developing
 
 socket.on('tick', server => {
+    console.log('tick!')
 
     gameState.time = server.time
     gameState.qBank = server.qBank
