@@ -152,8 +152,8 @@ app.get('/logout', (req, res) => {
 let lobby = new Game("lobby", io, userRepo)
 lobby.start()
 
-let history = new Game("history", io, userRepo)
-history.start()
+// let history = new Game("history", io, userRepo)
+// history.start()
 
 // let history = new Game("history", io, userRepo)
 // history.start()
@@ -171,7 +171,7 @@ io.on('connection', (socket) => {
     socket.on('chat_message', (text) => {      
         // console.log(text)     
         
-        // chat number allows the client to decorate individual messages with visual effects
+        // chatCount allows the client to decorate individual messages with visual effects
         try {
             var chatMessage = {
                 text: text,

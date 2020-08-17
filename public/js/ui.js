@@ -113,7 +113,7 @@ if(gameState.session.debug == "host") {
 disableAlreadyInProgress = true           // set to true when developing
 
 socket.on('tick', server => {
-    console.log('tick!')
+    // console.log('tick!')
 
     gameState.time = server.time
     gameState.qBank = server.qBank
@@ -123,8 +123,7 @@ socket.on('tick', server => {
    
     // console.log("gameState.time")
     // console.log(gameState.time)
-    // console.log("gameState.qBank")
-    // console.log(gameState.qBank)
+    console.log("timeLeft",gameState.qBank.currentQuestion.timeLeft, "timeAlloted",gameState.qBank.currentQuestion.timeAlloted)
     // console.log("tick",server.time.tick)
     // console.log("ticks",server.time.ticks)
 
@@ -187,14 +186,11 @@ socket.on('tick', server => {
                 Screen.populate("topic", gameState.qBank.loaded.meta.topic)
                 Screen.populate("question", gameState.qBank.currentQuestion.question)
                 Screen.populate("answer", gameState.qBank.currentQuestion.answer)
-                
-                Screen.populate("q", gameState.qBank.currentQuestion.q)
-                Screen.populate("of", gameState.qBank.currentQuestion.of)
     
                 progressBarElement = document.querySelector(".progress-bar")
                 startedWrapStartedElement = document.querySelector(".started-wrap .started")
                 
-                // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
+                // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAlloted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
             })
     
             // flags
@@ -218,11 +214,8 @@ socket.on('tick', server => {
             Screen.populate("question", gameState.qBank.currentQuestion.question)
             Screen.populate("answer", gameState.qBank.currentQuestion.answer)
     
-            Screen.populate("q", gameState.qBank.currentQuestion.q)
-            Screen.populate("of", gameState.qBank.currentQuestion.of)
-    
             // progress bar
-            let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAllotted - 1) * 100
+            let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAlloted - 1) * 100
     
             if(progressBarElement) {
                 progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
@@ -235,7 +228,7 @@ socket.on('tick', server => {
                 startedWrapStartedElement.classList.remove("answered")
             }
         }
-        // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAllotted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
+        // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAlloted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
 
     if(server.time.current == "ending" && (gameState.isStarted || gameState.noFlag) && gameState.alreadyInProgress == false) {
@@ -300,6 +293,7 @@ socket.on('chat_message_response', chatMessage => {       // { text, chatCount, 
     messageInputElement.value = ""
 })
 
+// answered a question correctly
 socket.on("success_response", successResponse => {     // {difficulty, chatCount, user}
     let className = successResponse.difficulty;
     gameState.session.user.answered = successResponse.user.answered
@@ -319,8 +313,8 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
         : '.open-side-bar'
     
     animateOrRepeat(document.querySelector(selector), "shine")
-
 })
+
 
 /* -------------------- SESSION --------------------- */
 

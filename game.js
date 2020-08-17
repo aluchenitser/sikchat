@@ -18,18 +18,15 @@ module.exports = class Game {
         // time window
         this.timeConstants = {
             // in minutes
-            WINDOW: 3,              // components in seconds must add up to this window in minutes
+            WINDOW: 1,              // components in seconds must add up to this window in minutes
 
             // in seconds
             INTERMISSION: 10,
             STARTING: 10,
-            STARTED: 150,
+            STARTED: 30,
             ENDING: 10,
 
-            // seconds given to answer a question
-            QUESTION_EASY: 10,
-            QUESTION_MEDIUM: 15,
-            QUESTION_HARD: 20,
+            QUESTION_TIME: 10,
         }
 
         this.scoreConstants = {
@@ -64,10 +61,8 @@ module.exports = class Game {
             isStarting: false,          // countdown
             isStarted: false,           // game is in session
             isEnding: false,            // outro
-
             // question bank
             qBank: {
-
                 // from json
                 loaded: {
                     meta: {},
@@ -120,6 +115,7 @@ module.exports = class Game {
                 
                 console.log("correct!!")
                 socket.emit("success_response", successReponse)    // { difficulty, chatCount }
+                this.loadQuestion()
             }
         }
     }
@@ -194,7 +190,7 @@ module.exports = class Game {
                 gameState.isStarted = true;
             }
             
-            // detect question, then select new ones as old ones expire
+            // detect question, then select a new one if the current one expires
             if(gameState.qBank.questionStack.length >= 0 && gameState.isStarted) {
                 if(gameState.qBank.currentQuestion.timeLeft == 0 && gameState.qBank.questionStack.length > 0 || gameState.qBank.questionStack.length == gameState.qBank.questionStack.originalLength) 
                 {
@@ -218,7 +214,7 @@ module.exports = class Game {
                 this.calculateWinner()
             }    
 
-            // console.log(`room ${this.room}: ${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
+            console.log(`room ${this.room}: ${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
 
             gameState.time.tick++               // used to help the client know where we are in the window
 
@@ -228,10 +224,7 @@ module.exports = class Game {
                 
             let gameStateEmit = this.mapGameStateForClient()
 
-            // console.log("this.io.to(this.room).emit('tick', gameStateEmit)")
             this.io.to(this.room).emit("tick", gameStateEmit)
-            
-            // this.io.emit("tick", gameStateEmit)
 
         }, 1000)
     }
@@ -325,13 +318,9 @@ module.exports = class Game {
 
     loadQuestionBank() {  // returns original number of questions before question stack 
         let gameState = this.gameState
-        let timeConstants = this.timeConstants
-        
+       
         console.log("loading question bank...")
-    
-    
-        let name = this.QUESTIONS_BANK_FILES_ARRAY[Math.floor(Math.random() * this.QUESTIONS_BANK_FILES_ARRAY.length)];
-        let path = `./questions/questions_${name}.json`;
+        let path = `./questions/questions_slang.json`;
     
         fs.readFile(path, (err, raw) => {
     
@@ -340,46 +329,8 @@ module.exports = class Game {
                 throw err;
             }
             gameState.qBank.loaded = JSON.parse(raw)
-    
-            // --- scrambles then builds questionStack
-            let timeLeft = timeConstants.STARTED  // 30
-            let shuffled = this.shuffle(gameState.qBank.loaded.questions)
-            
-            var i = 0;
-            while(timeLeft > 0 && i < shuffled.length) {
-                let questionSeconds;
-                let question = shuffled[i]
-                
-                switch(question.difficulty) {
-                    case "easy": 
-                        questionSeconds = timeConstants.QUESTION_EASY
-                        break;
-                    case "medium": 
-                        questionSeconds = timeConstants.QUESTION_MEDIUM
-                        break;
-                    case "hard": 
-                        questionSeconds = timeConstants.QUESTION_HARD
-                        break;
-                }
-    
-                i++
-                // doesn't fit
-                if(timeLeft - questionSeconds < 0) {
-                    // console.log("continuing!");
-                    continue;           // maybe the next question will be small enough to fit
-                }
-    
-                // does fit
-                timeLeft -= questionSeconds
-                question.timeAllotted = questionSeconds
-                gameState.qBank.questionStack.push(question)
-            }
-            
-            // make up the rest by adding time to the final question
-            if(timeLeft > 0) {
-                gameState.qBank.questionStack[gameState.qBank.questionStack.length - 1].timeAllotted += timeLeft
-            }
-    
+            gameState.qBank.questionStack = this.shuffle(gameState.qBank.loaded.questions)
+
             gameState.qBank.questionStack.originalLength = gameState.qBank.questionStack.length
 
             return 
@@ -392,16 +343,15 @@ module.exports = class Game {
         // load question
         
         gameState.qBank.currentQuestion = gameState.qBank.questionStack.pop()
-        gameState.qBank.currentQuestion.timeLeft = gameState.qBank.currentQuestion.timeAllotted
-        gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
+        gameState.qBank.currentQuestion.timeLeft = this.timeConstants.QUESTION_TIME
+        gameState.qBank.currentQuestion.timeAlloted = this.timeConstants.QUESTION_TIME
         
-        gameState.qBank.currentQuestion.q = gameState.qBank.questionStack.length + 1
-        gameState.qBank.currentQuestion.of = gameState.qBank.questionStack.originalLength
-      
-      //   console.log("question chosen\n", gameState.qBank.currentQuestion);
-      }
+        gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
 
-      clearUserStatistics() {
+        console.log("question chosen\n", gameState.qBank.currentQuestion);
+    }
+
+    clearUserStatistics() {
         let userRepo = this.userRepo
         let gameState = this.gameState
         
@@ -435,17 +385,24 @@ module.exports = class Game {
     // look at a questions_xyz.json file to see what the object looks like
     mapGameStateForClient() {
         let clone = JSON.parse(JSON.stringify(this.gameState))
-    
+        
         delete clone.qBank.loaded.questions
         delete clone.qBank.questionStack
-        delete clone.time.questionStack
-    
+
         delete clone.time.intermission
         delete clone.time.starting
         delete clone.time.started
         delete clone.time.ending
         // delete clone.time.next
     
+        return clone;
+    }
+
+    mapQBankForClient() {
+        let clone = JSON.parse(JSON.stringify(gameState.qBank))
+        delete clone.qBank.loaded.questions
+        delete clone.qBank.questionStack
+
         return clone;
     }
     
