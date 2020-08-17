@@ -110,11 +110,17 @@ module.exports = class Game {
                 let successReponse = {
                     difficulty: gameState.qBank.currentQuestion.difficulty,
                     chatCount: chatCount,
-                    user: socket.handshake.session.user // update the client
+                    user: socket.handshake.session.user, // update the client
+                    whoGotIt: socket.handshake.session.user.username
                 }
                 
-                console.log("correct!!")
-                socket.emit("success_response", successReponse)    // { difficulty, chatCount }
+                // send notice to the person who got it right
+                socket.emit("success_response", successReponse) 
+                
+                // send notice to everyone else
+                delete successReponse.user
+                socket.broadcast.to(this.room).emit('success_response', successReponse)
+
                 this.loadQuestion()
             }
         }

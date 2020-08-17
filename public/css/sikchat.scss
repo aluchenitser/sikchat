@@ -262,6 +262,10 @@ h1, p {
             .user-name {
                 font-size: 12px;
                 text-decoration: underline;
+
+                .user-name-wrap {
+                    position: relative;
+                }
             }
 
             .output-text {
@@ -270,12 +274,29 @@ h1, p {
 
             &.is-current-user {
                 text-align: right;
+
+                .stars {
+                    font-size: 18px;
+                    top: -13px;
+                    right: auto;
+                    left: -22px;
+
+                    i { animation: _31D4D4_color 7s infinite; }
+                }
+            }
+
+            @keyframes _31D4D4_color {
+                0% { color:  #31D4D4;  }
+                33% { color: #D4D431;   }
+                66% { color:  #d431d4; }
+                100% { color:  #31D4D4;  }
+        
             }
 
             .stars {
                 position: absolute;
-                right: -10px;
-                top: -13px;
+                right: -4px;
+                top: -6px;
 
                 i {
                     display: none;

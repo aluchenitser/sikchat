@@ -210,16 +210,42 @@ body.ending .next-game-in-wrapper {
   font-size: 12px;
   text-decoration: underline;
 }
+.chat-body #messages .message-output .user-name .user-name-wrap {
+  position: relative;
+}
 .chat-body #messages .message-output .output-text {
   font-size: 18px;
 }
 .chat-body #messages .message-output.is-current-user {
   text-align: right;
 }
+.chat-body #messages .message-output.is-current-user .stars {
+  font-size: 18px;
+  top: -13px;
+  right: auto;
+  left: -22px;
+}
+.chat-body #messages .message-output.is-current-user .stars i {
+  animation: _31D4D4_color 7s infinite;
+}
+@keyframes _31D4D4_color {
+  0% {
+    color: #31D4D4;
+  }
+  33% {
+    color: #D4D431;
+  }
+  66% {
+    color: #d431d4;
+  }
+  100% {
+    color: #31D4D4;
+  }
+}
 .chat-body #messages .message-output .stars {
   position: absolute;
-  right: -10px;
-  top: -13px;
+  right: -4px;
+  top: -6px;
 }
 .chat-body #messages .message-output .stars i {
   display: none;

@@ -288,31 +288,35 @@ socket.on('chat_message_response', chatMessage => {       // { text, chatCount, 
     console.log("gameState.session.user.guid", gameState.session.user.guid, "chatMessage.guid", chatMessage.guid)
 
     // add new message to UI
-    const markup = `<div id="chat_${chatMessage.chatCount}" class='${messageClass}'><div class='user-name'><span>${chatMessage.username}</span></div><p class='output-text'>${chatMessage.text}</p><div class="stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div></div>`
+    const markup = `<div id="chat_${chatMessage.chatCount}" class='${messageClass}'><div class='user-name'><span class="user-name-wrap">${chatMessage.username}<span class="stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></span></div><p class='output-text'><span>${chatMessage.text}</span></p></div>`
     $(markup).prependTo("#messages")
     messageInputElement.value = ""
 })
 
 // answered a question correctly
 socket.on("success_response", successResponse => {     // {difficulty, chatCount, user}
-    let className = successResponse.difficulty;
-    gameState.session.user.answered = successResponse.user.answered
-    gameState.session.user.points = successResponse.user.points
-    gameState.session.user.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
-    gameState.session.user.lifeTimePoints = successResponse.user.lifeTimePoints
 
+    // add starts to the chat message that succeeded
+    let className = successResponse.difficulty;
     document.getElementById("chat_" + successResponse.chatCount).classList.add(className)
     
     // shine effect
     animateOrRepeat(document.getElementById("logo"))
     animateOrRepeat(document.querySelector(".chat-bar"))
-    animateOrRepeat(document.querySelector(".success-overlay svg"), "success")
     
     let selector = sideBarToggle.checked 
         ? '.side-bar'
         : '.open-side-bar'
     
     animateOrRepeat(document.querySelector(selector), "shine")
+
+    if(successResponse.whoGotIt == gameState.session.user.username) {
+        gameState.session.user.answered = successResponse.user.answered
+        gameState.session.user.points = successResponse.user.points
+        gameState.session.user.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
+        gameState.session.user.lifeTimePoints = successResponse.user.lifeTimePoints
+        animateOrRepeat(document.querySelector(".success-overlay svg"), "success")
+    }
 })
 
 
