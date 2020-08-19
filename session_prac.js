@@ -43,7 +43,16 @@ app.route('/')
 
         res.sendFile(__dirname + '/session_prac.html');
 
-        req.session.user = "joe"
+        if(req.session.views) {
+            req.views++
+        }
+        else {
+            req.session.guid = Math.random()
+            req.session.views = 1
+            console.log("new session")
+        }
+
+
         // req.session.derp = "derperoo!"
         // console.log(req.session)
         // if (req.session.user && req.cookies.sik_sid) {
@@ -61,22 +70,63 @@ app.route('/')
 
 /* ------------------- SOCKETS ------------------- */
 
+let game = new Game({ io });
+let outerInterval = null
+
 io.on('connection', socket => {
-    console.log("socket connected")
-    console.log("total sockets: ", Object.keys(io.sockets.sockets).length)
+    console.log("new socket connected\ttotal sockets:", Object.keys(io.sockets.sockets).length)
+    
 
-    if(socket.handshake.session) {
-        console.log("socket session found:")
-        console.log(socket.handshake.session)
-    }
-    else {
-        console.log("no socket session found")
-    }
+    socket.on("start_game", () => {
+        start_outside()
+        game.start();
+    })
+    
+    socket.on("stop_game", () => {
+        stop_outside()
+        game.stop();
+    })
 
 
 
-    // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
+
+    socket.on("disconnect", () => {
+        console.log("socket disconnceted\ttotal sockets:", Object.keys(io.sockets.sockets).length)
+    })
 });
+
+
+
+
+/* ------------------- SESSION LOOPER ------------------- */
+
+
+
+function start_outside() {
+    let interval = 0
+
+    if(outerInterval) return;
+
+    outerInterval = setInterval(() => {
+        console.log("outside------", interval)
+        // console.log("Number of sockets:", Object.keys(io.sockets.sockets).length)
+        console.log("Session list:")
+    
+        Object.keys(io.sockets.sockets).forEach(key => {
+            let socket = io.sockets.sockets[key]
+            console.log("\t", socket.handshake.session.guid, "views:", socket.handshake.session.guid)
+        })
+        
+        interval++
+    }, 2500)
+}
+
+function stop_outside() {
+    clearInterval(outerInterval)
+}
+
+
+
 
 /* ------------------- WEB SERVER ------------------- */
 

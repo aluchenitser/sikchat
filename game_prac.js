@@ -7,8 +7,6 @@ var dayjs = require('dayjs')
     dayjs.extend(advancedFormat)
 
 
-
-
 module.exports = class Game {
     constructor({ io, room = "lobby"})
     {
@@ -18,23 +16,46 @@ module.exports = class Game {
     }
 
     start() {
+        if(this.interval) return;
+        let interval = 0
+
         this.interval = setInterval(() => {
-            
-        }, 1000)
-        this.alterSocket()
-        console.log("started!")
+            console.log("inside------", interval)
+            // console.log("Number of sockets:", Object.keys(this.io.sockets.sockets).length)
+            console.log("Session list:")
+
+            Object.keys(this.io.sockets.sockets).forEach(key => {
+                let socket = this.io.sockets.sockets[key]
+                console.log("\t", socket.handshake.session.guid, "views:", socket.handshake.session.guid)
+            })
+
+            interval++
+
+        }, 2500)
+        // this.alterSocket()
+        // console.log("started!")
     }
 
     stop() {
-
+        clearInterval(this.interval)
+        this.interval = null
     }
 
-    alterSocket() {
+    clearUsers() {
+        // let sockets = this.io.sockets.sockets
+
+        // Object.keys(sockets).forEach(key => {
+        //     let socket = sockets[key]
+        //     console.log(socket.handshake.session.user)
+        // })
+    }
+
+    showUsers() {
         let sockets = this.io.sockets.sockets
 
         Object.keys(sockets).forEach(key => {
             let socket = sockets[key]
-            console.log(socket.handshake.session)
+            console.log(socket.handshake.session.user)
         })
     }
 }    

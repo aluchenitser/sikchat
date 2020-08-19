@@ -9,10 +9,20 @@
             say something: <input type="text">
         </div>
 
+        <div>
+            <button id="start">START</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="stop">STOP</button> 
+        </div>
 
         <script>
             var socket = io() 
 
+            document.getElementById("start").addEventListener("click", e => {
+                socket.emit("start_game")
+            })
+
+            document.getElementById("stop").addEventListener("click", e => {
+                socket.emit("stop_game")
+            })
 
         </script>
     </body>
