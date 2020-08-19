@@ -220,7 +220,7 @@ module.exports = class Game {
                 this.calculateWinner()
             }    
 
-            console.log(`room ${this.room}: ${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
+            // console.log(`room ${this.room}: ${dayjs().format("h[h ]m[m ]s[s]\t")}top: ${topWindowState}\tbottom: ${gameState.time.current}`)
 
             gameState.time.tick++               // used to help the client know where we are in the window
 
@@ -358,18 +358,32 @@ module.exports = class Game {
     }
 
     clearUserStatistics() {
+        let sockets = this.io.sockets.sockets
         let userRepo = this.userRepo
         let gameState = this.gameState
-        
-        console.log("clear user statistics_______")
-    
-        for (var user in userRepo) {
-            if(userRepo.hasOwnProperty(user)) {
-                userRepo[user].answered = 0
-                userRepo[user].points = 0
+
+
+        Object.keys(sockets).forEach(key => {
+            let socket = sockets[key]
+            console.log("clearUserStatistics --- socket")
+            // console.log(socket)
+
+            let guid;
+            try {
+                guid = socket.handshake.session.user.guid
+            } catch(e) {
+                console.log("socket.handshake.session.user error")
+                console.log(socket.handshake.session.user)
             }
-        }
-    
+
+            if(socket.rooms.hasOwnProperty(this.room)) {
+                socket.handshake.session.user.answered = 0
+                socket.handshake.session.user.points = 0
+                userRepo[guid].answered = 0
+                userRepo[guid].points = 0
+            }
+        })
+   
         gameState.winners = []
     }
 
@@ -381,10 +395,6 @@ module.exports = class Game {
         }
     }
 
-    intUser(user) {
-        console.log(user.username, user.email, user.password, user.guid)
-    }
-    
     /* ------------------ UTILITY FUNCTIONS ------------------- */
     
     // snips the more repo esque properties to save bandwidth

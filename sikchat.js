@@ -63,6 +63,7 @@ var chatCount = 0
 
 app.route('/')
     .get(function(req, res) {
+        // debugger;
         console.log("get /")
 
         res.sendFile(__dirname + '/index.html');
@@ -76,7 +77,7 @@ app.route('/')
             printUserRepo()
         }
         else {
-            req.session.user = new User()                           // blank account until the user logs in or registers
+            req.session.user = new User({})                           // blank account until the user logs in or registers
             userRepo[req.session.user.guid] = req.session.user
 
             console.log("-- created blank user --")
@@ -103,7 +104,7 @@ app.route('/')
                 }
                 else {
 
-                    let user = new User(req.body.email, req.body.password, req.body.username, true)   // newly registered user has default username of "someone"
+                    let user = new User({ email: req.body.email, password: req.body.password, username: req.body.username, isRegistered: true})   // newly registered user has default username of "someone"
                     delete userRepo[req.session.user.guid]
 
                     // update session and add to user repo
@@ -160,13 +161,15 @@ lobby.start()
 
 /* ------------------- SOCKETS ------------------- */
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
 
     try {
         socket.join(socket.handshake.session.user.room)
     }
-    catch(e) { console.log("--- room lookup failed ---")}
+    catch(e) { 
+        console.log("--- room lookup failed ---")
+    }
 
     socket.on('chat_message', (text) => {      
         // console.log(text)     
@@ -180,9 +183,7 @@ io.on('connection', (socket) => {
                 username: socket.handshake.session.user.username
             }
         } catch(e) {
-            // console.log(e)
             console.log("--- chatMessage error, probably something to do with session & init  --- ")
-            // console.log(socket.handshake.session)
             return
         }
 
@@ -195,11 +196,9 @@ io.on('connection', (socket) => {
         switch(socket.handshake.session.user.room) {
             case 'lobby': 
                 lobby.submitAnswer(text, socket, chatCount)
-                console.log("chat switch case: lobby")
                 break;
             case 'history': 
                 history.submitAnswer(text, socket, chatCount)
-                console.log("chat switch case: history")
                 break;
             default:
         }
@@ -278,10 +277,10 @@ http.listen(port, function() {
 
 
 function printUserRepo() {
-    console.log("--- user repo ---")
-    for(var email in userRepo) {
-        user = userRepo[email]
-        console.log(user.username, user.email, user.password, user.guid)
+    console.log("key\t\tusername\t\temail\t\tpassword\t\tguid")
+    for(var key in userRepo) {
+        user = userRepo[key]
+        console.log(key, user.username, user.email, user.password, user.guid)
     }
 }
 

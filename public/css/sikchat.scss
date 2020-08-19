@@ -278,8 +278,8 @@ h1, p {
                 .stars {
                     font-size: 18px;
                     top: -13px;
-                    right: auto;
-                    left: -22px;
+                    right: -12px;
+                    left: auto;
 
                     i { animation: _31D4D4_color 7s infinite; }
                 }
@@ -290,7 +290,6 @@ h1, p {
                 33% { color: #D4D431;   }
                 66% { color:  #d431d4; }
                 100% { color:  #31D4D4;  }
-        
             }
 
             .stars {
@@ -300,7 +299,7 @@ h1, p {
 
                 i {
                     display: none;
-                    color: $triad-blue;
+                    color: white;
                     text-shadow: 1px 1px black;
                 }
             }

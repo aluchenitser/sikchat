@@ -1,7 +1,7 @@
 var dayjs = require('dayjs')
 
 class User {
-    constructor(email = null, password = null, username = "someone", isRegistered = false) {
+    constructor({email = null, password = null, username = "someone", isRegistered = false, room = "lobby"}) {
 
         // setup
         let date = new dayjs()
@@ -15,7 +15,7 @@ class User {
         this.isRegistered = isRegistered
         this.username = username
 
-        this.room = "lobby"
+        this.room = room
 
 
         // questions

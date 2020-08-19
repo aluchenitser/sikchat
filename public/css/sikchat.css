@@ -222,8 +222,8 @@ body.ending .next-game-in-wrapper {
 .chat-body #messages .message-output.is-current-user .stars {
   font-size: 18px;
   top: -13px;
-  right: auto;
-  left: -22px;
+  right: -12px;
+  left: auto;
 }
 .chat-body #messages .message-output.is-current-user .stars i {
   animation: _31D4D4_color 7s infinite;
@@ -249,7 +249,7 @@ body.ending .next-game-in-wrapper {
 }
 .chat-body #messages .message-output .stars i {
   display: none;
-  color: #31D4D4;
+  color: white;
   text-shadow: 1px 1px black;
 }
 .chat-body #messages .message-output.easy .stars i:nth-child(1), .chat-body #messages .message-output.medium .stars i:nth-child(1), .chat-body #messages .message-output.hard .stars i:nth-child(1) {

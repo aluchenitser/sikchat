@@ -106,6 +106,8 @@ var gameState = {
 // server also has "init"
 var socket = io() 
 
+// socket.on("reload_page", location.reload())
+
 if(gameState.session.debug == "host") {
     socket.close()
 }
@@ -120,25 +122,23 @@ socket.on('tick', server => {
     gameState.winners = server.winners
 
     Screen.nextGameIn(server.time.secondsUntilNextGame)
-   
-    // console.log("gameState.time")
-    // console.log(gameState.time)
     console.log("timeLeft",gameState.qBank.currentQuestion.timeLeft, "timeAlloted",gameState.qBank.currentQuestion.timeAlloted)
-    // console.log("tick",server.time.tick)
-    // console.log("ticks",server.time.ticks)
-
-    // console.log("secondsUntilNextGame", server.time.secondsUntilNextGame)
 
     setBodyClass(server.time.current)
 
     if(server.time.current == "intermission" && (gameState.isEnding || gameState.noFlag)) {
         console.log("intermission")
 
+        // clear stats
+        // gameState.session.user.answered = 0
+        // gameState.session.user.points = 0
+
         if(disableAlreadyInProgress == false) {
             alreadyInProgressBallsAnimation(false)
         }
 
         Screen.load("intermission")
+        
 
         // flags
         gameState.noFlag = false;
