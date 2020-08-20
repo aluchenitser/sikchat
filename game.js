@@ -13,6 +13,9 @@ module.exports = class Game {
         this.io = io
         this.userRepo = userRepo
 
+        this.loopNum = 0
+        this.clearNum = 0
+
         this.QUESTIONS_BANK_FILES_ARRAY = ["slang", "slang", "slang"];                        // each entry matches the unique portion of a file name in /questions
 
         // time window
@@ -232,6 +235,7 @@ module.exports = class Game {
 
             this.io.to(this.room).emit("tick", gameStateEmit)
 
+            this.loopNum++
         }, 1000)
     }
 
@@ -325,7 +329,7 @@ module.exports = class Game {
     loadQuestionBank() {  // returns original number of questions before question stack 
         let gameState = this.gameState
        
-        console.log("loading question bank...")
+        // console.log("loading question bank...")
         let path = `./questions/questions_slang.json`;
     
         fs.readFile(path, (err, raw) => {
@@ -354,7 +358,7 @@ module.exports = class Game {
         
         gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
 
-        console.log("question chosen\n", gameState.qBank.currentQuestion);
+        // console.log("question chosen\n", gameState.qBank.currentQuestion);
     }
 
     clearUserStatistics() {
@@ -362,17 +366,43 @@ module.exports = class Game {
         let userRepo = this.userRepo
         let gameState = this.gameState
 
+        console.log("clearUserStatistics")
+        console.log("\tsockets.length:", Object.keys(sockets).length)
+        console.log("\tloopNum:", this.loopNum)
+        console.log("\tclearNum:", this.clearNum++)
 
+        
+        let i = 0
         Object.keys(sockets).forEach(key => {
             let socket = sockets[key]
-            console.log("clearUserStatistics --- socket")
-            // console.log(socket)
+            
+            console.log("\n\tsocket #", i)
+            if(socket.handshake.session) {
+                console.log("\t\thas session")
+            }
+            else {
+                console.log("\t\tdoes not have session")
+            }
+            if(socket.handshake.session && socket.handshake.session.user) {
+                console.log("\t\thas user")
+            }
+            else {
+                console.log("\t\tdoes not have user")
+            }
+    
+            if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.guid) {
+                console.log("\t\thas guid: ", socket.handshake.session.user.guid)
+            }
+            else {
+                console.log("\t\tdoes not have guid")
+            }
+
 
             let guid;
             try {
                 guid = socket.handshake.session.user.guid
             } catch(e) {
-                console.log("socket.handshake.session.user error")
+                console.log("clearUserStatistics socket.handshake.session.user error")
                 console.log(socket.handshake.session.user)
             }
 

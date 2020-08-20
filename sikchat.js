@@ -72,7 +72,7 @@ app.route('/')
         if (req.session.user && req.cookies.sik_sid) {
             req.session.user.room = req.session.user.room || "lobby"
 
-            console.log("-- existing user found --")
+            console.log("existing user found")
             printUser(req.session.user)
             printUserRepo()
         }
@@ -80,7 +80,7 @@ app.route('/')
             req.session.user = new User({})                           // blank account until the user logs in or registers
             userRepo[req.session.user.guid] = req.session.user
 
-            console.log("-- created blank user --")
+            console.log("created blank user")
             printUser(req.session.user)
             printUserRepo()
         }
@@ -164,11 +164,27 @@ lobby.start()
 io.on('connection', socket => {
     // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
 
-    try {
+    console.log("socket connection")
+
+    if(socket.handshake.session) {
+        console.log("\thas session")
+    }
+    else {
+        console.log("\tdoes not have session")
+    }
+    if(socket.handshake.session && socket.handshake.session.user) {
+        console.log("\thas user")
+    }
+    else {
+        console.log("\tdoes not have user")
+    }
+    if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.room) {
+        console.log("\thas room:", socket.handshake.session.user.room)
         socket.join(socket.handshake.session.user.room)
     }
-    catch(e) { 
-        console.log("--- room lookup failed ---")
+    else {
+        console.log("\tdoes not have room\n\treload_page")
+        socket.emit("reload_page")
     }
 
     socket.on('chat_message', (text) => {      
@@ -188,7 +204,7 @@ io.on('connection', socket => {
         }
 
         // broadcast to the room
-        console.log(chatMessage.username, chatMessage.text)
+        console.log("chat:", chatMessage.username, chatMessage.text)
         io.to(socket.handshake.session.user.room).emit('chat_message_response', chatMessage);
         // io.emit('chat_message_response', chatMessage);
         
@@ -277,15 +293,16 @@ http.listen(port, function() {
 
 
 function printUserRepo() {
-    console.log("key\t\tusername\t\temail\t\tpassword\t\tguid")
+    console.log("print user repo")
+    console.log("\tkey\t\tusername\t\temail\t\tpassword\t\tguid")
     for(var key in userRepo) {
         user = userRepo[key]
-        console.log(key, user.username, user.email, user.password, user.guid)
+        console.log("\t", key, user.username, user.email, user.password, user.guid)
     }
 }
 
 function printUser(user) {
-    console.log(user.username, user.email, user.password, user.guid)
+    console.log("\t", user.username, user.email, user.password, user.guid)
 }
 
 /* ------------------ UTILITY FUNCTIONS ------------------- */

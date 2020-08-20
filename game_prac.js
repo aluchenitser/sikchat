@@ -19,13 +19,15 @@ module.exports = class Game {
         if(this.interval) return;
         let interval = 0
 
+        let sockets = this.io.sockets.sockets
+
         this.interval = setInterval(() => {
             console.log("inside------", interval)
-            // console.log("Number of sockets:", Object.keys(this.io.sockets.sockets).length)
+            // console.log("Number of sockets:", Object.keys(sockets).length)
             console.log("Session list:")
 
-            Object.keys(this.io.sockets.sockets).forEach(key => {
-                let socket = this.io.sockets.sockets[key]
+            Object.keys(sockets).forEach(key => {
+                let socket = sockets[key]
                 console.log("\t", socket.handshake.session.guid, "views:", socket.handshake.session.guid)
             })
 
@@ -40,22 +42,5 @@ module.exports = class Game {
         clearInterval(this.interval)
         this.interval = null
     }
-
-    clearUsers() {
-        // let sockets = this.io.sockets.sockets
-
-        // Object.keys(sockets).forEach(key => {
-        //     let socket = sockets[key]
-        //     console.log(socket.handshake.session.user)
-        // })
-    }
-
-    showUsers() {
-        let sockets = this.io.sockets.sockets
-
-        Object.keys(sockets).forEach(key => {
-            let socket = sockets[key]
-            console.log(socket.handshake.session.user)
-        })
-    }
+  
 }    

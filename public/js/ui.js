@@ -106,7 +106,10 @@ var gameState = {
 // server also has "init"
 var socket = io() 
 
-// socket.on("reload_page", location.reload())
+socket.on("reload_page", () => {
+    console.log("received reload_page")
+    location.reload()
+})
 
 if(gameState.session.debug == "host") {
     socket.close()
