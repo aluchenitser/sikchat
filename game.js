@@ -145,6 +145,7 @@ module.exports = class Game {
 
         // time window starts at intermission
         this.intervalId = setInterval(() => {
+
             let topWindowState = gameState.time.current
 
             // acknowledge limbo period (init) before the first game window has started
@@ -158,6 +159,8 @@ module.exports = class Game {
 
             // proceed to intermission, also window update
             if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
+                this.printUserRepo("user repo at intermission")
+                
                 // update window
                 if(gameState.isEnding) {
                     this.updateTimeWindow()
@@ -295,7 +298,7 @@ module.exports = class Game {
 
         if(gameState.winners.length === 0) {
             let highest = 0
-            for(user in userRepo) {
+            for(let user in userRepo) {
                 if(userRepo[user].points > highest) {
                     highest = userRepo[user].points
                     gameState.winners = [userRepo[user].username]
@@ -415,14 +418,34 @@ module.exports = class Game {
         })
    
         gameState.winners = []
+
+        this.printUserRepo("userRepo at end of clearStatistics")
+        // this.printSocketUsers()
     }
 
-    printUserRepo() {
-        console.log("--- user repo ---")
-        for(var email in userRepo) {
-            user = userRepo[email]
-            console.log(user.username, user.email, user.password, user.guid)
+    printUserRepo(msg) {
+        console.log(msg)
+        console.log("\tkey, username, email, password, guid, answered, points")
+        for(var key in this.userRepo) {
+            this.printUser(this.userRepo[key])
         }
+    }
+
+    printSocketUsers(msg) {
+        let sockets = this.io.sockets.sockets
+
+        
+        console.log(msg)
+        console.log("\tkey, username, email, password, guid, answered, points")
+
+
+        for(var key in this.userRepo) {
+            this.printUser(this.userRepo[key])
+        }
+    }
+
+    printUser(user) {
+        console.log("\t", user.username, user.email, user.password, user.guid, user.answered, user.points)
     }
 
     /* ------------------ UTILITY FUNCTIONS ------------------- */

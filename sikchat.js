@@ -6,6 +6,12 @@
 const express = require('express')
 
 var session = require('express-session');
+var MemoryStore = require('memorystore')(session)
+var sessionStore = new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  })
+
+
 const app = express()
 
 const http = require('http').Server(app)
@@ -22,6 +28,7 @@ sharedsession = require("express-socket.io-session");
 
 var expressSession = session({
     secret: "dajfklhsl&&3fhalskfasfd",
+    store: sessionStore,
     key: "sik_sid",
     resave: false,      
     saveUninitialized: false,
@@ -74,7 +81,8 @@ app.route('/')
 
             console.log("existing user found")
             printUser(req.session.user)
-            printUserRepo()
+            printUserRepo("user repo at get/")
+            printSessionUsers("sessions at get /")
         }
         else {
             req.session.user = new User({})                           // blank account until the user logs in or registers
@@ -82,7 +90,9 @@ app.route('/')
 
             console.log("created blank user")
             printUser(req.session.user)
-            printUserRepo()
+            printUserRepo("user repo at get/")
+            printSessionUsers("sessions at get /")
+
         }
 
         res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
@@ -112,27 +122,27 @@ app.route('/')
                     userRepo[req.body.email] = user
 
                     console.log("registration success")
-                    printUserRepo()
+                    printUserRepo("user repo at post/")
 
                     
                     res.send({ username: user.username, msg: "registration success" })
-                    console.log(" -- registration success --")
+                    console.log("registration success")
                 }
             }
 
             // existing login (session likely expired)
             else {
-                console.log(" -- login attempt -- ")
+                console.log("login attempt")
                 if(userRepo.hasOwnProperty(req.body.email) && userRepo[req.body.email].password == req.body.password) {
                     let user = userRepo[req.body.email]
                     req.session.user = user
                     res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
                     res.send({ username: user.username, msg: "success" })
-                    console.log(" -- login success -- ")
+                    console.log("login success")
                 }
                 else {
                     res.send("failed login")
-                    console.log(" -- login failed -- ")
+                    console.log("login failed")
                 }
             }
         }
@@ -199,7 +209,7 @@ io.on('connection', socket => {
                 username: socket.handshake.session.user.username
             }
         } catch(e) {
-            console.log("--- chatMessage error, probably something to do with session & init  --- ")
+            console.log("chatMessage error")
             return
         }
 
@@ -292,17 +302,28 @@ http.listen(port, function() {
 /* ------------------ USER FUNCTIONS ------------------- */
 
 
-function printUserRepo() {
-    console.log("print user repo")
-    console.log("\tkey\t\tusername\t\temail\t\tpassword\t\tguid")
+function printUserRepo(msg) {
+    console.log(msg)
+    console.log("\tkey, username, email, password, guid, answered, points")
     for(var key in userRepo) {
-        user = userRepo[key]
-        console.log("\t", key, user.username, user.email, user.password, user.guid)
+        printUser(userRepo[key])
     }
 }
 
 function printUser(user) {
-    console.log("\t", user.username, user.email, user.password, user.guid)
+    console.log("\t", user.username, user.email, user.password, user.guid, user.answered, user.points)
+}
+
+function printSessionUsers(msg) {
+    console.log(msg)
+    // console.log("\tkey, username, email, password, guid, answered, points")
+
+    sessionStore.all(function(err, sessions) {
+
+        console.log("\tnumber of sessions:", Object.keys(sessions).length)
+        // if err handle err
+        // iterate over sessions array
+    });
 }
 
 /* ------------------ UTILITY FUNCTIONS ------------------- */
