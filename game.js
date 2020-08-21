@@ -1,4 +1,5 @@
 const fs = require('fs');
+const {printUserRepo, printUser, printSessions, printSocketSessions} = require('./utils.js')
 
 var dayjs = require('dayjs')
     var isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
@@ -7,7 +8,7 @@ var dayjs = require('dayjs')
     dayjs.extend(advancedFormat)
 
 module.exports = class Game {
-    constructor(room, io, userRepo)
+    constructor({room, io, userRepo, sessionStore})
     {
         this.room = room
         this.io = io
@@ -102,6 +103,7 @@ module.exports = class Game {
                 socket.handshake.session.user.lifeTimeAnswered++
                 socket.handshake.session.user.points += this.scoreConstants[gameState.qBank.currentQuestion.difficulty]
                 socket.handshake.session.user.lifeTimePoints += this.scoreConstants[gameState.qBank.currentQuestion.difficulty]
+                socket.handshake.session.save()
 
                 // update the repo
                 let lookup = socket.handshake.session.user.isRegistered
@@ -370,9 +372,9 @@ module.exports = class Game {
         let gameState = this.gameState
 
         console.log("clearUserStatistics")
-        console.log("\tsockets.length:", Object.keys(sockets).length)
-        console.log("\tloopNum:", this.loopNum)
-        console.log("\tclearNum:", this.clearNum++)
+        console.log("\tsockets:", Object.keys(sockets).length)
+        // console.log("\tloopNum:", this.loopNum)
+        // console.log("\tclearNum:", this.clearNum++)
 
         
         let i = 0
@@ -419,33 +421,9 @@ module.exports = class Game {
    
         gameState.winners = []
 
-        this.printUserRepo("userRepo at end of clearStatistics")
-        // this.printSocketUsers()
-    }
-
-    printUserRepo(msg) {
-        console.log(msg)
-        console.log("\tkey, username, email, password, guid, answered, points")
-        for(var key in this.userRepo) {
-            this.printUser(this.userRepo[key])
-        }
-    }
-
-    printSocketUsers(msg) {
-        let sockets = this.io.sockets.sockets
-
-        
-        console.log(msg)
-        console.log("\tkey, username, email, password, guid, answered, points")
-
-
-        for(var key in this.userRepo) {
-            this.printUser(this.userRepo[key])
-        }
-    }
-
-    printUser(user) {
-        console.log("\t", user.username, user.email, user.password, user.guid, user.answered, user.points)
+        printUserRepo(this.userRepo, "userRepo at end of clearUserStatistics")
+        printSocketSessions(io, "socket sessions at end of clearUserStatistics")
+        printSessions(sessionStore, "sessions at end of clearUserStatistics")
     }
 
     /* ------------------ UTILITY FUNCTIONS ------------------- */

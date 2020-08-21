@@ -47,25 +47,21 @@ const Game = require('./game_prac.js')
 
 app.route('/')
     .get((req, res) => {
-
+        console.log('get /')
         res.sendFile(__dirname + '/session_prac.html');
 
-        // if(req.session.views) {
-        //     req.views++
-        // }
-        // else {
-        //     req.session.guid = Math.random()
-        //     req.session.views = 1
-        //     console.log("new session")
-        // }
-
-
-        if(req.session.data) {
-            console.log("req.session.data:", req.session.data)
+        if(req.session.views) {
+            req.views++
+        }
+        else {
+            req.session.guid = Math.random()
+            req.session.views = 1
+            console.log("new session")
         }
 
-        // req.session.save(printSessionStore)
-        printSessionStore()
+        // req.session.save(() => {
+            printSessions("print sessions (get /)")
+        // })
 
 
         // req.session.derp = "derperoo!"
@@ -90,7 +86,7 @@ let outerInterval = null
 
 io.on('connection', socket => {
     console.log("new socket connected")
-    printSockets()
+    printSocketSessions("print sessions (socket)")
 
     // socket.on("start_game", () => {
     //     start_outside()
@@ -105,13 +101,61 @@ io.on('connection', socket => {
     socket.on("data", dataFromClient => {
         console.log(`socket.handshake.session.data = ${dataFromClient}`)
         socket.handshake.session.data = dataFromClient
-        printSessionStore()
+        // socket.handshake.session.save()
+    })
+
+    socket.on("retrieve", () => {
+        console.log("--retrieving:", socket.handshake.session.data)
+        socket.emit("retrieve_response", socket.handshake.session.data)
     })
 
 
     socket.on("disconnect", () => {
-        console.log("socket disconnceted\ttotal sockets:", Object.keys(io.sockets.sockets).length)
+        console.log("socket disconnceted\n\tsockets:", Object.keys(io.sockets.sockets).length)
     })
+});
+
+
+
+
+function printSessions(msg) {
+    console.log(msg)
+    sessionStore.all(function(err, sessions) {
+        console.log("\ttotal sessions:", Object.keys(sessions).length)
+        Object.keys(sessions).forEach(sess => {
+            console.log("\t\t", "data", sessions[sess].data, "guid", sessions[sess].guid, "views", sessions[sess].views)
+        })
+        
+    });
+}
+
+function printSocketSessions(msg) {
+    console.log(msg)
+    console.log(`\tsockets: ${Object.keys(io.sockets.sockets).length}\n\tdata, guid, views`)
+
+    Object.keys(io.sockets.sockets).forEach(key => {
+        let socket = io.sockets.sockets[key]
+        if(socket.handshake.session) {
+            console.log("\t\t", "data", socket.handshake.session.data, "guid", socket.handshake.session.guid, "views", socket.handshake.session.views)
+        }
+        else {
+            console.log("\t\t", "--empty--")
+        }
+    })
+}
+
+
+
+/* ------------------- WEB SERVER ------------------- */
+
+// command line port selection or default to 3000
+let port = parseInt(process.argv[2]);
+port = port && port >= 1023 && port <= 65535
+    ? port
+    : 3001;
+
+http.listen(port, function() {
+    console.log(`listening on *:${port}\n`);
 });
 
 
@@ -143,39 +187,3 @@ io.on('connection', socket => {
 // function stop_outside() {
 //     clearInterval(outerInterval)
 // }
-
-function printSessionStore() {
-    console.log("print session store")
-    sessionStore.all(function(err, sessions) {
-        console.log("\ttotal sessions:", Object.keys(sessions).length)
-    });
-}
-
-function printSockets() {
-    console.log("print sockets data")
-    console.log("\ttotal sockets:", Object.keys(io.sockets.sockets).length)
-
-    Object.keys(io.sockets.sockets).forEach(key => {
-        let socket = io.sockets.sockets[key]
-        if(socket.handshake.session.data) {
-            console.log("\t", "data", socket.handshake.session.data)
-        }
-        else {
-            console.log("\t", "--empty--")
-        }
-    })
-}
-
-
-
-/* ------------------- WEB SERVER ------------------- */
-
-// command line port selection or default to 3000
-let port = parseInt(process.argv[2]);
-port = port && port >= 1023 && port <= 65535
-    ? port
-    : 3001;
-
-http.listen(port, function() {
-    console.log(`listening on *:${port}\n`);
-});

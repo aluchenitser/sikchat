@@ -6,23 +6,36 @@
     <body>
         <h1>sockets & sessions</h1>
         
-        send data to socket: <input id="data" type="text"> <button id="send-data-to-socket">send</button>
+        <input id="data" type="text"> <button id="send-data-to-socket">send</button>
         <br /><br />
-        <button id="start">START</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="stop">STOP</button> 
+        <!-- <button id="start">START</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="stop">STOP</button> <br /><br /> -->
+
+        <button id="retrieve">retreive</button><br /><br />
+        <div>Retrieved: <span id="retrieved-data"></span></div>
+
+
 
         <script>
             var socket = io() 
 
-            document.getElementById("start").addEventListener("click", e => {
-                socket.emit("start_game")
-            })
+            // document.getElementById("start").addEventListener("click", e => {
+            //     socket.emit("start_game")
+            // })
 
-            document.getElementById("stop").addEventListener("click", e => {
-                socket.emit("stop_game")
-            })
+            // document.getElementById("stop").addEventListener("click", e => {
+            //     socket.emit("stop_game")
+            // })
 
             document.getElementById("send-data-to-socket").addEventListener("click", e => {
                 socket.emit("data", document.getElementById("data").value)
+            })
+
+            document.getElementById("retrieve").addEventListener("click", e => {
+                socket.emit("retrieve")
+            })
+            
+            socket.on("retrieve_response", data => {
+                document.getElementById("retrieved-data").textContent = data
             })
 
         </script>

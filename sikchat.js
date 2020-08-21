@@ -21,6 +21,8 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser());
 
 const User = require('./user.js')
+const {printUserRepo, printUser, printSessions, printSocketSessions} = require('./utils.js')
+
 app.use(express.static(__dirname + "/public/"));
 app.use(express.json());
 
@@ -71,7 +73,7 @@ var chatCount = 0
 app.route('/')
     .get(function(req, res) {
         // debugger;
-        console.log("get /")
+        console.log("------ START GET / ------")
 
         res.sendFile(__dirname + '/index.html');
         res.cookie("sik_debug", "false", {path: "/"});
@@ -80,21 +82,21 @@ app.route('/')
             req.session.user.room = req.session.user.room || "lobby"
 
             console.log("existing user found")
-            printUser(req.session.user)
-            printUserRepo("user repo at get/")
-            printSessionUsers("sessions at get /")
         }
         else {
             req.session.user = new User({})                           // blank account until the user logs in or registers
             userRepo[req.session.user.guid] = req.session.user
-
             console.log("created blank user")
-            printUser(req.session.user)
-            printUserRepo("user repo at get/")
-            printSessionUsers("sessions at get /")
-
         }
 
+        printUser(req.session.user)
+        printUserRepo(userRepo, "user repo at get/")
+        printSessions(sessionStore, "sessions at get /")
+        printSocketSessions(io, "get / socket sessions")
+
+        console.log("------ END GET / ------")
+
+        // update client
         res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
         res.cookie("sik_rooms", JSON.stringify(roomList), {path: "/", expires: dayjs().add(7,"d").toDate()});
 
@@ -122,7 +124,7 @@ app.route('/')
                     userRepo[req.body.email] = user
 
                     console.log("registration success")
-                    printUserRepo("user repo at post/")
+                    printUserRepo(userRepo, "user repo at post/")
 
                     
                     res.send({ username: user.username, msg: "registration success" })
@@ -160,7 +162,7 @@ app.get('/logout', (req, res) => {
 /* ----------------- GAME LOOPS ----------------- */
 
 
-let lobby = new Game("lobby", io, userRepo)
+let lobby = new Game({room: "lobby", io, userRepo, sessionStore})
 lobby.start()
 
 // let history = new Game("history", io, userRepo)
@@ -214,7 +216,7 @@ io.on('connection', socket => {
         }
 
         // broadcast to the room
-        console.log("chat:", chatMessage.username, chatMessage.text)
+        // console.log("chat:", chatMessage.username, chatMessage.text)
         io.to(socket.handshake.session.user.room).emit('chat_message_response', chatMessage);
         // io.emit('chat_message_response', chatMessage);
         
@@ -302,29 +304,30 @@ http.listen(port, function() {
 /* ------------------ USER FUNCTIONS ------------------- */
 
 
-function printUserRepo(msg) {
-    console.log(msg)
-    console.log("\tkey, username, email, password, guid, answered, points")
-    for(var key in userRepo) {
-        printUser(userRepo[key])
-    }
-}
+// function printUserRepo(msg) {
+//     console.log(msg)
+//     console.log("\tkey, username, email, password, guid, answered, points")
+//     for(var key in userRepo) {
+//         printUser(userRepo[key])
+//     }
+// }
 
-function printUser(user) {
-    console.log("\t", user.username, user.email, user.password, user.guid, user.answered, user.points)
-}
+// function printUser(user) {
+//     console.log("\t", user.username, user.email, user.password, user.guid, user.answered, user.points)
+// }
 
-function printSessionUsers(msg) {
-    console.log(msg)
-    // console.log("\tkey, username, email, password, guid, answered, points")
-
-    sessionStore.all(function(err, sessions) {
-
-        console.log("\tnumber of sessions:", Object.keys(sessions).length)
-        // if err handle err
-        // iterate over sessions array
-    });
-}
+// function printSessions(msg) {
+//     console.log(msg)
+//     sessionStore.all(function(err, sessions) {
+//         console.log("\ttotal sessions:", Object.keys(sessions).length)
+//         Object.keys(sessions).forEach(sess => {
+//             if(sessions[sess].user) {
+//                 let user = sessions[sess].user
+//                 console.log("\t\t", "guid", user.guid, "answered", user.answered, "points", user.points)
+//             }
+//         })
+//     });
+// }
 
 /* ------------------ UTILITY FUNCTIONS ------------------- */
 
