@@ -3,6 +3,12 @@
 const express = require('express')
 
 var session = require('express-session');
+
+var MemoryStore = require('memorystore')(session)
+var sessionStore = new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+})
+
 const app = express()
 
 const http = require('http').Server(app)
@@ -12,15 +18,16 @@ const io = require('socket.io')(http)
 // app.use(cookieParser());
 
 app.use(express.static(__dirname + "/public/"));
-app.use(express.json());
+// app.use(express.json());
 
 sharedsession = require("express-socket.io-session");
 
 var expressSession = session({
     secret: "dork breath",
     key: "sesh_sid",
-    resave: false,      
+    resave: true,      
     saveUninitialized: false,
+    store: sessionStore
     // cookie: {
     //     expires: 600000
     // }
@@ -43,14 +50,22 @@ app.route('/')
 
         res.sendFile(__dirname + '/session_prac.html');
 
-        if(req.session.views) {
-            req.views++
+        // if(req.session.views) {
+        //     req.views++
+        // }
+        // else {
+        //     req.session.guid = Math.random()
+        //     req.session.views = 1
+        //     console.log("new session")
+        // }
+
+
+        if(req.session.data) {
+            console.log("req.session.data:", req.session.data)
         }
-        else {
-            req.session.guid = Math.random()
-            req.session.views = 1
-            console.log("new session")
-        }
+
+        // req.session.save(printSessionStore)
+        printSessionStore()
 
 
         // req.session.derp = "derperoo!"
@@ -74,20 +89,24 @@ let game = new Game({ io });
 let outerInterval = null
 
 io.on('connection', socket => {
-    console.log("new socket connected\ttotal sockets:", Object.keys(io.sockets.sockets).length)
+    console.log("new socket connected")
+    printSockets()
+
+    // socket.on("start_game", () => {
+    //     start_outside()
+    //     game.start();
+    // })
     
+    // socket.on("stop_game", () => {
+    //     stop_outside()
+    //     game.stop();
+    // })
 
-    socket.on("start_game", () => {
-        start_outside()
-        game.start();
+    socket.on("data", dataFromClient => {
+        console.log(`socket.handshake.session.data = ${dataFromClient}`)
+        socket.handshake.session.data = dataFromClient
+        printSessionStore()
     })
-    
-    socket.on("stop_game", () => {
-        stop_outside()
-        game.stop();
-    })
-
-
 
 
     socket.on("disconnect", () => {
@@ -102,29 +121,50 @@ io.on('connection', socket => {
 
 
 
-function start_outside() {
-    let interval = 0
+// function start_outside() {
+//     let interval = 0
 
-    if(outerInterval) return;
+//     if(outerInterval) return;
 
-    outerInterval = setInterval(() => {
-        console.log("outside------", interval)
-        // console.log("Number of sockets:", Object.keys(io.sockets.sockets).length)
-        console.log("Session list:")
+//     outerInterval = setInterval(() => {
+//         console.log("outside------", interval)
+//         // console.log("Number of sockets:", Object.keys(io.sockets.sockets).length)
+//         console.log("Session list:")
     
-        Object.keys(io.sockets.sockets).forEach(key => {
-            let socket = io.sockets.sockets[key]
-            console.log("\t", socket.handshake.session.guid, "views:", socket.handshake.session.guid)
-        })
+//         Object.keys(io.sockets.sockets).forEach(key => {
+//             let socket = io.sockets.sockets[key]
+//             console.log("\t", socket.handshake.session.guid, "views:", socket.handshake.session.guid)
+//         })
         
-        interval++
-    }, 2500)
+//         interval++
+//     }, 2500)
+// }
+
+// function stop_outside() {
+//     clearInterval(outerInterval)
+// }
+
+function printSessionStore() {
+    console.log("print session store")
+    sessionStore.all(function(err, sessions) {
+        console.log("\ttotal sessions:", Object.keys(sessions).length)
+    });
 }
 
-function stop_outside() {
-    clearInterval(outerInterval)
-}
+function printSockets() {
+    console.log("print sockets data")
+    console.log("\ttotal sockets:", Object.keys(io.sockets.sockets).length)
 
+    Object.keys(io.sockets.sockets).forEach(key => {
+        let socket = io.sockets.sockets[key]
+        if(socket.handshake.session.data) {
+            console.log("\t", "data", socket.handshake.session.data)
+        }
+        else {
+            console.log("\t", "--empty--")
+        }
+    })
+}
 
 
 
@@ -137,5 +177,5 @@ port = port && port >= 1023 && port <= 65535
     : 3001;
 
 http.listen(port, function() {
-    console.log(`listening on *:${port}`);
+    console.log(`listening on *:${port}\n`);
 });

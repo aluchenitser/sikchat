@@ -5,13 +5,10 @@
     </head>
     <body>
         <h1>sockets & sessions</h1>
-        <div>
-            say something: <input type="text">
-        </div>
-
-        <div>
-            <button id="start">START</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="stop">STOP</button> 
-        </div>
+        
+        send data to socket: <input id="data" type="text"> <button id="send-data-to-socket">send</button>
+        <br /><br />
+        <button id="start">START</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="stop">STOP</button> 
 
         <script>
             var socket = io() 
@@ -22,6 +19,10 @@
 
             document.getElementById("stop").addEventListener("click", e => {
                 socket.emit("stop_game")
+            })
+
+            document.getElementById("send-data-to-socket").addEventListener("click", e => {
+                socket.emit("data", document.getElementById("data").value)
             })
 
         </script>
