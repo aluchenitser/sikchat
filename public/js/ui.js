@@ -322,6 +322,11 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
     }
 })
 
+socket.on("clear_user_statistics", () => {     // {difficulty, chatCount, user}
+    gameState.session.user.answered = 0
+    gameState.session.user.points = 0
+})
+
 
 /* -------------------- SESSION --------------------- */
 

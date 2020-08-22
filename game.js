@@ -11,8 +11,10 @@ module.exports = class Game {
     constructor({room, io, userRepo, sessionStore})
     {
         this.room = room
+
         this.io = io
         this.userRepo = userRepo
+        this.sessionStore = sessionStore
 
         this.loopNum = 0
         this.clearNum = 0
@@ -161,7 +163,7 @@ module.exports = class Game {
 
             // proceed to intermission, also window update
             if(dayjs().isSameOrAfter(gameState.time.intermission) && gameState.isInit || dayjs().isSameOrAfter(gameState.time.next) && gameState.isEnding) {
-                this.printUserRepo("user repo at intermission")
+                printUserRepo(this.userRepo, "user repo at intermission")
                 
                 // update window
                 if(gameState.isEnding) {
@@ -372,7 +374,7 @@ module.exports = class Game {
         let gameState = this.gameState
 
         console.log("clearUserStatistics")
-        console.log("\tsockets:", Object.keys(sockets).length)
+        // console.log("\tsockets:", Object.keys(sockets).length)
         // console.log("\tloopNum:", this.loopNum)
         // console.log("\tclearNum:", this.clearNum++)
 
@@ -414,6 +416,7 @@ module.exports = class Game {
             if(socket.rooms.hasOwnProperty(this.room)) {
                 socket.handshake.session.user.answered = 0
                 socket.handshake.session.user.points = 0
+                socket.handshake.session.save()
                 userRepo[guid].answered = 0
                 userRepo[guid].points = 0
             }
@@ -421,9 +424,11 @@ module.exports = class Game {
    
         gameState.winners = []
 
-        printUserRepo(this.userRepo, "userRepo at end of clearUserStatistics")
-        printSocketSessions(io, "socket sessions at end of clearUserStatistics")
-        printSessions(sessionStore, "sessions at end of clearUserStatistics")
+        // printUserRepo(this.userRepo, "userRepo at end of clearUserStatistics")
+        // printSocketSessions(this.io, "socket sessions at end of clearUserStatistics")
+        // printSessions(this.sessionStore, "sessions at end of clearUserStatistics")
+
+        this.io.to(this.room).emit("clear_user_statistics")
     }
 
     /* ------------------ UTILITY FUNCTIONS ------------------- */

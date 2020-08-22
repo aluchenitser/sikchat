@@ -78,18 +78,20 @@ app.route('/')
         res.sendFile(__dirname + '/index.html');
         res.cookie("sik_debug", "false", {path: "/"});
         
+        let isNewUser = false
         if (req.session.user && req.cookies.sik_sid) {
             req.session.user.room = req.session.user.room || "lobby"
-
-            console.log("existing user found")
         }
         else {
             req.session.user = new User({})                           // blank account until the user logs in or registers
             userRepo[req.session.user.guid] = req.session.user
-            console.log("created blank user")
+            isNewUser = true
         }
 
-        printUser(req.session.user)
+        console.log(isNewUser ? "created blank user" : "existing user found")
+        let user = req.session.user
+        console.log("\t", user.guid, user.username, user.email, user.password, user.guid, user.answered, user.points)
+
         printUserRepo(userRepo, "user repo at get/")
         printSessions(sessionStore, "sessions at get /")
         printSocketSessions(io, "get / socket sessions")
