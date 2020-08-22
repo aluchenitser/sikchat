@@ -72,7 +72,6 @@ var chatCount = 0
 
 app.route('/')
     .get(function(req, res) {
-        // debugger;
         console.log("------ START GET / ------")
 
         res.sendFile(__dirname + '/index.html');
@@ -176,10 +175,10 @@ lobby.start()
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', socket => {
-    // TODO: clients gets by without any cookie data socket.io reconnects a dead session without a page refresh .. just need to reload page for now
 
     console.log("socket connection")
 
+    // joins room or sends page reload signal
     if(socket.handshake.session) {
         console.log("\thas session")
     }
@@ -202,9 +201,8 @@ io.on('connection', socket => {
     }
 
     socket.on('chat_message', (text) => {      
-        // console.log(text)     
         
-        // chatCount allows the client to decorate individual messages with visual effects
+        // chatCount helps the client to decorate individual messages with visual effects
         try {
             var chatMessage = {
                 text: text,
@@ -220,7 +218,6 @@ io.on('connection', socket => {
         // broadcast to the room
         // console.log("chat:", chatMessage.username, chatMessage.text)
         io.to(socket.handshake.session.user.room).emit('chat_message_response', chatMessage);
-        // io.emit('chat_message_response', chatMessage);
         
         // per game behavior
         switch(socket.handshake.session.user.room) {
@@ -298,38 +295,6 @@ http.listen(port, function() {
     console.log(`listening on *:${port}`);
 });
 
-/* ------------------- WINDOW FUNCTIONS ------------------- */
-
-
-/* ------------------- QBANK FUNCTIONS ------------------- */
-
-/* ------------------ USER FUNCTIONS ------------------- */
-
-
-// function printUserRepo(msg) {
-//     console.log(msg)
-//     console.log("\tkey, username, email, password, guid, answered, points")
-//     for(var key in userRepo) {
-//         printUser(userRepo[key])
-//     }
-// }
-
-// function printUser(user) {
-//     console.log("\t", user.username, user.email, user.password, user.guid, user.answered, user.points)
-// }
-
-// function printSessions(msg) {
-//     console.log(msg)
-//     sessionStore.all(function(err, sessions) {
-//         console.log("\ttotal sessions:", Object.keys(sessions).length)
-//         Object.keys(sessions).forEach(sess => {
-//             if(sessions[sess].user) {
-//                 let user = sessions[sess].user
-//                 console.log("\t\t", "guid", user.guid, "answered", user.answered, "points", user.points)
-//             }
-//         })
-//     });
-// }
 
 /* ------------------ UTILITY FUNCTIONS ------------------- */
 
