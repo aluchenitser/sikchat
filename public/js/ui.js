@@ -318,7 +318,7 @@ socket.on('pm_bar_opened_response', users => {
     PMUsersWrapperElement.innerHTML = markup
 })
 
-socket.on('pm_request_success', guid => {
+// socket.on('pm_request_success', guid => {
 
 
 // --- receive chat

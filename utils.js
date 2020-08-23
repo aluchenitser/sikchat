@@ -62,7 +62,7 @@ exports.getUserSocket = (io, username) => {
 }
 
 exports.getRoomUsers = (io, room) => {
-    let roomUsers = {}
+    let roomUsers = []
 
     Object.keys(io.sockets.sockets).forEach(key => {
         let socket = io.sockets.sockets[key]
