@@ -66,7 +66,7 @@ h1, p {
     color: white;
     border-radius: 21px 0 0 0;
     overflow: hidden;
-    background-color: #d431d4;
+    background-color: $general-background-color;
     background-image: url('../img/3px-tile.png');
 
     animation: barshine 1s;
@@ -173,16 +173,16 @@ h1, p {
     }
     @keyframes barshine {
         0% {
-            box-shadow: 0px 0 0 #d431d4;
-            background-color:#d431d4;
+            box-shadow: 0px 0 0 $general-background-color;
+            background-color:$general-background-color;
         }
         30% {
             box-shadow: 0px 0 10px #ff00ff;
             background-color:#ff00ff;
         }
         10% {
-            box-shadow: 0px 0 0 #d431d4;
-            background-color:#d431d4;
+            box-shadow: 0px 0 0 $general-background-color;
+            background-color:$general-background-color;
         }
     }
 
@@ -291,7 +291,7 @@ h1, p {
             @keyframes _31D4D4_color {
                 0% { color:  #31D4D4;  }
                 33% { color: #D4D431;   }
-                66% { color:  #d431d4; }
+                66% { color:  $general-background-color; }
                 100% { color:  #31D4D4;  }
             }
 
@@ -472,7 +472,7 @@ h1, p {
     }
     border-radius: 0 0 18px;
     // background-color: $general-background-color;
-    background-color: #d431d4;
+    background-color: $general-background-color;
     // background-image: url('../img/3px-tile.png');
     position: fixed;
     width: 260px;
@@ -772,7 +772,7 @@ h1, p {
         animation: barshine 1s;
     }
     border-radius: 0 0 18px;
-    background-color: #d431d4;
+    background-color: $general-background-color;
     position: fixed;
     width: 260px;
     color: white;
@@ -832,6 +832,29 @@ h1, p {
         }
     }
 }
+
+.pm-window {
+    width: 350px;
+    padding: 15px;
+    background-color: $general-background-color;
+    color: white;
+    position: absolute;
+    left: 500px;
+    z-index: 5;
+
+    .chat-area {
+        background-color: white;
+        color: black;
+        height: 300px;
+    }
+    
+    .input {
+        input {
+            width: 100%;
+        }
+    }
+}
+
 /* ---------------- INIT SPINNER ----------------- */
 
 .sik-spinner {

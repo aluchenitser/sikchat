@@ -650,6 +650,24 @@ body.ending .next-game-in-wrapper {
   border-radius: 0 0 10px 0;
 }
 
+.pm-window {
+  width: 350px;
+  padding: 15px;
+  background-color: #d431d4;
+  color: white;
+  position: absolute;
+  left: 500px;
+  z-index: 5;
+}
+.pm-window .chat-area {
+  background-color: white;
+  color: black;
+  height: 300px;
+}
+.pm-window .input input {
+  width: 100%;
+}
+
 /* ---------------- INIT SPINNER ----------------- */
 .sik-spinner {
   display: none;

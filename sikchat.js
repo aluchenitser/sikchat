@@ -175,7 +175,7 @@ lobby.start()
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', socket => {
-    let PMChats = []
+    let PMChats = {}
 
 
     console.log("socket connection")
@@ -243,12 +243,13 @@ io.on('connection', socket => {
     })
 
     socket.on("pm_request", guid => {
-        let destinationSocket = getUserSocket(io, guid)
-        
+        let data = getUserSocket(io, guid)     // { guid, username, socket }
 
-        if(destinationSocket) {
-            PMChats.push(destinationSocket)
-            socket.emit("pm_request_success", guid)
+        if(data) {
+            PMChats[data.guid] = data
+
+            delete data.socket
+            socket.emit("pm_request_success", data)
         }
     })
 
@@ -273,7 +274,7 @@ io.on('connection', socket => {
         // Object.keys(socket.rooms).filter(name => name.startsWith("sik"))[0]
     })
 
-    socket.on('username_update', (username) => {         // socket.handshake.session added to the socket by socket.handshake.session
+    socket.on('username_update', username => {         // socket.handshake.session added to the socket by socket.handshake.session
         
         let foundDuplicate = false;
         

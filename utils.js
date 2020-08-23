@@ -49,16 +49,20 @@ exports.printSocketSessions = (io, msg) => {
 exports.getUserSocket = (io, guid) => {
     console.log("_exports.getUserSocket")
     
-    let userSocket = undefined;
+    let info = undefined;
 
     Object.keys(io.sockets.sockets).forEach(key => {
         let socket = io.sockets.sockets[key]
         if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.guid == guid) {
-            userSocket = socket
+            info = {
+                guid: guid,
+                username: socket.handshake.session.user.username,
+                socket: socket
+            }
         }
     })
 
-    return userSocket
+    return info
 }
 
 exports.getRoomUsers = (io, room) => {
@@ -67,9 +71,11 @@ exports.getRoomUsers = (io, room) => {
     Object.keys(io.sockets.sockets).forEach(key => {
         let socket = io.sockets.sockets[key]
         if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.room == room) {
-            roomUsers.push({ username: socket.handshake.session.user.username, guid: socket.handshake.session.user.username})
+            roomUsers.push({ username: socket.handshake.session.user.username, guid: socket.handshake.session.user.guid})
         }
     })
 
     return roomUsers
 }
+
+

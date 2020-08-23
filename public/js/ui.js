@@ -23,8 +23,8 @@ var changeUsernameElement = document.querySelector(".user-label-wrap .change-use
 var sideBarElement = document.querySelector(".side-bar")
 var openSideBar = document.querySelector(".open-side-bar")
 
-var sideBarElement = document.querySelector(".pm-bar")
-var openSideBar = document.querySelector(".open-pm-bar")
+var PMBarElement = document.querySelector(".pm-bar")
+var openPMBar = document.querySelector(".open-pm-bar")
 
 var closeSideBar = document.querySelector(".close-side-bar")
 var closePMBar = document.querySelector(".close-pm-bar")
@@ -298,6 +298,30 @@ $(PMUsersWrapperElement).on("click", ".fa-comment", e => {
      socket.emit('pm_request', guid)
 })
 
+let mouseCoordinates = { x: 0, y: 0 }
+
+document.onmousemove = e => {
+    mouseCoordinates.x = e.pageX
+    mouseCoordinates.y = e.pageX
+}
+
+socket.on('pm_request_success', data => {   // { guid, username, socket }
+        let markup = `
+            <div class='pm-window' id='pm_window_${data.guid.substring(2)}'>
+                <div class="header">${data.username}</div>
+                <div class="chat-area"></div>
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        `
+
+        let PMWindowElement = FEUtils.stringToHTML(markup)
+        FEUtils.dragElement(PMWindowElement)
+        document.body.appendChild(PMWindowElement)
+
+})
+
 // open pm menu
 document.getElementById('pm-bar-toggle').addEventListener('change', e => {
     if(e.target.checked) {
@@ -318,11 +342,9 @@ socket.on('pm_bar_opened_response', users => {
     PMUsersWrapperElement.innerHTML = markup
 })
 
-// socket.on('pm_request_success', guid => {
-
 
 // --- receive chat
-socket.on('chat_message_response', chatMessage => {       // { text, chatCount, guid, ADSASusername }
+socket.on('chat_message_response', chatMessage => {       // { text, chatCount, guid, username }
     let messageClass = gameState.session.user.guid == chatMessage.guid
         ? 'message-output is-current-user'
         : 'message-output'
