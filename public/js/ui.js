@@ -125,7 +125,7 @@ socket.on('tick', server => {
     gameState.winners = server.winners
 
     Screen.nextGameIn(server.time.secondsUntilNextGame)
-    console.log("timeLeft",gameState.qBank.currentQuestion.timeLeft, "timeAlloted",gameState.qBank.currentQuestion.timeAlloted)
+    // console.log("timeLeft",gameState.qBank.currentQuestion.timeLeft, "timeAlloted",gameState.qBank.currentQuestion.timeAlloted)
 
     setBodyClass(server.time.current)
 
@@ -273,6 +273,7 @@ socket.on('tick', server => {
 
 /* -------------------- CHAT & CHAT INTERACTIONS --------------------- */
 
+// chat bar that the user inputs text into
 document.getElementById('chat-form').addEventListener('submit', e => {
     e.preventDefault()
     messageInputElement.focus()
@@ -281,6 +282,20 @@ document.getElementById('chat-form').addEventListener('submit', e => {
     
     socket.emit('chat_message', text )
 })
+
+
+document.getElementById('pm-bar-toggle').addEventListener('change', e => {
+    if(e.target.checked) {
+        console.log(e)
+        socket.emit('pm_bar_opened')
+    }
+})
+
+socket.on('pm_bar_opened_response', users => {
+    console.log("pm_bar_opened_response")
+    console.log(users)
+})
+
 
 // --- receive chat
 socket.on('chat_message_response', chatMessage => {       // { text, chatCount, guid, ADSASusername }
@@ -609,6 +624,8 @@ logOutElement.addEventListener("keyup", e => {
 
 
 /* -------------------- FUNCTIONS --------------------- */
+/* -------------------- FUNCTIONS --------------------- */
+/* -------------------- FUNCTIONS --------------------- */
 
 function alreadyInProgressBallsAnimation(bool) {
 
@@ -646,8 +663,6 @@ function alreadyInProgressBallsAnimation(bool) {
         }, rand);
     }());
 }
-
-
 
 function registerPasswordsAreValid(e) {
 

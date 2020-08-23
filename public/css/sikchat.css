@@ -227,6 +227,7 @@ body.ending .next-game-in-wrapper {
 }
 .chat-body #messages .message-output.is-current-user .stars i {
   animation: _31D4D4_color 7s infinite;
+  text-shadow: 1px 1px black;
 }
 @keyframes _31D4D4_color {
   0% {
@@ -249,8 +250,7 @@ body.ending .next-game-in-wrapper {
 }
 .chat-body #messages .message-output .stars i {
   display: none;
-  color: white;
-  text-shadow: 1px 1px black;
+  color: black;
 }
 .chat-body #messages .message-output.easy .stars i:nth-child(1), .chat-body #messages .message-output.medium .stars i:nth-child(1), .chat-body #messages .message-output.hard .stars i:nth-child(1) {
   display: inline;
@@ -317,7 +317,29 @@ body.ending .next-game-in-wrapper {
   transition: left 0.2s 0.25s;
 }
 
-.open-side-bar {
+#pm-bar-toggle {
+  visibility: hidden;
+  position: absolute;
+  font-size: 16px;
+}
+#pm-bar-toggle:checked ~ .pm-bar {
+  left: 0;
+  transition: left 0.2s 0.25s, border-radius 0.2s;
+}
+#pm-bar-toggle:not(:checked) ~ .pm-bar {
+  left: -260px;
+  transition: left 0.2s;
+}
+#pm-bar-toggle:checked ~ .open-pm-bar {
+  left: -35px;
+  transition: left 0.2s;
+}
+#pm-bar-toggle:not(:checked) ~ .open-pm-bar {
+  left: 0;
+  transition: left 0.2s 0.25s;
+}
+
+.open-side-bar, .open-pm-bar {
   position: fixed;
   top: 10px;
   border-radius: 0 4px 4px 0px;
@@ -340,12 +362,16 @@ body.ending .next-game-in-wrapper {
   -webkit-tap-highlight-color: transparent;
   z-index: 1;
 }
-.open-side-bar.shine {
+.open-side-bar.shine, .open-pm-bar.shine {
   animation: barshine 1s;
 }
-.open-side-bar > .fa {
+.open-side-bar > .fa, .open-pm-bar > .fa {
   top: 1px;
   position: relative;
+}
+
+.open-pm-bar {
+  top: 50px;
 }
 
 .side-bar {
@@ -354,7 +380,7 @@ body.ending .next-game-in-wrapper {
   position: fixed;
   width: 260px;
   color: white;
-  z-index: 1;
+  z-index: 2;
   padding: 23px 10px 10px 15px;
 }
 .side-bar.shine {
@@ -565,6 +591,66 @@ body.ending .next-game-in-wrapper {
   color: black;
   background-color: white;
   user-select: none;
+}
+
+.pm-bar {
+  border-radius: 0 0 18px;
+  background-color: #d431d4;
+  position: fixed;
+  width: 260px;
+  color: white;
+  z-index: 1;
+  padding: 23px 10px 10px 15px;
+}
+.pm-bar.shine {
+  animation: barshine 1s;
+}
+.pm-bar * {
+  transition: border-radius 0.2s;
+}
+.pm-bar.square {
+  border-radius: 0;
+}
+.pm-bar .pm-bar-row {
+  margin-bottom: 10px;
+}
+.pm-bar .pm-bar-row:last-of-type {
+  margin: 0;
+}
+.pm-bar label.close-pm-bar {
+  position: absolute;
+  top: 5px;
+  cursor: pointer;
+  padding-right: 15px;
+}
+.pm-bar input, .pm-bar select {
+  width: 100%;
+  border: none;
+}
+.pm-bar .users-wrapper {
+  background-color: white;
+  color: black;
+}
+.pm-bar .users-wrapper .user {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 8px;
+  border-bottom: 3px dashed transparent;
+  margin-bottom: -3px;
+  cursor: pointer;
+}
+.pm-bar .users-wrapper .user.chosen {
+  background-color: #8effff;
+  outline: 3px solid #8effff !important;
+}
+.pm-bar .users-wrapper .user:hover, .pm-bar .users-wrapper .user:focus {
+  border-bottom-color: #8effff;
+  outline: none;
+}
+.pm-bar .users-wrapper .user .user-inner {
+  position: relative;
+  top: 3px;
 }
 
 /* ---------------- INIT SPINNER ----------------- */

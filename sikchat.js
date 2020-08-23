@@ -21,7 +21,7 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser());
 
 const User = require('./user.js')
-const {printUserRepo, printUser, printSessions, printSocketSessions} = require('./utils.js')
+const {printUserRepo, getRoomUsers, printSessions, printSocketSessions} = require('./utils.js')
 
 app.use(express.static(__dirname + "/public/"));
 app.use(express.json());
@@ -233,6 +233,13 @@ io.on('connection', socket => {
         chatCount++
     })
     
+    socket.on("pm_bar_opened", () => {
+        console.log("pm_bar_opened")
+
+        let users = getRoomUsers(io, socket.handshake.session.user.room)
+        socket.emit("pm_bar_opened_response", users)
+    })
+
     socket.on('room_change', (room_name_new) => { 
         console.log("received room_change request:", room_name_new)
 

@@ -281,7 +281,10 @@ h1, p {
                     right: -12px;
                     left: auto;
 
-                    i { animation: _31D4D4_color 7s infinite; }
+                    i { 
+                        animation: _31D4D4_color 7s infinite; 
+                        text-shadow: 1px 1px black;
+                    }
                 }
             }
 
@@ -299,8 +302,7 @@ h1, p {
 
                 i {
                     display: none;
-                    color: white;
-                    text-shadow: 1px 1px black;
+                    color: black;
                 }
             }
 
@@ -393,7 +395,34 @@ h1, p {
 }
 
 
-.open-side-bar {
+#pm-bar-toggle {
+    visibility: hidden;
+    position: absolute;
+    font-size: 16px;
+
+    &:checked ~ .pm-bar {
+        left: 0;
+        transition: left .2s .25s, border-radius .2s;
+    }
+   
+    &:not(:checked) ~ .pm-bar {
+        left: -260px;
+        transition: left .2s;
+    }
+
+    &:checked ~ .open-pm-bar {
+        left: -35px;
+        transition: left .2s; 
+    }
+    
+    &:not(:checked) ~ .open-pm-bar {
+        left: 0;
+        transition: left .2s .25s; 
+    }    
+}
+
+
+.open-side-bar, .open-pm-bar {
     position: fixed;
     top: 10px;
     border-radius: 0 4px 4px 0px;
@@ -431,6 +460,10 @@ h1, p {
     }
 }
 
+.open-pm-bar {
+    top: 50px;
+}
+
 
 .side-bar {
 
@@ -444,7 +477,7 @@ h1, p {
     position: fixed;
     width: 260px;
     color: white;
-    z-index: 1;
+    z-index: 2;
     padding: 23px 10px 10px 15px;
 
     * {
@@ -728,6 +761,79 @@ h1, p {
                 user-select: none;
             }
             
+        }
+    }
+}
+
+.pm-bar {
+
+    &.shine {
+        animation: barshine 1s;
+    }
+    border-radius: 0 0 18px;
+    background-color: #d431d4;
+    position: fixed;
+    width: 260px;
+    color: white;
+    z-index: 1;
+    padding: 23px 10px 10px 15px;
+
+    * {
+        transition: border-radius .2s;
+    }
+    
+    &.square {
+        border-radius: 0;
+    }
+
+    .pm-bar-row {
+        margin-bottom: 10px;
+
+        &:last-of-type {
+            margin: 0;
+        }
+    }
+
+    label.close-pm-bar {
+        position: absolute;
+        top: 5px;
+        cursor: pointer;
+        padding-right: 15px;
+    }
+
+    input, select {
+        width: 100%;
+        border: none;
+    }
+
+    .users-wrapper {
+        background-color: white;
+        color: black;
+        
+        .user {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 5px 8px;
+            border-bottom: 3px dashed transparent;
+            margin-bottom: -3px;
+            cursor: pointer;
+  
+            &.chosen {
+                background-color: #8effff;
+                outline: 3px solid #8effff !important; 
+            }
+            
+            &:hover, &:focus {
+                border-bottom-color: #8effff;
+                outline: none;
+            }
+            
+            .user-inner {
+                position: relative;
+                top: 3px;
+            }
+
         }
     }
 }

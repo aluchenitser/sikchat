@@ -45,3 +45,16 @@ exports.printSocketSessions = (io, msg) => {
         }
     })
 }
+
+exports.getRoomUsers = (io, room) => {
+    let roomUsers = []
+
+    Object.keys(io.sockets.sockets).forEach(key => {
+        let socket = io.sockets.sockets[key]
+        if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.room == room) {
+            roomUsers.push(socket.handshake.session.user.username)
+        }
+    })
+
+    return roomUsers
+}
