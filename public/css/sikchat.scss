@@ -806,11 +806,12 @@ h1, p {
         border: none;
     }
 
-    .users-wrapper {
+    .pm-users-wrapper {
         background-color: white;
         color: black;
+        border-radius: 0 0 10px 0;
         
-        .user {
+        .pm-user {
             display: flex;
             justify-content: space-between;
             width: 100%;
@@ -818,22 +819,15 @@ h1, p {
             border-bottom: 3px dashed transparent;
             margin-bottom: -3px;
             cursor: pointer;
-  
-            &.chosen {
-                background-color: #8effff;
-                outline: 3px solid #8effff !important; 
-            }
-            
-            &:hover, &:focus {
-                border-bottom-color: #8effff;
-                outline: none;
-            }
-            
-            .user-inner {
+              
+            .pm-user-inner {
                 position: relative;
                 top: 3px;
             }
 
+            &:last-of-type {
+                border-radius: 0 0 10px 0;
+            }
         }
     }
 }

@@ -627,11 +627,12 @@ body.ending .next-game-in-wrapper {
   width: 100%;
   border: none;
 }
-.pm-bar .users-wrapper {
+.pm-bar .pm-users-wrapper {
   background-color: white;
   color: black;
+  border-radius: 0 0 10px 0;
 }
-.pm-bar .users-wrapper .user {
+.pm-bar .pm-users-wrapper .pm-user {
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -640,17 +641,12 @@ body.ending .next-game-in-wrapper {
   margin-bottom: -3px;
   cursor: pointer;
 }
-.pm-bar .users-wrapper .user.chosen {
-  background-color: #8effff;
-  outline: 3px solid #8effff !important;
-}
-.pm-bar .users-wrapper .user:hover, .pm-bar .users-wrapper .user:focus {
-  border-bottom-color: #8effff;
-  outline: none;
-}
-.pm-bar .users-wrapper .user .user-inner {
+.pm-bar .pm-users-wrapper .pm-user .pm-user-inner {
   position: relative;
   top: 3px;
+}
+.pm-bar .pm-users-wrapper .pm-user:last-of-type {
+  border-radius: 0 0 10px 0;
 }
 
 /* ---------------- INIT SPINNER ----------------- */

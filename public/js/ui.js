@@ -22,7 +22,15 @@ var changeUsernameElement = document.querySelector(".user-label-wrap .change-use
 
 var sideBarElement = document.querySelector(".side-bar")
 var openSideBar = document.querySelector(".open-side-bar")
+
+var sideBarElement = document.querySelector(".pm-bar")
+var openSideBar = document.querySelector(".open-pm-bar")
+
 var closeSideBar = document.querySelector(".close-side-bar")
+var closePMBar = document.querySelector(".close-pm-bar")
+
+
+
 var sideBarToggle = document.getElementById("side-bar-toggle")
 var tabSegue1 = document.getElementById("tab-segue-1")
 
@@ -34,6 +42,7 @@ var loginChoosersElement = document.querySelector(".login-choosers")
 var loginChoosersToggleElement = document.getElementById("login-choosers-toggle")
 
 var roomsWrapperElement = document.querySelector(".rooms-wrapper")
+var PMUsersWrapperElement = document.querySelector(".pm-users-wrapper")
 
 var progressBarElement
 var startedWrapStartedElement
@@ -294,6 +303,13 @@ document.getElementById('pm-bar-toggle').addEventListener('change', e => {
 socket.on('pm_bar_opened_response', users => {
     console.log("pm_bar_opened_response")
     console.log(users)
+
+    let markup = ""
+    users.forEach(room => {
+        markup += "<div class='pm-user' tabindex='0' sik-pm-user='" + room + "'><div class='pm-user-inner'>" + room + "</div></div>"
+    })
+
+    PMUsersWrapperElement.innerHTML = markup
 })
 
 
