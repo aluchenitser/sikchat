@@ -292,25 +292,33 @@ document.getElementById('chat-form').addEventListener('submit', e => {
     socket.emit('chat_message', text )
 })
 
+// open pm window
+$(PMUsersWrapperElement).on("click", ".fa-comment", e => {
+     let guid = e.target.parentElement.getAttribute("sik-pm-guid")
+     socket.emit('pm_request', guid)
+})
 
+// open pm menu
 document.getElementById('pm-bar-toggle').addEventListener('change', e => {
     if(e.target.checked) {
-        console.log(e)
         socket.emit('pm_bar_opened')
     }
 })
 
+// receive who's on chat
 socket.on('pm_bar_opened_response', users => {
     console.log("pm_bar_opened_response")
     console.log(users)
 
     let markup = ""
-    users.forEach(room => {
-        markup += "<div class='pm-user' tabindex='0' sik-pm-user='" + room + "'><div class='pm-user-inner'>" + room + "</div></div>"
+    users.forEach(user => {
+        markup += "<div class='pm-user' tabindex='0' sik-pm-guid='" + user.guid + "'><div class='pm-user-inner'>" + user.username + "</div><i class='fa fa-comment'></i></div>"
     })
 
     PMUsersWrapperElement.innerHTML = markup
 })
+
+socket.on('pm_request_success', guid => {
 
 
 // --- receive chat

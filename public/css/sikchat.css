@@ -594,6 +594,7 @@ body.ending .next-game-in-wrapper {
 }
 
 .pm-bar {
+  top: 50px;
   border-radius: 0 0 18px;
   background-color: #d431d4;
   position: fixed;

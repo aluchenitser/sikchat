@@ -46,13 +46,28 @@ exports.printSocketSessions = (io, msg) => {
     })
 }
 
+exports.getUserSocket = (io, username) => {
+    console.log("_exports.getUserSocket")
+    
+    let userSocket = undefined;
+
+    Object.keys(io.sockets.sockets).forEach(guid => {
+        let socket = io.sockets.sockets[key]
+        if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.guid == guid) {
+            userSocket = socket.handshake.session.user
+        }
+    })
+
+    return userSocket
+}
+
 exports.getRoomUsers = (io, room) => {
-    let roomUsers = []
+    let roomUsers = {}
 
     Object.keys(io.sockets.sockets).forEach(key => {
         let socket = io.sockets.sockets[key]
         if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.room == room) {
-            roomUsers.push(socket.handshake.session.user.username)
+            roomUsers.push({ username: socket.handshake.session.user.username, guid: socket.handshake.session.user.username})
         }
     })
 

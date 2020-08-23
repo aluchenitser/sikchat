@@ -21,7 +21,7 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser());
 
 const User = require('./user.js')
-const {printUserRepo, getRoomUsers, printSessions, printSocketSessions} = require('./utils.js')
+const {printUserRepo, getRoomUsers, printSessions, printSocketSessions, getUserSocket} = require('./utils.js')
 
 app.use(express.static(__dirname + "/public/"));
 app.use(express.json());
@@ -175,6 +175,8 @@ lobby.start()
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', socket => {
+    let PMChats = []
+
 
     console.log("socket connection")
 
@@ -202,6 +204,8 @@ io.on('connection', socket => {
 
     socket.on('chat_message', (text) => {      
         
+
+
         // chatCount helps the client to decorate individual messages with visual effects
         try {
             var chatMessage = {
@@ -234,10 +238,18 @@ io.on('connection', socket => {
     })
     
     socket.on("pm_bar_opened", () => {
-        console.log("pm_bar_opened")
-
         let users = getRoomUsers(io, socket.handshake.session.user.room)
         socket.emit("pm_bar_opened_response", users)
+    })
+
+    socket.on("pm_request", guid => {
+        let destinationSocket = getUserSocket(io, guid)
+        
+
+        if(destinationSocket) {
+            PMChats.push(destinationSocket)
+            socket.emit("pm_request_success", guid)
+        }
     })
 
     socket.on('room_change', (room_name_new) => { 
