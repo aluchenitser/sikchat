@@ -65,12 +65,16 @@ exports.getUserSocket = (io, guid) => {
     return info
 }
 
-exports.getRoomUsers = (io, room) => {
+exports.getRoomUsers = (io, room, requestingGuid) => {
     let roomUsers = []
 
     Object.keys(io.sockets.sockets).forEach(key => {
         let socket = io.sockets.sockets[key]
-        if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.room == room) {
+        if(socket.handshake.session && 
+            socket.handshake.session.user && 
+            socket.handshake.session.user.room == room &&
+            socket.handshake.session.user.guid != requestingGuid
+            ) {
             roomUsers.push({ username: socket.handshake.session.user.username, guid: socket.handshake.session.user.guid})
         }
     })

@@ -7,6 +7,7 @@ $general-background-color: #d431d4;
 $triad-blue: #31D4D4;
 $triad-yellow: #D4D431;
 
+
 $label-text-color: gray;
 
 $font-size-message: 16px;
@@ -835,8 +836,8 @@ h1, p {
 
 .pm-window {
     width: 345px;
-    height: 364px;
-    padding: 0 10px 10px 15px;
+    height: 362px;
+    padding: 0 10px 8px 15px;
     background-color: $general-background-color;
     color: white;
     position: absolute;
@@ -859,6 +860,26 @@ h1, p {
         color: black;
         height: 300px;
         transition: height .135s ease-in;
+        display: flex;
+        flex-flow: column-reverse nowrap;
+
+        .chat-row {
+            &.current-user {
+                text-align: right;
+                
+                span {
+                    padding: 3px 2px 3px 2px;
+                    text-align: left;
+                    background-color: transparent;
+                }
+            }
+
+            span {
+                display: inline-block;
+                padding: 2px;
+                background-color: rgb(165,255, 159, 0.37)
+            }
+        }
     }
     
     .input {

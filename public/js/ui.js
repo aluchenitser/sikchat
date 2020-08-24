@@ -340,6 +340,7 @@ socket.on('pm_request_success', data => {   // { guid, username, socket }
                 let msg =  e.target.value
     
                 socket.emit("pm_chat", { msg, sender_guid, recipient_guid })
+                e.target.value = ""
             }
         })
 
@@ -347,24 +348,30 @@ socket.on('pm_request_success', data => {   // { guid, username, socket }
 })
 
 socket.on("pm_chat_response", data => { // { msg, sender_guid, recipient_guid }
-    console.log("pm_chat_response")
+    
     let PMWindowElement = getPMWindowWithGuid(data.sender_guid.toString()) || getPMWindowWithGuid(data.recipient_guid.toString())
     if(PMWindowElement) {
-        PMWindowElement.querySelector(".chat-area").innerHTML += `<div class='chat-row'>${data.msg}</div>`
+        let htmlClass = data.sender_guid == gameState.session.user.guid 
+            ? " current-user"
+            : ""
+
+        let prevHTML = PMWindowElement.querySelector(".chat-area").innerHTML 
+
+        PMWindowElement.querySelector(".chat-area").innerHTML = `<div class='chat-row${htmlClass}'><span>${data.msg}</span></div>` + prevHTML
     }
 })
 
 // open pm menu
 document.getElementById('pm-bar-toggle').addEventListener('change', e => {
     if(e.target.checked) {
-        socket.emit('pm_bar_opened')
+        socket.emit('chat_list_request', gameState.session.user.guid)
     }
 })
 
 // receive who's on chat
-socket.on('chat_list_update', users => {
-    console.log("chat_list_update")
-    console.log(users)
+socket.on('chat_list_request_response', users => {
+    // console.log("chat_list_update")
+    // console.log(users)
 
     let markup = ""
     users.forEach(user => {

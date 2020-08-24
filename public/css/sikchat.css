@@ -652,8 +652,8 @@ body.ending .next-game-in-wrapper {
 
 .pm-window {
   width: 345px;
-  height: 364px;
-  padding: 0 10px 10px 15px;
+  height: 362px;
+  padding: 0 10px 8px 15px;
   background-color: #d431d4;
   color: white;
   position: absolute;
@@ -673,6 +673,21 @@ body.ending .next-game-in-wrapper {
   color: black;
   height: 300px;
   transition: height 0.135s ease-in;
+  display: flex;
+  flex-flow: column-reverse nowrap;
+}
+.pm-window .chat-area .chat-row.current-user {
+  text-align: right;
+}
+.pm-window .chat-area .chat-row.current-user span {
+  padding: 3px 2px 3px 2px;
+  text-align: left;
+  background-color: transparent;
+}
+.pm-window .chat-area .chat-row span {
+  display: inline-block;
+  padding: 2px;
+  background-color: rgba(165, 255, 159, 0.37);
 }
 .pm-window .input input {
   width: 100%;

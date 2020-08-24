@@ -204,8 +204,6 @@ io.on('connection', socket => {
 
     socket.on('chat_message', (text) => {      
         
-
-
         // chatCount helps the client to decorate individual messages with visual effects
         try {
             var chatMessage = {
@@ -237,17 +235,15 @@ io.on('connection', socket => {
         chatCount++
     })
     
-    socket.on("pm_bar_opened", () => {
-        let users = getRoomUsers(io, socket.handshake.session.user.room)
-        socket.emit("chat_list_update", users)
+    socket.on("chat_list_request", requestingGuid => {
+        let users = getRoomUsers(io, socket.handshake.session.user.room, requestingGuid)
+        socket.emit("chat_list_request_response", users)
     })
 
     socket.on("pm_request", guid => {
         let data = getUserSocket(io, guid)     // { guid, username, socket }
 
         if(data) {
-            PMChats[data.guid] = data
-
             delete data.socket
             socket.emit("pm_request_success", data)
         }
