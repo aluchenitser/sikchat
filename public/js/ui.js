@@ -328,7 +328,7 @@ socket.on('pm_request_success', data => {   // { guid, username, socket }
         })
         
         PMWindowElement.addEventListener("transitionend", () => {
-            PMWindowElement.parentNode.removeChild(PMWindowElement);
+            PMWindowElement.remove();
         })
 
         document.body.appendChild(PMWindowElement)

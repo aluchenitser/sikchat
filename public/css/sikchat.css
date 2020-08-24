@@ -688,6 +688,7 @@ body.ending .next-game-in-wrapper {
   overflow: hidden;
   left: 1px;
   top: 1px;
+  cursor: pointer;
 }
 .pm-window .exit div {
   height: 15px;
