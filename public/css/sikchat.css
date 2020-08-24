@@ -375,7 +375,7 @@ body.ending .next-game-in-wrapper {
 }
 
 .side-bar {
-  border-radius: 0 0 18px;
+  border-radius: 0 0 18px 0;
   background-color: #d431d4;
   position: fixed;
   width: 260px;
@@ -652,20 +652,59 @@ body.ending .next-game-in-wrapper {
 
 .pm-window {
   width: 350px;
-  padding: 15px;
+  height: 369px;
+  padding: 0 15px 15px 15px;
   background-color: #d431d4;
   color: white;
   position: absolute;
   left: 500px;
   z-index: 5;
+  border-radius: 0 0 18px 0;
+  transition: height 0.15s ease-in, width 0.15s ease-in, opacity 0.15s;
+  overflow: hidden;
+  opacity: 1;
+}
+.pm-window .header {
+  padding-top: 15px;
+  height: 33px;
 }
 .pm-window .chat-area {
   background-color: white;
   color: black;
   height: 300px;
+  transition: height 0.135s ease-in;
 }
 .pm-window .input input {
   width: 100%;
+  border-radius: 0 0 10px 0;
+  border: none;
+  border-top: 1px dashed black;
+  outline: none;
+}
+.pm-window .exit {
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  overflow: hidden;
+  left: 1px;
+  top: 1px;
+}
+.pm-window .exit div {
+  height: 15px;
+  width: 15px;
+  position: absolute;
+  left: -7.5px;
+  top: -7.5px;
+  transform: rotate(45deg);
+  background-color: white;
+}
+.pm-window.exiting {
+  height: 0;
+  width: 0;
+  opacity: 0.2;
+}
+.pm-window.exiting .chat-area {
+  height: 0;
 }
 
 /* ---------------- INIT SPINNER ----------------- */

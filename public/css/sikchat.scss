@@ -470,7 +470,7 @@ h1, p {
     &.shine {
         animation: barshine 1s;
     }
-    border-radius: 0 0 18px;
+    border-radius: 0 0 18px 0;
     // background-color: $general-background-color;
     background-color: $general-background-color;
     // background-image: url('../img/3px-tile.png');
@@ -835,23 +835,67 @@ h1, p {
 
 .pm-window {
     width: 350px;
-    padding: 15px;
+    height: 369px;
+    padding: 0 15px 15px 15px;
     background-color: $general-background-color;
     color: white;
     position: absolute;
     left: 500px;
     z-index: 5;
 
+    border-radius: 0 0 18px 0;
+
+    transition: height .15s ease-in, width .15s ease-in, opacity .15s;
+    overflow: hidden;
+    opacity: 1;
+
+    .header {
+        padding-top: 15px;
+        height: 33px;
+    }
+
     .chat-area {
         background-color: white;
         color: black;
         height: 300px;
+        transition: height .135s ease-in;
     }
     
     .input {
         input {
             width: 100%;
+            border-radius: 0 0 10px 0;
+            border: none;
+            border-top: 1px dashed black;
+            outline: none;
         }
+    }
+
+    .exit {
+        position: absolute;
+        height: 14px;
+        width: 14px;
+        overflow: hidden;
+        left: 1px;
+        top: 1px;
+
+        div {
+            height: 15px;
+            width: 15px;
+            position: absolute;
+            left: -7.5px;
+            top: -7.5px;
+            transform: rotate(45deg);
+            background-color: white;
+        }
+    }
+
+    &.exiting {
+        height: 0;
+        width: 0;
+        opacity: .2;
+        
+        .chat-area { height: 0 }
     }
 }
 

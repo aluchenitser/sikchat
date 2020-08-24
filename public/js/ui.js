@@ -294,8 +294,10 @@ document.getElementById('chat-form').addEventListener('submit', e => {
 
 // open pm window
 $(PMUsersWrapperElement).on("click", ".fa-comment", e => {
-     let guid = e.target.parentElement.getAttribute("sik-pm-guid")
-     socket.emit('pm_request', guid)
+    let guid = e.target.parentElement.getAttribute("sik-pm-guid")
+     if(document.querySelector(`[id$=pm_window_${guid.substring(2)}]`) == undefined) {
+         socket.emit('pm_request', guid)
+     }
 })
 
 let mouseCoordinates = { x: 0, y: 0 }
@@ -308,6 +310,9 @@ document.onmousemove = e => {
 socket.on('pm_request_success', data => {   // { guid, username, socket }
         let markup = `
             <div class='pm-window' id='pm_window_${data.guid.substring(2)}'>
+                <div class="exit">
+                    <div></div>
+                </div>
                 <div class="header">${data.username}</div>
                 <div class="chat-area"></div>
                 <div class="input">
@@ -315,11 +320,18 @@ socket.on('pm_request_success', data => {   // { guid, username, socket }
                 </div>
             </div>
         `
-
         let PMWindowElement = FEUtils.stringToHTML(markup)
         FEUtils.dragElement(PMWindowElement)
-        document.body.appendChild(PMWindowElement)
+        PMWindowElement.querySelector(".exit").addEventListener("click", () => {
 
+            PMWindowElement.classList.add('exiting')
+        })
+        
+        PMWindowElement.addEventListener("transitionend", () => {
+            PMWindowElement.parentNode.removeChild(PMWindowElement);
+        })
+
+        document.body.appendChild(PMWindowElement)
 })
 
 // open pm menu
@@ -330,8 +342,8 @@ document.getElementById('pm-bar-toggle').addEventListener('change', e => {
 })
 
 // receive who's on chat
-socket.on('pm_bar_opened_response', users => {
-    console.log("pm_bar_opened_response")
+socket.on('chat_list_update', users => {
+    console.log("chat_list_update")
     console.log(users)
 
     let markup = ""

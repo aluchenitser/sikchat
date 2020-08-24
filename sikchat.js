@@ -239,7 +239,7 @@ io.on('connection', socket => {
     
     socket.on("pm_bar_opened", () => {
         let users = getRoomUsers(io, socket.handshake.session.user.room)
-        socket.emit("pm_bar_opened_response", users)
+        socket.emit("chat_list_update", users)
     })
 
     socket.on("pm_request", guid => {
