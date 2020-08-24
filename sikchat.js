@@ -253,6 +253,19 @@ io.on('connection', socket => {
         }
     })
 
+    // sends pm chat to recipient and echos to client
+    socket.on("pm_chat", data => {          // { msg, sender_guid, recipient_guid }
+        socket.emit("pm_chat_response", data)
+        getUserSocket(io, data.recipient_guid).socket.emit("pm_chat_response", data)
+    })
+
+
+
+
+
+
+
+
     socket.on('room_change', (room_name_new) => { 
         console.log("received room_change request:", room_name_new)
 

@@ -295,8 +295,8 @@ document.getElementById('chat-form').addEventListener('submit', e => {
 // open pm window
 $(PMUsersWrapperElement).on("click", ".fa-comment", e => {
     let guid = e.target.parentElement.getAttribute("sik-pm-guid")
-     if(document.querySelector(`[id$=pm_window_${guid.substring(2)}]`) == undefined) {
-         socket.emit('pm_request', guid)
+     if(getPMWindowWithGuid(guid) == undefined) {
+         socket.emit('pm_request', guid)    
      }
 })
 
@@ -316,10 +316,12 @@ socket.on('pm_request_success', data => {   // { guid, username, socket }
                 <div class="header">${data.username}</div>
                 <div class="chat-area"></div>
                 <div class="input">
-                    <input type="text" />
+                    <input type="text" sik-pm-guid="${data.guid}" />
                 </div>
             </div>
         `
+
+        // create window and close handler
         let PMWindowElement = FEUtils.stringToHTML(markup)
         FEUtils.dragElement(PMWindowElement)
         PMWindowElement.querySelector(".exit").addEventListener("click", () => {
@@ -331,7 +333,25 @@ socket.on('pm_request_success', data => {   // { guid, username, socket }
             PMWindowElement.remove();
         })
 
+        PMWindowElement.querySelector("input").addEventListener("keydown", e => {
+            if(e.key == "Enter") {
+                let sender_guid  = gameState.session.user.guid
+                let recipient_guid  = e.target.getAttribute("sik-pm-guid")
+                let msg =  e.target.value
+    
+                socket.emit("pm_chat", { msg, sender_guid, recipient_guid })
+            }
+        })
+
         document.body.appendChild(PMWindowElement)
+})
+
+socket.on("pm_chat_response", data => { // { msg, sender_guid, recipient_guid }
+    console.log("pm_chat_response")
+    let PMWindowElement = getPMWindowWithGuid(data.sender_guid.toString()) || getPMWindowWithGuid(data.recipient_guid.toString())
+    if(PMWindowElement) {
+        PMWindowElement.querySelector(".chat-area").innerHTML += `<div class='chat-row'>${data.msg}</div>`
+    }
 })
 
 // open pm menu
@@ -934,4 +954,9 @@ function setCookie(name, value, options = {}) {
     }
 
     document.cookie = updatedCookie;
+}
+
+function getPMWindowWithGuid(guid) {   // returns PMWindow element
+
+    return document.querySelector(`#pm_window_${guid.substring(2)}`)
 }

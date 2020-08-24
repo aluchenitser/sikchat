@@ -651,9 +651,9 @@ body.ending .next-game-in-wrapper {
 }
 
 .pm-window {
-  width: 350px;
-  height: 369px;
-  padding: 0 15px 15px 15px;
+  width: 345px;
+  height: 364px;
+  padding: 0 10px 10px 15px;
   background-color: #d431d4;
   color: white;
   position: absolute;
