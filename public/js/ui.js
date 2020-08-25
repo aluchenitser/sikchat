@@ -80,6 +80,7 @@ var gameState = {
     let debug = getCookie("sik_debug")
     let rooms = getCookie("sik_rooms")
     let data = getCookie("sik_user")
+    let chatList = getCookie("sik_chat_list")
     
     if (data == undefined || debug == undefined || rooms == undefined) {
         throw "bogus cookies: browser may have cookies disabled"
@@ -354,7 +355,7 @@ socket.on('chat_list_response', users => { // users[]
     })
 
     if(users.length == 0) {
-        markup += "<div class='pm-user' ><div class='pm-user-inner'> ... empty ... </div></div>"
+        markup += "<div class='pm-user' ><div class='pm-user-inner'> ... just you ... </div></div>"
     }
 
     PMUsersWrapperElement.innerHTML = markup

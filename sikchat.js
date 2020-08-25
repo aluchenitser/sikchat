@@ -78,25 +78,26 @@ app.route('/')
         res.cookie("sik_debug", "false", {path: "/"});
         
         let isNewUser = false
-        if (req.session.user && req.cookies.sik_sid) {
-            req.session.user.room = req.session.user.room || "lobby"
-        }
-        else {
+
+        if (!(req.session.user && req.cookies.sik_sid)) {
             req.session.user = new User({})                           // blank account until the user logs in or registers
             userRepo[req.session.user.guid] = req.session.user
             isNewUser = true
         }
 
         console.log(isNewUser ? "created blank user" : "existing user found")
+        
         let user = req.session.user
+        console.log("---------user")
+        console.log(user)
         console.log("\t", user.guid, user.username, user.email, user.password, user.guid, user.answered, user.points)
 
-        printUserRepo(userRepo, "user repo at get/")
-        printSessions(sessionStore, "sessions at get /")
-        printSocketSessions(io, "get / socket sessions")
-
+        // printUserRepo(userRepo, "user repo at get/")
+        // printSessions(sessionStore, "sessions at get /")
+        // printSocketSessions(io, "get / socket sessions")
+      
         console.log("------ END GET / ------")
-
+        
         // update client
         res.cookie("sik_user", JSON.stringify(mapRepoUserToClientUser(req.session.user)), {path: "/", expires: dayjs().add(7,"d").toDate()});
         res.cookie("sik_rooms", JSON.stringify(roomList), {path: "/", expires: dayjs().add(7,"d").toDate()});
@@ -175,27 +176,17 @@ lobby.start()
 /* ------------------- SOCKETS ------------------- */
 
 io.on('connection', socket => {
-    let PMChats = {}
-
 
     console.log("socket connection")
 
-    // joins room or sends page reload signal
-    if(socket.handshake.session) {
-        console.log("\thas session")
-    }
-    else {
-        console.log("\tdoes not have session")
-    }
-    if(socket.handshake.session && socket.handshake.session.user) {
-        console.log("\thas user")
-    }
-    else {
-        console.log("\tdoes not have user")
-    }
-    if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.room) {
+    if(socketSessionUserHasProperty(socket, "room")) {
         console.log("\thas room:", socket.handshake.session.user.room)
         socket.join(socket.handshake.session.user.room)
+
+        let chatList = getRoomUsers(io, socket.handshake.session.user.room, socket.handshake.session.user.guid)
+        if(chatList.length > 0) {
+            socket.emit("chat_list_response", chatList)
+        }
     }
     else {
         console.log("\tdoes not have room\n\treload_page")
@@ -254,13 +245,6 @@ io.on('connection', socket => {
         socket.emit("pm_chat_response", data)
         getUserSocket(io, data.recipient_guid).socket.emit("pm_chat_response", data)
     })
-
-
-
-
-
-
-
 
     socket.on('room_change', (room_name_new) => { 
         console.log("received room_change request:", room_name_new)
@@ -337,5 +321,11 @@ function mapRepoUserToClientUser(user) {
     clone.isRegistered = user.email == null ? false : true              // toggles whether they see logout or register/login
 
     return clone
+}
+
+function socketSessionUserHasProperty(socket, property) {
+    return socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user[property]
+        ? true
+        : false
 }
 
