@@ -340,21 +340,25 @@ socket.on("pm_chat_response", data => { // { msg, username, sender_guid, recipie
 })
 
 // open pm menu
-document.getElementById('pm-bar-toggle').addEventListener('change', e => {
-    if(e.target.checked) {
-        socket.emit('chat_list', gameState.session.user.guid)
-    }
-})
+// document.getElementById('pm-bar-toggle').addEventListener('change', e => {
+//     if(e.target.checked) {
+//         socket.emit('chat_list', gameState.session.user.guid)
+//     }
+// })
 
 // receive who's on chat
 socket.on('chat_list_response', users => { // users[]
+    console.log("chat_list_response")
+    console.log(users)
 
     let markup = ""
     users.forEach(user => {
+        if(user.guid == gameState.session.user.guid) return;
+
         markup += "<div class='pm-user' tabindex='0' sik-pm-guid='" + user.guid + "'><div class='pm-user-inner'>" + user.username + "</div><i class='fa fa-comment'></i></div>"
     })
 
-    if(users.length == 0) {
+    if(users.length == 1) {
         markup += "<div class='pm-user' ><div class='pm-user-inner'> ... just you ... </div></div>"
     }
 

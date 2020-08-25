@@ -174,19 +174,21 @@ lobby.start()
 // history.start()
 
 /* ------------------- SOCKETS ------------------- */
+let disconnectTimers = {}
 
 io.on('connection', socket => {
 
     console.log("socket connection")
 
     if(socketSessionUserHasProperty(socket, "room")) {
-        console.log("\thas room:", socket.handshake.session.user.room)
-        socket.join(socket.handshake.session.user.room)
-
-        let chatList = getRoomUsers(io, socket.handshake.session.user.room, socket.handshake.session.user.guid)
-        if(chatList.length > 0) {
-            socket.emit("chat_list_response", chatList)
-        }
+        clearTimeout(disconnectTimers[socket.handshake.session.user.guid])
+        
+        socket.join(socket.handshake.session.user.room, () => {
+            let chatList = getRoomUsers(io, socket.handshake.session.user.room)
+            if(chatList.length > 0) {
+                io.to(socket.handshake.session.user.room).emit("chat_list_response", chatList)
+            }
+        })
     }
     else {
         console.log("\tdoes not have room\n\treload_page")
@@ -226,10 +228,10 @@ io.on('connection', socket => {
         chatCount++
     })
     
-    socket.on("chat_list", requestingGuid => {
-        let users = getRoomUsers(io, socket.handshake.session.user.room, requestingGuid)
-        socket.emit("chat_list_response", users)
-    })
+    // socket.on("chat_list", requestingGuid => {
+    //     let users = getRoomUsers(io, socket.handshake.session.user.room, requestingGuid)
+    //     socket.emit("chat_list_response", users)
+    // })
 
     socket.on("pm_window", guid => {
         let data = getUserSocket(io, guid)     // { guid, username, socket }
@@ -280,6 +282,7 @@ io.on('connection', socket => {
 
         if(foundDuplicate == false) {
             socket.handshake.session.user.username = username
+            socket.handshake.session.save()
 
             // update repo for registered accounts
             if(userRepo.hasOwnProperty(socket.handshake.session.user.email)) {
@@ -288,11 +291,33 @@ io.on('connection', socket => {
         }
         
         socket.emit('username_update_response', { username: username, foundDuplicate });
+        
+        let chatList = getRoomUsers(io, socket.handshake.session.user.room)
+        io.to(socket.handshake.session.user.room).emit("chat_list_response", chatList)
+
+
         console.log(`username_update_response\n\t${username} foundDuplicate: ${foundDuplicate}`);
     })
 
-    socket.on('disconnect', () => {
-        // console.log('user disconnected');
+    socket.on('disconnecting', () => {
+
+        let chatList = []
+        try {
+            chatList = getRoomUsers(io, socket.handshake.session.user.room, socket.handshake.session.user.guid)
+        } catch(e) { 
+            console.log("disconnceting error catch---")
+            console.log(socket.handshake.session.user)
+            return;
+        }
+        
+     
+        // this is to lessen network traffic when the user refreshes the page
+        let timer = setTimeout(() => {
+            io.to(socket.handshake.session.user.room).emit("chat_list_response", chatList)
+            delete disconnectTimers[socket.handshake.session.user.guid]
+        }, 1000)
+
+        disconnectTimers[socket.handshake.session.user.guid] = timer
     });
 });
 
