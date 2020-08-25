@@ -235,22 +235,22 @@ io.on('connection', socket => {
         chatCount++
     })
     
-    socket.on("chat_list_request", requestingGuid => {
+    socket.on("chat_list", requestingGuid => {
         let users = getRoomUsers(io, socket.handshake.session.user.room, requestingGuid)
-        socket.emit("chat_list_request_response", users)
+        socket.emit("chat_list_response", users)
     })
 
-    socket.on("pm_request", guid => {
+    socket.on("pm_window", guid => {
         let data = getUserSocket(io, guid)     // { guid, username, socket }
 
         if(data) {
             delete data.socket
-            socket.emit("pm_request_success", data)
+            socket.emit("pm_window_success", data)
         }
     })
 
     // sends pm chat to recipient and echos to client
-    socket.on("pm_chat", data => {          // { msg, sender_guid, recipient_guid }
+    socket.on("pm_chat", data => {          // { msg, username, sender_guid, recipient_guid }
         socket.emit("pm_chat_response", data)
         getUserSocket(io, data.recipient_guid).socket.emit("pm_chat_response", data)
     })

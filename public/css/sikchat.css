@@ -652,7 +652,7 @@ body.ending .next-game-in-wrapper {
 
 .pm-window {
   width: 345px;
-  height: 362px;
+  height: 363px;
   padding: 0 10px 8px 15px;
   background-color: #d431d4;
   color: white;
@@ -680,13 +680,13 @@ body.ending .next-game-in-wrapper {
   text-align: right;
 }
 .pm-window .chat-area .chat-row.current-user span {
-  padding: 3px 2px 3px 2px;
+  padding: 3px 5px 3px 5px;
   text-align: left;
   background-color: transparent;
 }
 .pm-window .chat-area .chat-row span {
   display: inline-block;
-  padding: 2px;
+  padding: 2px 5px 2px 5px;
   background-color: rgba(165, 255, 159, 0.37);
 }
 .pm-window .input input {

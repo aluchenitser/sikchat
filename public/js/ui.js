@@ -124,7 +124,7 @@ if(gameState.session.debug == "host") {
     socket.close()
 }
 
-disableAlreadyInProgress = true           // set to true when developing
+var disableAlreadyInProgress = true           // set to true when developing
 
 socket.on('tick', server => {
     // console.log('tick!')
@@ -293,12 +293,12 @@ document.getElementById('chat-form').addEventListener('submit', e => {
 })
 
 // open pm window
-$(PMUsersWrapperElement).on("click", ".fa-comment", e => {
-    let guid = e.target.parentElement.getAttribute("sik-pm-guid")
-     if(getPMWindowWithGuid(guid) == undefined) {
-         socket.emit('pm_request', guid)    
-     }
-})
+// $(PMUsersWrapperElement).on("click", ".fa-comment", e => {
+//     let guid = e.target.parentElement.getAttribute("sik-pm-guid")
+//      if(getPMWindowWithGuid(guid) == undefined) {
+//          socket.emit('pm_window', guid)    
+//      }
+// })
 
 let mouseCoordinates = { x: 0, y: 0 }
 
@@ -307,47 +307,19 @@ document.onmousemove = e => {
     mouseCoordinates.y = e.pageX
 }
 
-socket.on('pm_request_success', data => {   // { guid, username, socket }
-        let markup = `
-            <div class='pm-window' id='pm_window_${data.guid.substring(2)}'>
-                <div class="exit">
-                    <div></div>
-                </div>
-                <div class="header">${data.username}</div>
-                <div class="chat-area"></div>
-                <div class="input">
-                    <input type="text" sik-pm-guid="${data.guid}" />
-                </div>
-            </div>
-        `
+$(PMUsersWrapperElement).on("click", ".fa-comment", e => {  // { guid, username, socket }
 
-        // create window and close handler
-        let PMWindowElement = FEUtils.stringToHTML(markup)
-        FEUtils.dragElement(PMWindowElement)
-        PMWindowElement.querySelector(".exit").addEventListener("click", () => {
-
-            PMWindowElement.classList.add('exiting')
-        })
-        
-        PMWindowElement.addEventListener("transitionend", () => {
-            PMWindowElement.remove();
-        })
-
-        PMWindowElement.querySelector("input").addEventListener("keydown", e => {
-            if(e.key == "Enter") {
-                let sender_guid  = gameState.session.user.guid
-                let recipient_guid  = e.target.getAttribute("sik-pm-guid")
-                let msg =  e.target.value
+    let guid = e.target.parentElement.getAttribute("sik-pm-guid")
+    let username = e.target.parentElement.querySelector(".pm-user-inner").textContent
     
-                socket.emit("pm_chat", { msg, sender_guid, recipient_guid })
-                e.target.value = ""
-            }
-        })
+    if(getPMWindowWithGuid(guid)) {
+        return;
+    }
 
-        document.body.appendChild(PMWindowElement)
+    PMChatWindow(username, guid)
 })
 
-socket.on("pm_chat_response", data => { // { msg, sender_guid, recipient_guid }
+socket.on("pm_chat_response", data => { // { msg, username, sender_guid, recipient_guid }
     
     let PMWindowElement = getPMWindowWithGuid(data.sender_guid.toString()) || getPMWindowWithGuid(data.recipient_guid.toString())
     if(PMWindowElement) {
@@ -359,24 +331,31 @@ socket.on("pm_chat_response", data => { // { msg, sender_guid, recipient_guid }
 
         PMWindowElement.querySelector(".chat-area").innerHTML = `<div class='chat-row${htmlClass}'><span>${data.msg}</span></div>` + prevHTML
     }
+    else {
+        PMChatWindow(data.username, data.sender_guid)
+            .querySelector(".chat-area").innerHTML = `<div class='chat-row'><span>${data.msg}</span></div>`
+        
+    }
 })
 
 // open pm menu
 document.getElementById('pm-bar-toggle').addEventListener('change', e => {
     if(e.target.checked) {
-        socket.emit('chat_list_request', gameState.session.user.guid)
+        socket.emit('chat_list', gameState.session.user.guid)
     }
 })
 
 // receive who's on chat
-socket.on('chat_list_request_response', users => {
-    // console.log("chat_list_update")
-    // console.log(users)
+socket.on('chat_list_response', users => { // users[]
 
     let markup = ""
     users.forEach(user => {
         markup += "<div class='pm-user' tabindex='0' sik-pm-guid='" + user.guid + "'><div class='pm-user-inner'>" + user.username + "</div><i class='fa fa-comment'></i></div>"
     })
+
+    if(users.length == 0) {
+        markup += "<div class='pm-user' ><div class='pm-user-inner'> ... empty ... </div></div>"
+    }
 
     PMUsersWrapperElement.innerHTML = markup
 })
@@ -711,6 +690,54 @@ logOutElement.addEventListener("keyup", e => {
 /* -------------------- FUNCTIONS --------------------- */
 /* -------------------- FUNCTIONS --------------------- */
 /* -------------------- FUNCTIONS --------------------- */
+
+function PMChatWindow(username, guid) {
+
+    guid = guid.toString()
+
+    let markup = `
+        <div class='pm-window' id='pm_window_${guid.substring(2)}'>
+            <div class="exit">
+                <div></div>
+            </div>
+            <div class="header">${username}</div>
+            <div class="chat-area"></div>
+            <div class="input">
+                <input type="text" sik-pm-guid="${guid}" />
+            </div>
+        </div>
+    `
+
+    // create window and close handler
+    let PMWindowElement = FEUtils.stringToHTML(markup)
+    FEUtils.dragElement(PMWindowElement)
+    PMWindowElement.querySelector(".exit").addEventListener("click", () => {
+
+        PMWindowElement.classList.add('exiting')
+    })
+    
+    PMWindowElement.addEventListener("transitionend", e => {
+        PMWindowElement.remove();
+    })
+
+    PMWindowElement.querySelector("input").addEventListener("keydown", e => {
+        if(e.key == "Enter") {
+            let sender_guid = gameState.session.user.guid
+            let recipient_guid  = e.target.getAttribute("sik-pm-guid")
+            let username = gameState.session.user.username
+            let msg =  e.target.value
+
+            socket.emit("pm_chat", { msg, username, sender_guid, recipient_guid })
+            e.target.value = ""
+        }
+    })
+
+    document.body.appendChild(PMWindowElement)
+
+    return PMWindowElement
+}
+
+
 
 function alreadyInProgressBallsAnimation(bool) {
 

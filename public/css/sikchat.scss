@@ -835,8 +835,10 @@ h1, p {
 }
 
 .pm-window {
+    // resize: horizontal;
+
     width: 345px;
-    height: 362px;
+    height: 363px;
     padding: 0 10px 8px 15px;
     background-color: $general-background-color;
     color: white;
@@ -868,7 +870,7 @@ h1, p {
                 text-align: right;
                 
                 span {
-                    padding: 3px 2px 3px 2px;
+                    padding: 3px 5px 3px 5px;
                     text-align: left;
                     background-color: transparent;
                 }
@@ -876,7 +878,7 @@ h1, p {
 
             span {
                 display: inline-block;
-                padding: 2px;
+                padding: 2px 5px 2px 5px;
                 background-color: rgb(165,255, 159, 0.37)
             }
         }
