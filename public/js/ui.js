@@ -579,6 +579,7 @@ changeUsernameElement.addEventListener("blur", e => {
 var originalValue = userInputElement.value
 userInputElement.addEventListener("focus", e => { 
     originalValue = userInputElement.value
+    userInputElement.select()
 })
 
 userInputElement.addEventListener("keydown", e => {
@@ -815,7 +816,6 @@ function submitUserNameChange(e) {
     let username = userInputElement.value;
 
     if(validUserPattern.test(username) && username != gameState.session.user.username) {
-        changeUsernameElement.textContent = "checking.."
         socket.emit('username_update', username)
     }
 }

@@ -761,6 +761,15 @@ h1, p {
                 background-color: white;
                 user-select: none;
             }
+
+            // gets rid of safari key icon
+            &::-webkit-contacts-auto-fill-button {
+                visibility: hidden;
+                display: none !important;
+                pointer-events: none;
+                position: absolute;
+                right: 0;
+            }
             
         }
     }

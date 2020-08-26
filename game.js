@@ -383,26 +383,26 @@ module.exports = class Game {
         Object.keys(sockets).forEach(key => {
             let socket = sockets[key]
             
-            console.log("\n\tsocket #", i)
-            if(socket.handshake.session) {
-                console.log("\t\thas session")
-            }
-            else {
-                console.log("\t\tdoes not have session")
-            }
-            if(socket.handshake.session && socket.handshake.session.user) {
-                console.log("\t\thas user")
-            }
-            else {
-                console.log("\t\tdoes not have user")
-            }
+            // console.log("\n\tsocket #", i)
+            // if(socket.handshake.session) {
+            //     console.log("\t\thas session")
+            // }
+            // else {
+            //     console.log("\t\tdoes not have session")
+            // }
+            // if(socket.handshake.session && socket.handshake.session.user) {
+            //     console.log("\t\thas user")
+            // }
+            // else {
+            //     console.log("\t\tdoes not have user")
+            // }
     
-            if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.guid) {
-                console.log("\t\thas guid: ", socket.handshake.session.user.guid)
-            }
-            else {
-                console.log("\t\tdoes not have guid")
-            }
+            // if(socket.handshake.session && socket.handshake.session.user && socket.handshake.session.user.guid) {
+            //     console.log("\t\thas guid: ", socket.handshake.session.user.guid)
+            // }
+            // else {
+            //     console.log("\t\tdoes not have guid")
+            // }
 
 
             let guid;

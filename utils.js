@@ -1,6 +1,6 @@
 
 exports.printUserRepo = (userRepo, msg) => {
-    console.log("_exports.printUserRepo")
+    // console.log("_exports.printUserRepo")
     console.log(msg)
     console.log(`\tkey, username, email, password, guid, answered, points`)
     for(var key in userRepo) {
@@ -11,9 +11,9 @@ exports.printUserRepo = (userRepo, msg) => {
 
 exports.printSessions = (store, msg) => {
 
-    console.log("_exports.printSessions")
-    console.log(msg)
-    console.log(`\tusername, email, password, guid, answered, points`)
+    // console.log("_exports.printSessions")
+    // console.log(msg)
+    // console.log(`\tusername, email, password, guid, answered, points`)
     store.all(function(err, sessions) {
         console.log("ENTERED STORE.ALL")
 
@@ -29,10 +29,10 @@ exports.printSessions = (store, msg) => {
 
 
 exports.printSocketSessions = (io, msg) => {
-    console.log("_exports.printSocketSessions")
-    console.log(msg)
-    console.log(`\tsockets: ${Object.keys(io.sockets.sockets).length}`)
-    console.log(`\tusername, email, password, guid, answered, points`)
+    // console.log("_exports.printSocketSessions")
+    // console.log(msg)
+    // console.log(`\tsockets: ${Object.keys(io.sockets.sockets).length}`)
+    // console.log(`\tusername, email, password, guid, answered, points`)
 
     Object.keys(io.sockets.sockets).forEach(key => {
         let socket = io.sockets.sockets[key]
@@ -47,7 +47,7 @@ exports.printSocketSessions = (io, msg) => {
 }
 
 exports.getUserSocket = (io, guid) => {
-    console.log("_exports.getUserSocket")
+    // console.log("_exports.getUserSocket")
     
     let info = undefined;
 

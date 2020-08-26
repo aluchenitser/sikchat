@@ -88,11 +88,10 @@ app.route('/')
         console.log(isNewUser ? "created blank user" : "existing user found")
         
         let user = req.session.user
-        console.log("---------user")
         console.log(user)
-        console.log("\t", user.guid, user.username, user.email, user.password, user.guid, user.answered, user.points)
+        // console.log("\t", user.guid, user.username, user.email, user.password, user.guid, user.answered, user.points)
 
-        // printUserRepo(userRepo, "user repo at get/")
+        printUserRepo(userRepo, "user repo at get /")
         // printSessions(sessionStore, "sessions at get /")
         // printSocketSessions(io, "get / socket sessions")
       
@@ -269,14 +268,14 @@ io.on('connection', socket => {
         // Object.keys(socket.rooms).filter(name => name.startsWith("sik"))[0]
     })
 
-    socket.on('username_update', username => {         // socket.handshake.session added to the socket by socket.handshake.session
+    socket.on('username_update', username => {        
         
         let foundDuplicate = false;
         
         for(var i in userRepo) {
-            if(userRepo[i].username == username && userRepo[i] != socket.handshake.session.user) {
+            if(userRepo[i].username == username && userRepo[i].guid != socket.handshake.session.user.guid) {
                 foundDuplicate = true
-                break
+                break;
             }
         }
 
@@ -285,13 +284,11 @@ io.on('connection', socket => {
             socket.handshake.session.save()
 
             // update repo for registered accounts
-            if(userRepo.hasOwnProperty(socket.handshake.session.user.email)) {
-                userRepo[socket.handshake.session.user.email] = socket.handshake.session.user
-            }
+            userRepo[socket.handshake.session.user.guid] = socket.handshake.session.user
         }
         
         socket.emit('username_update_response', { username: username, foundDuplicate });
-        
+
         let chatList = getRoomUsers(io, socket.handshake.session.user.room)
         io.to(socket.handshake.session.user.room).emit("chat_list_response", chatList)
 
@@ -305,7 +302,7 @@ io.on('connection', socket => {
         try {
             chatList = getRoomUsers(io, socket.handshake.session.user.room, socket.handshake.session.user.guid)
         } catch(e) { 
-            console.log("disconnceting error catch---")
+            console.log("disconnecting error catch")
             console.log(socket.handshake.session.user)
             return;
         }

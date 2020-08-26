@@ -592,6 +592,13 @@ body.ending .next-game-in-wrapper {
   background-color: white;
   user-select: none;
 }
+.side-bar .user-bar #username::-webkit-contacts-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
 
 .pm-bar {
   top: 50px;
