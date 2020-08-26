@@ -269,7 +269,11 @@ io.on('connection', socket => {
     })
 
     socket.on('username_update', username => {        
-        
+        console.log("username_update request")
+            printUserRepo(userRepo, "userRepo prior username_update")
+            printSessions(sessionStore, "sessions prior username_update")
+            printSocketSessions(io, "socket sessions prior username_update")
+
         let foundDuplicate = false;
         
         for(var i in userRepo) {

@@ -417,24 +417,24 @@ socket.on("clear_user_statistics", () => {     // {difficulty, chatCount, user}
 var timeout_user;    
 socket.on('username_update_response', data => {    // {username, foundDuplicate}
 
-    changeUsernameElement.textContent = 'checking..'
+    if(data.foundDuplicate) {
+        changeUsernameElement.textContent = 'duplicate'
+        userInputElement.value = gameState.session.user.username
+        changeUsernameElement.classList.add('duplicate')
+    }
+    else {
+        gameState.session.user.username = data.username
+        setCookie("sik_user", JSON.stringify(gameState.session.user))
+        changeUsernameElement.textContent = 'changed!'
+        changeUsernameElement.classList.add('duplicate')
+    }
 
     setTimeout(() => {
-        if(data.foundDuplicate) {
-            changeUsernameElement.textContent = 'duplicate'
-        }
-        else {
-            gameState.session.user.username = data.username
-            setCookie("sik_user", JSON.stringify(gameState.session.user))
-            changeUsernameElement.textContent = 'changed!'
-        }
-
-        setTimeout(() => {
-            changeUsernameElement.textContent = 'save'
-            changeUsernameElement.classList.remove('active')
-        }, 2000)
+        changeUsernameElement.textContent = 'save'
+        changeUsernameElement.classList.remove('active')
+        changeUsernameElement.classList.remove('duplicate')
+        changeUsernameElement.classList.remove('changed')
     }, 2000)
-
 })
 
 socket.on("room_change_response", new_room => {
@@ -576,9 +576,7 @@ changeUsernameElement.addEventListener("blur", e => {
     }
 })
 
-var originalValue = userInputElement.value
 userInputElement.addEventListener("focus", e => { 
-    originalValue = userInputElement.value
     userInputElement.select()
 })
 
@@ -590,10 +588,12 @@ userInputElement.addEventListener("keydown", e => {
 })
 
 userInputElement.addEventListener("keyup", e => { 
-    if(originalValue != e.target.value) {
+    if(e.target.value != gameState.session.user.username) {
         changeUsernameElement.classList.add("active")
     }
-    console.log("KEYUP: e.target.value", e.target.value, "userInputElement.value", userInputElement.value);
+    else {
+        changeUsernameElement.classList.remove("active")
+    }
 })
 
 userInputElement.addEventListener("blur", e => { 
@@ -805,17 +805,16 @@ function clearSideBar() {
     userInputElement.value = gameState.session.user.username
 
     registerSubmitElement.classList.remove("valid")
-    // userInputElement.value = gameState.session.user.username || "someone"
 }
 
 // username functions
 function submitUserNameChange(e) {
-    // var validUserPattern = /^[a-z0-9_-]{1,16}$/
 
     var validUserPattern = /^[a-zA-Z0-9 ]*$/
     let username = userInputElement.value;
 
     if(validUserPattern.test(username) && username != gameState.session.user.username) {
+        changeUsernameElement.textContent = 'checking..'
         socket.emit('username_update', username)
     }
 }

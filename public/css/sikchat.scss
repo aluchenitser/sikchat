@@ -8,6 +8,8 @@ $triad-blue: #31D4D4;
 $triad-yellow: #D4D431;
 
 
+
+
 $label-text-color: gray;
 
 $font-size-message: 16px;
@@ -743,9 +745,13 @@ h1, p {
             top: 11px;
             cursor: pointer;
             opacity: 0.6;
-            transition: opacity .2s;
-
+            
             &.active {
+                transition: opacity .2s;
+                opacity: 1;
+            }
+
+            &.duplicate, &.changed {
                 opacity: 1;
             }
         }

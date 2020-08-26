@@ -576,9 +576,12 @@ body.ending .next-game-in-wrapper {
   top: 11px;
   cursor: pointer;
   opacity: 0.6;
-  transition: opacity 0.2s;
 }
 .side-bar .user-label-wrap .change-username.active {
+  transition: opacity 0.2s;
+  opacity: 1;
+}
+.side-bar .user-label-wrap .change-username.duplicate, .side-bar .user-label-wrap .change-username.changed {
   opacity: 1;
 }
 .side-bar .user-bar {
