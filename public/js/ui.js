@@ -706,7 +706,7 @@ function PMChatWindow(username, guid) {
             <div class="exit">
                 <div></div>
             </div>
-            <div class="header">${username}</div>
+            <div class="header"><span>${username}</span></div>
             <div class="chat-area"></div>
             <div class="input">
                 <input type="text" sik-pm-guid="${guid}" />

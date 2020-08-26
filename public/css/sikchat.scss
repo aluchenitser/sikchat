@@ -678,6 +678,10 @@ h1, p {
         top: 5px;
         cursor: pointer;
         padding-right: 15px;
+
+        i {
+            font-size: 20px;
+        }
     }
 
     input, select {
@@ -769,10 +773,8 @@ h1, p {
             }
 
             // gets rid of safari key icon
-            &::-webkit-contacts-auto-fill-button {
+            &::-webkit-credentials-auto-fill-button {
                 visibility: hidden;
-                display: none !important;
-                pointer-events: none;
                 position: absolute;
                 right: 0;
             }
@@ -816,6 +818,10 @@ h1, p {
         top: 5px;
         cursor: pointer;
         padding-right: 15px;
+
+        i {
+            font-size: 20px;
+        }
     }
 
     input, select {
@@ -870,6 +876,11 @@ h1, p {
     .header {
         padding-top: 15px;
         height: 33px;
+
+        span {
+            position: relative;
+            top: -1px;
+        }
     }
 
     .chat-area {

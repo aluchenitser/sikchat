@@ -524,6 +524,9 @@ body.ending .next-game-in-wrapper {
   cursor: pointer;
   padding-right: 15px;
 }
+.side-bar label.close-side-bar i {
+  font-size: 20px;
+}
 .side-bar input, .side-bar select {
   width: 100%;
   border: none;
@@ -595,10 +598,8 @@ body.ending .next-game-in-wrapper {
   background-color: white;
   user-select: none;
 }
-.side-bar .user-bar #username::-webkit-contacts-auto-fill-button {
+.side-bar .user-bar #username::-webkit-credentials-auto-fill-button {
   visibility: hidden;
-  display: none !important;
-  pointer-events: none;
   position: absolute;
   right: 0;
 }
@@ -633,6 +634,9 @@ body.ending .next-game-in-wrapper {
   top: 5px;
   cursor: pointer;
   padding-right: 15px;
+}
+.pm-bar label.close-pm-bar i {
+  font-size: 20px;
 }
 .pm-bar input, .pm-bar select {
   width: 100%;
@@ -677,6 +681,10 @@ body.ending .next-game-in-wrapper {
 .pm-window .header {
   padding-top: 15px;
   height: 33px;
+}
+.pm-window .header span {
+  position: relative;
+  top: -1px;
 }
 .pm-window .chat-area {
   background-color: white;
