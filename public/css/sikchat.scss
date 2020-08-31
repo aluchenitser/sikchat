@@ -2,22 +2,21 @@
 
 /* ----------------- VARIABLES ----------------- */
 
+@import "variables";
+
 // $general-background-color: #EE90EE;
 $general-background-color: #d431d4;
 $triad-blue: #31D4D4;
 $triad-yellow: #D4D431;
 
-
-
+// $body-copy: #2b2b2b;
 
 $label-text-color: gray;
-
 $font-size-message: 16px;
-
 $font-size-username: 22px;
-
 $font-size-logo: 20px;
 
+// $fade-in-length: 0.3s;
 /* ----------------- GENERAL ----------------- */
 
 html, body {
@@ -846,6 +845,11 @@ h1, p {
             .pm-user-inner {
                 position: relative;
                 top: 3px;
+            }
+
+            i.fa-comment {
+                position: relative;
+                top: 2px;
             }
 
             &:last-of-type {

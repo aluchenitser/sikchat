@@ -4,7 +4,7 @@ div.ending {
   padding: 0 15px;
   left: -2px;
   position: relative;
-  animation: fadeIn 0.5s;
+  animation: fadeIn 0.3s;
   transition: opacity 0.5s;
   max-width: 600px;
 }

@@ -3,6 +3,7 @@
 # 	components/starting/starting.scss:components/starting/starting.css
 # 	components/started/started.scss:components/started/started.css
 # 	components/ending/ending.scss:components/ending/ending.css
+#   css/_variables.scss:css/_variables.css 
 
 
-sass --watch css/sikchat.scss:css/sikchat.css components/intermission/intermission.scss:components/intermission/intermission.css components/starting/starting.scss:components/starting/starting.css components/started/started.scss:components/started/started.css components/ending/ending.scss:components/ending/ending.css
+sass --watch css/_variables.scss:css/_variables.css css/sikchat.scss:css/sikchat.css components/intermission/intermission.scss:components/intermission/intermission.css components/starting/starting.scss:components/starting/starting.css components/started/started.scss:components/started/started.css components/ending/ending.scss:components/ending/ending.css

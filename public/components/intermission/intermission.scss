@@ -1,6 +1,8 @@
+@import "../../css/variables";
+
 div.intermission {
     position: relative;
-    animation: fadeIn .5s;
+    animation: fadeIn $fade-in-length;
     margin: 0 auto;
 
     @media (max-height: 720px) {

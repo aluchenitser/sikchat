@@ -1,10 +1,12 @@
+@import "../../css/_variables";  
+
 div.ending {
     width: 80%;
-    margin: auto;
+    margin: auto; 
     padding: 0 15px;
     left: -2px;
     position: relative;
-    animation: fadeIn .5s;
+    animation: fadeIn $fade-in-length;  
     transition: opacity 0.5s;
     max-width: 600px;
 

@@ -1,6 +1,6 @@
 div.intermission {
   position: relative;
-  animation: fadeIn 0.5s;
+  animation: fadeIn 0.3s;
   margin: 0 auto;
 }
 @media (max-height: 720px) {

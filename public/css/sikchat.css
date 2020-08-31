@@ -660,6 +660,10 @@ body.ending .next-game-in-wrapper {
   position: relative;
   top: 3px;
 }
+.pm-bar .pm-users-wrapper .pm-user i.fa-comment {
+  position: relative;
+  top: 2px;
+}
 .pm-bar .pm-users-wrapper .pm-user:last-of-type {
   border-radius: 0 0 10px 0;
 }

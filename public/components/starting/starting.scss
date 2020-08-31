@@ -1,6 +1,7 @@
+@import "../../css/variables";
 
 div.starting {
-    animation: fadeIn .5s;
+    animation: fadeIn $fade-in-length;
     position: relative;
     margin: auto 0;
     // transform: translate(0, -5%);

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 52 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-miterlimit:1.5;">
+    <g transform="matrix(1,0,0,1,0,-259.53)">
+        <g id="countdown-nofx" serif:id="countdown nofx" transform="matrix(0.131545,0,0,0.141388,-48.6003,252.122)">
+            <rect x="369.458" y="52.395" width="394.562" height="387.374" style="fill:none;"/>
+            <clipPath id="_clip1">
+                <rect x="369.458" y="52.395" width="394.562" height="387.374"/>
+            </clipPath>
+            <g clip-path="url(#_clip1)">
+                <g transform="matrix(28.3455,0,0,24.3048,-19004,-6302.08)">
+                    <path d="M695.656,263.396C695.656,263.396 698.328,271.874 695.453,275.195C692.578,278.515 685.238,275.429 685.238,275.429C685.238,275.429 682.566,266.95 685.441,263.63C688.316,260.309 695.656,263.396 695.656,263.396Z" style="fill:none;stroke:rgb(212,212,49);stroke-width:1.12px;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

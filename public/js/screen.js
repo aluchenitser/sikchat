@@ -88,11 +88,7 @@ var Screen = {
             "topic": null,
             "question": null,
             "answer": null,
-            
-            // question # of total #
-            "q": null,
-            "of": null
-
+            "count": null,
         },
         ending: {
             "path": "../components/ending/ending.html",

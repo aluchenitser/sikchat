@@ -168,6 +168,8 @@ socket.on('tick', server => {
             Screen.populate("topic", gameState.qBank.loaded.meta.topic)
                         
             Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
+
+            
         })
         
         
@@ -199,8 +201,13 @@ socket.on('tick', server => {
                 Screen.populate("topic", gameState.qBank.loaded.meta.topic)
                 Screen.populate("question", gameState.qBank.currentQuestion.question)
                 Screen.populate("answer", gameState.qBank.currentQuestion.answer)
+                Screen.populate("count", gameState.qBank.currentQuestion.timeLeft)
+
+                setTimeout(() => {
+                    document.querySelector(".difficulty-wrap").className = "difficulty-wrap " + gameState.qBank.currentQuestion.difficulty
+                }, 0)
     
-                progressBarElement = document.querySelector(".progress-bar")
+                // progressBarElement = document.querySelector(".progress-bar")
                 startedWrapStartedElement = document.querySelector(".started-wrap .started")
                 
                 // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAlloted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
@@ -226,20 +233,24 @@ socket.on('tick', server => {
             Screen.populate("topic", gameState.qBank.loaded.meta.topic)
             Screen.populate("question", gameState.qBank.currentQuestion.question)
             Screen.populate("answer", gameState.qBank.currentQuestion.answer)
+            Screen.populate("count", gameState.qBank.currentQuestion.timeLeft)
     
+            setTimeout(() => {
+                document.querySelector(".difficulty-wrap").className = "difficulty-wrap " + gameState.qBank.currentQuestion.difficulty
+            }, 0)
             // progress bar
-            let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAlloted - 1) * 100
+            // let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAlloted - 1) * 100
     
-            if(progressBarElement) {
-                progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
-            }
+            // if(progressBarElement) {
+            //     progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
+            // }
     
-            if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
-                startedWrapStartedElement.classList.add("answered")
-            }
-            else if(startedWrapStartedElement) {
-                startedWrapStartedElement.classList.remove("answered")
-            }
+            // if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
+            //     startedWrapStartedElement.classList.add("answered")
+            // }
+            // else if(startedWrapStartedElement) {
+            //     startedWrapStartedElement.classList.remove("answered")
+            // }
         }
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAlloted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
