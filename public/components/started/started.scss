@@ -92,16 +92,36 @@
         }
 
         .question-text-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
+            // align-items: center;
+            // justify-content: center;
             flex: 1;
+
+            display: flex;
+            flex-flow: column;
+
+            justify-content: center;
 
             .question-text {
                 font-size: 1.5rem;
                 opacity: 1;
                 text-align: justify;
+                // border: 1px dotted blue;
+
+            }
+
+            .question-text-phantom {
+                color: white;
+                // border: 1px dotted pink;
+
+                font-size: 1.5rem;
+                opacity: 1;
+                text-align: justify;
+
+                // visibility: hidden;
+                height: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+                // overflow: hidden;
             }
         }
 

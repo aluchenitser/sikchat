@@ -46,15 +46,18 @@ var Screen = {
 
     populateTypingAnimation(property, value) {
         let element = document.querySelector(`[sik=${property}]`)
+        let phantomElement = document.querySelector(`[sik=${property}-phantom]`)
+
         if(!element) {
             return
         }
 
         if(this.vm.hasOwnProperty(property) && this.vm[property] != value) {
             this.vm[property] = value
+            phantomElement.textContent = value
             
             let i = 0
-            let speed = 10;
+            let speed = 5;
             element.textContent = ''
 
             setTimeout(function typeWriter() {

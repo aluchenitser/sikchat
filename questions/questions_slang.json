@@ -32,7 +32,7 @@
        {
           "question": "slang word for juicy gossip",
           "answer": "tea",
-          "difficulty": "easy",
+          "difficulty": "medium",
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
@@ -82,7 +82,7 @@
        {
           "question": "an acronym used as term of endearment, generally but not exclusively between romantic partners",
           "answer": "BAE",
-          "difficulty": "easy",
+          "difficulty": "medium",
           "extras": {
              "hints": [],
              "postAnswerMessage": null,
@@ -110,7 +110,7 @@
           }
        },
        {
-          "question": "often used publically to accuse someone of havine their feelings hurt",
+          "question": "often used publically to accuse someone of having their feelings hurt",
           "answer": "salty",
           "difficulty": "easy",
           "extras": {
