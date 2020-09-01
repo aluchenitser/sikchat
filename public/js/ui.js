@@ -168,10 +168,7 @@ socket.on('tick', server => {
             Screen.populate("topic", gameState.qBank.loaded.meta.topic)
                         
             Screen.populate("count-down", gameState.time.ticks - gameState.time.tick)
-
-            
         })
-        
         
         // flags
         gameState.noFlag = false;
@@ -198,9 +195,7 @@ socket.on('tick', server => {
             Screen.load("started").done(() => {
                 
                 // first question
-                Screen.populate("topic", gameState.qBank.loaded.meta.topic)
-                Screen.populate("question", gameState.qBank.currentQuestion.question)
-                Screen.populate("answer", gameState.qBank.currentQuestion.answer)
+                Screen.populateTypingAnimation("question", gameState.qBank.currentQuestion.question)
                 Screen.populate("count", gameState.qBank.currentQuestion.timeLeft)
 
                 setTimeout(() => {
@@ -230,13 +225,14 @@ socket.on('tick', server => {
             })
         }
         else {
-            Screen.populate("topic", gameState.qBank.loaded.meta.topic)
-            Screen.populate("question", gameState.qBank.currentQuestion.question)
-            Screen.populate("answer", gameState.qBank.currentQuestion.answer)
+            Screen.populateTypingAnimation("question", gameState.qBank.currentQuestion.question)
             Screen.populate("count", gameState.qBank.currentQuestion.timeLeft)
     
             setTimeout(() => {
-                document.querySelector(".difficulty-wrap").className = "difficulty-wrap " + gameState.qBank.currentQuestion.difficulty
+                let difficultyElement = document.querySelector(".difficulty-wrap")
+                if(difficultyElement) {
+                    difficultyElement.className = "difficulty-wrap " + gameState.qBank.currentQuestion.difficulty
+                }
             }, 0)
             // progress bar
             // let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAlloted - 1) * 100

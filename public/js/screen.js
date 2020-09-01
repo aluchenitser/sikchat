@@ -2,6 +2,7 @@ var Screen = {
     markup: null,
     tick: 0,
     vm: {},
+    lastNow: Date.now(),
     load(type, name, display = true) {
         let self = this;
 
@@ -42,6 +43,38 @@ var Screen = {
             })
         } else { throw "bogus model property" }
     },
+
+    populateTypingAnimation(property, value) {
+        let element = document.querySelector(`[sik=${property}]`)
+        if(!element) {
+            return
+        }
+
+        if(this.vm.hasOwnProperty(property) && this.vm[property] != value) {
+            this.vm[property] = value
+            
+            let i = 0
+            let speed = 10;
+            element.textContent = ''
+
+            setTimeout(function typeWriter() {
+                if(i < value.length) {
+                    element.textContent += value.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed)
+                }
+            }, speed)
+
+        } else if(this.vm.hasOwnProperty(property) == false) { 
+            throw "bogus model property" 
+        }
+    },
+
+    populateFiller() {
+        document.querySelectorAll(`[sik]`).forEach((markup)=> {
+            markup.textContent = "FILLER"
+        })
+    },
     
     // property should read xyz_container (for example: winners_container)
     insertMarkup(property, markup) {
@@ -54,11 +87,6 @@ var Screen = {
         } else { throw "bogus model property" }
     },
     // used for dev / debug purposes
-    populateFiller() {
-        document.querySelectorAll(`[sik]`).forEach((markup)=> {
-            markup.textContent = "FILLER"
-        })
-    },
     display(id) {       // id optional
         if(this.markup) {
 
