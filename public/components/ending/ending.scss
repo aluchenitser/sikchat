@@ -8,7 +8,12 @@ div.ending {
     position: relative;
     animation: fadeIn $fade-in-length;  
     transition: opacity 0.5s;
-    max-width: 600px;
+    // max-width: 600px;
+
+    .points-wrap {
+        width: 90%;
+        margin: 0 auto;
+    }
 
     * {
         font-size: 1.6rem;
@@ -76,6 +81,53 @@ div.ending {
 
         &.round-complete {
             text-align: center;
+        }
+    }
+
+
+    .skew-box-wrap {
+
+        position: relative;
+        
+        span {
+            color: white;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 39px;
+            font-family: 'Nunito Sans', sans-serif;
+            text-shadow: 2px 2px 2px black;
+        }
+
+        .skew-box {
+            height: 60px;
+            margin: 0 auto 35px auto;
+            transform: skewX(-35deg);
+            text-align: center;
+            font-size: 40px;
+            box-shadow: 2px 2px 2px black;
+            
+
+            &.round-complete-box {
+                background-color: $triad-magenta;
+
+                + span {
+                    text-decoration: underline;
+                }
+            }
+
+            &.winner-box {
+                background-color: $triad-blue;
+            }
+
+            &.topic-box {
+                background-color: $triad-yellow;
+            }
+        }
+
+        &.last {
+            margin-bottom: 95px;
         }
     }
 

@@ -6,7 +6,10 @@ div.ending {
   position: relative;
   animation: fadeIn 0.3s;
   transition: opacity 0.5s;
-  max-width: 600px;
+}
+div.ending .points-wrap {
+  width: 90%;
+  margin: 0 auto;
 }
 div.ending * {
   font-size: 1.6rem;
@@ -59,6 +62,42 @@ div.ending .stats-header {
 }
 div.ending .stats-header.round-complete {
   text-align: center;
+}
+div.ending .skew-box-wrap {
+  position: relative;
+}
+div.ending .skew-box-wrap span {
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 39px;
+  font-family: "Nunito Sans", sans-serif;
+  text-shadow: 2px 2px 2px black;
+}
+div.ending .skew-box-wrap .skew-box {
+  height: 60px;
+  margin: 0 auto 35px auto;
+  transform: skewX(-35deg);
+  text-align: center;
+  font-size: 40px;
+  box-shadow: 2px 2px 2px black;
+}
+div.ending .skew-box-wrap .skew-box.round-complete-box {
+  background-color: #d431d4;
+}
+div.ending .skew-box-wrap .skew-box.round-complete-box + span {
+  text-decoration: underline;
+}
+div.ending .skew-box-wrap .skew-box.winner-box {
+  background-color: #31D4D4;
+}
+div.ending .skew-box-wrap .skew-box.topic-box {
+  background-color: #D4D431;
+}
+div.ending .skew-box-wrap.last {
+  margin-bottom: 95px;
 }
 @keyframes _31D4D4 {
   0% {
