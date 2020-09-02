@@ -10,36 +10,54 @@ div.starting {
         top: -15px;
     }
     @media (min-height: 721px) {
-        top: -45px;
+        top: -75px;
     }
 
     h1, h2 {
         position: relative;
         text-align: center;
+        font-family: 'Nunito Sans', sans-serif;
+        line-height: 1;
+        font-size: 63px;
+        font-weight: 300;
     }
     
     .starting-h1 {
-        font-weight: 300;
-        font-size: 1.8rem;
         text-align: center;
-        margin: 0 0 5px 0;
+        margin: 0;
         animation: raise 1s;
     }
 
     .starting-h2 {
-        font-weight: 300;
-        font-size: 1.8rem;
-        margin-top: 0;
         text-align: center;
-        font-style: italic;
         animation: slideFromLeft 2s;
         text-align: center;
+        margin: 0 0 10px 0;
     }
 
-    .count-down-wrapper {
+    .countdown-wrapper {
         text-align: center;
         margin-bottom: 0;
-        font-weight: 300;
+        position: relative;
+
+        img {
+            max-width: 300px;
+        }
+
+        .count-down {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-family: Lobster, monospace;
+            text-decoration: underline;
+            font-size: 65px;
+        }
+    }
+
+    .topic {
+        text-align: center;
+        margin-top: 10px;
     }
 }
 
