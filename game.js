@@ -24,12 +24,12 @@ module.exports = class Game {
         // time window
         this.timeConstants = {
             // in minutes
-            WINDOW: 2,              // components in seconds must add up to this window in minutes
+            WINDOW: 1,              // components in seconds must add up to this window in minutes
 
             // in seconds
             INTERMISSION: 10,
             STARTING: 10,
-            STARTED: 90,
+            STARTED: 30,
             ENDING: 10,
 
             QUESTION_TIME: 10,

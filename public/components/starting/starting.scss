@@ -26,13 +26,15 @@ div.starting {
         text-align: center;
         margin: 0;
         animation: raise 1s;
+        font-size: 63px;
     }
 
     .starting-h2 {
         text-align: center;
         animation: slideFromLeft 2s;
         text-align: center;
-        margin: 0 0 10px 0;
+        margin: 5px 0 10px 0;
+        font-size: 50px;
     }
 
     .countdown-wrapper {
