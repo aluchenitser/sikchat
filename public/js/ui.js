@@ -274,7 +274,7 @@ socket.on('tick', server => {
                 Screen.populate("lifeTimePoints", gameState.session.user.lifeTimePoints)
 
                 for(user in gameState.winners) {
-                    let markup = "<div class='winner'>WINNER: <span>" + gameState.winners[user] + "</span></div>"
+                    let markup = gameState.winners[user] + "<br />"
                     Screen.insertMarkup("winners_container", markup)
                 }
 

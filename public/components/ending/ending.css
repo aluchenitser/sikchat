@@ -72,6 +72,7 @@ div.ending .skew-box-wrap {
   margin: 0 auto;
 }
 div.ending .skew-box-wrap span {
+  display: inline-block;
   color: white;
   position: absolute;
   left: 50%;
