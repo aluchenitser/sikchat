@@ -33,10 +33,10 @@ div.ending {
         letter-spacing: -1.5px;
     }
 
-    @media (max-height: 720px) {
-        top: -15px;
+    @media (max-height: 799px) {
+        top: 5px;
     }
-    @media (min-height: 721px) {
+    @media (min-height: 800px) {
         top: -45px;
     }
 

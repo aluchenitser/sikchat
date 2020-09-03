@@ -26,12 +26,12 @@ div.ending * {
   font-style: italic;
   letter-spacing: -1.5px;
 }
-@media (max-height: 720px) {
+@media (max-height: 799px) {
   div.ending {
-    top: -15px;
+    top: 5px;
   }
 }
-@media (min-height: 721px) {
+@media (min-height: 800px) {
   div.ending {
     top: -45px;
   }
