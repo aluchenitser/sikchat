@@ -59,12 +59,12 @@
   min-height: 25%;
   position: relative;
 }
-@media (max-height: 720px) {
+@media (max-height: 799px) {
   .started-wrap .started .question-answer-wrap {
-    top: -30px;
+    top: -60px;
   }
 }
-@media (min-height: 721px) {
+@media (min-height: 800px) {
   .started-wrap .started .question-answer-wrap {
     top: -75px;
   }

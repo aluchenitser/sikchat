@@ -6,10 +6,10 @@ div.starting {
     margin: auto 0;
     // transform: translate(0, -5%);
     
-    @media (max-height: 720px) {
-        top: -15px;
+    @media (max-height: 799px) {
+        top: -35px;
     }
-    @media (min-height: 721px) {
+    @media (min-height: 800px) {
         top: -75px;
     }
 

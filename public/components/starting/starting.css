@@ -3,12 +3,12 @@ div.starting {
   position: relative;
   margin: auto 0;
 }
-@media (max-height: 720px) {
+@media (max-height: 799px) {
   div.starting {
-    top: -15px;
+    top: -35px;
   }
 }
-@media (min-height: 721px) {
+@media (min-height: 800px) {
   div.starting {
     top: -75px;
   }
