@@ -8,7 +8,7 @@ div.ending {
   transition: opacity 0.5s;
 }
 div.ending .points-wrap {
-  width: 90%;
+  width: 75%;
   margin: 0 auto;
 }
 div.ending * {
@@ -65,6 +65,8 @@ div.ending .stats-header.round-complete {
 }
 div.ending .skew-box-wrap {
   position: relative;
+  width: 85%;
+  margin: 0 auto;
 }
 div.ending .skew-box-wrap span {
   color: white;
@@ -72,17 +74,18 @@ div.ending .skew-box-wrap span {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-size: 39px;
-  font-family: "Nunito Sans", sans-serif;
-  text-shadow: 2px 2px 2px black;
+  font-size: 32px;
+  font-family: monospace;
+  text-shadow: 2px 2px black;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 div.ending .skew-box-wrap .skew-box {
   height: 60px;
   margin: 0 auto 35px auto;
   transform: skewX(-35deg);
   text-align: center;
-  font-size: 40px;
-  box-shadow: 2px 2px 2px black;
 }
 div.ending .skew-box-wrap .skew-box.round-complete-box {
   background-color: #d431d4;
@@ -93,8 +96,25 @@ div.ending .skew-box-wrap .skew-box.round-complete-box + span {
 div.ending .skew-box-wrap .skew-box.winner-box {
   background-color: #31D4D4;
 }
+div.ending .skew-box-wrap .skew-box.winner-box + .fin {
+  background-color: #31D4D4;
+}
 div.ending .skew-box-wrap .skew-box.topic-box {
   background-color: #D4D431;
+}
+div.ending .skew-box-wrap .skew-box.topic-box + .fin {
+  background-color: #D4D431;
+}
+div.ending .skew-box-wrap .skew-box + .fin {
+  position: absolute;
+  right: -20px;
+  top: -19px;
+  height: 18px;
+  font-size: 16px;
+  color: white;
+  padding: 0 30px;
+  text-shadow: 1px 1px 1px black;
+  letter-spacing: 0.5px;
 }
 div.ending .skew-box-wrap.last {
   margin-bottom: 95px;

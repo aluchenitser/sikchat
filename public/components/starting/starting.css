@@ -16,7 +16,7 @@ div.starting {
 div.starting h1, div.starting h2 {
   position: relative;
   text-align: center;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: monospace;
   line-height: 1;
   font-size: 63px;
   font-weight: 300;
