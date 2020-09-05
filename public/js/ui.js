@@ -411,6 +411,7 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
         gameState.session.user.points = successResponse.user.points
         gameState.session.user.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
         gameState.session.user.lifeTimePoints = successResponse.user.lifeTimePoints
+        animateOrRepeat(document.querySelector(".difficulty-wrap"), "success")
         starsAnimation()
     }
 })

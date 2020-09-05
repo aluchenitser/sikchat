@@ -31,39 +31,50 @@
 
     .difficulty-wrap {
         position: absolute;
-        width: 100px;
+        width: 109px;
         margin: 8px 10px;
         right: 0;
         overflow: hidden;
+        height: 35px;
+        display: flex;
+        transition: width 0.3s 0.3s;
 
         img {
-            width: 100px;
+            width: 33px;
             filter: drop-shadow(1px 1px 1px black);
+            margin-left: 3px;
         }
 
         &.easy {
-            width: 33px;
+            width: 38px;
         }
 
         &.medium {
-            width: 66px;
+            width: 75px;
         }
 
         &.hard {
-            width: 100px;
+            width: 109px;
         }
+
+        &.success {
+            img {
+                animation: spin 0.3s;
+            }
+        }
+
     }
 
-    // .progress-bar {
-    //     position: absolute;
-    //     width: 100%;
-    //     font-family: monospace;
-    //     transition: width 0.8s;
-    //     padding: 2px;
-    //     background-image: linear-gradient(0, #D4D431, transparent); 
-    //     text-shadow: 1px 1px white;
-    //     white-space: nowrap; 
-    // }
+    @keyframes spin {
+        0% {
+            transform: rotate(0);
+        }
+       
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    
    
     .started {
         display: flex;
