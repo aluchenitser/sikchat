@@ -178,6 +178,7 @@
   transform: scale(var(--star-scale)) translateY(-20px) rotate(var(--random-rotation));
   opacity: 0;
   fill: var(--random-triad);
+  transition: opacity 0.4s;
 }
 .started-wrap .success-overlay svg:nth-child(1) {
   top: 0;
