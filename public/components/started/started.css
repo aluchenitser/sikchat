@@ -3,6 +3,30 @@
   display: flex;
   flex-flow: column nowrap;
 }
+.started-wrap.success .correct {
+  opacity: 1;
+}
+.started-wrap.success .difficulty-wrap img {
+  animation: spin 0.3s;
+}
+.started-wrap .correct {
+  position: absolute;
+  font-size: 50px;
+  font-family: Courier, monospace;
+  opacity: 0;
+  text-decoration: underline;
+  font-style: italic;
+  transition: opacity 0.4s;
+  letter-spacing: 0.5px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  color: white;
+}
+.started-wrap .correct.top {
+  top: -100px;
+}
+.started-wrap .correct.bottom {
+  bottom: -100px;
+}
 .started-wrap .countdown-wrap {
   width: 45px;
   height: 45px;
@@ -45,9 +69,6 @@
 }
 .started-wrap .difficulty-wrap.hard {
   width: 109px;
-}
-.started-wrap .difficulty-wrap.success img {
-  animation: spin 0.3s;
 }
 @keyframes spin {
   0% {

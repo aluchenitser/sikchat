@@ -5,6 +5,38 @@
     display: flex;
     flex-flow: column nowrap;
 
+    &.success {
+        .correct {
+            opacity: 1;
+        }
+
+        .difficulty-wrap img {
+            animation: spin 0.3s;
+        }
+    }
+
+    .correct {
+        position: absolute; 
+        font-size: 50px;
+        font-family: Courier, monospace;
+        opacity: 0;
+        text-decoration: underline;
+        font-style: italic;
+        transition: opacity 0.4s;
+
+        letter-spacing: 0.5px;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        color: white;
+
+        &.top {
+            top: -100px;
+        }
+
+        &.bottom {
+            bottom: -100px;
+        }
+    }
+
     .countdown-wrap {
         width: 45px;
         height: 45px;
@@ -56,13 +88,6 @@
         &.hard {
             width: 109px;
         }
-
-        &.success {
-            img {
-                animation: spin 0.3s;
-            }
-        }
-
     }
 
     @keyframes spin {
@@ -74,6 +99,20 @@
             transform: rotate(360deg);
         }
     }
+
+    // @keyframes fadeInOut {
+    //     0% {
+    //         opacity: 0;
+    //     }
+       
+    //     50% {
+    //         opacity: 1;
+    //     }
+
+    //     100% {
+    //         opacity: 0;
+    //     }
+    // }    
     
    
     .started {

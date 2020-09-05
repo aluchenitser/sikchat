@@ -47,7 +47,7 @@ var successOverlayElement = document.querySelector(".success-overlay")
 
 
 var progressBarElement
-var startedWrapStartedElement
+var WrapStartedElement
 
 // game state
 var gameState = {
@@ -411,8 +411,8 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
         gameState.session.user.points = successResponse.user.points
         gameState.session.user.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
         gameState.session.user.lifeTimePoints = successResponse.user.lifeTimePoints
-        animateOrRepeat(document.querySelector(".difficulty-wrap"), "success")
-        starsAnimation()
+        document.querySelector(".started-wrap").classList.add('success')
+        starsAnimation() // left side of screen
     }
 })
 
@@ -950,7 +950,7 @@ function submitRegistration() {
     }
 }
 
-//UI functions
+//UI animate for when css the animation is ON THE ELEMENT not just its descendents
 function animateOrRepeat(element, addOnClass = null) {
     if(addOnClass == null || element.classList.contains(addOnClass)) {
         element.style.animation = 'none'
@@ -989,6 +989,15 @@ function starsAnimation() {
     successOverlayElement.classList.remove('success')
     setTimeout(() => {
         successOverlayElement.classList.add('success')
+    }, 25)
+}
+
+function successClassAnimate() {
+    let element = document.querySelector(".started-wrap")
+
+    element.classList.remove('success')
+    setTimeout(() => {
+        element.classList.add('success')
     }, 25)
 }
 

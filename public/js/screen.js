@@ -53,6 +53,7 @@ var Screen = {
         }
 
         if(this.vm.hasOwnProperty(property) && this.vm[property] != value) {
+            document.querySelector(".started-wrap").classList.remove('success')
             this.vm[property] = value
             phantomElement.textContent = value
             
