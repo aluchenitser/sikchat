@@ -43,6 +43,8 @@ var loginChoosersToggleElement = document.getElementById("login-choosers-toggle"
 
 var roomsWrapperElement = document.querySelector(".rooms-wrapper")
 var PMUsersWrapperElement = document.querySelector(".pm-users-wrapper")
+var successOverlayElement = document.querySelector(".success-overlay")
+
 
 var progressBarElement
 var startedWrapStartedElement
@@ -409,7 +411,7 @@ socket.on("success_response", successResponse => {     // {difficulty, chatCount
         gameState.session.user.points = successResponse.user.points
         gameState.session.user.lifeTimeAnswered = successResponse.user.lifeTimeAnswered
         gameState.session.user.lifeTimePoints = successResponse.user.lifeTimePoints
-        animateOrRepeat(document.querySelector(".success-overlay svg"), "success")
+        starsAnimation()
     }
 })
 
@@ -958,6 +960,35 @@ function animateOrRepeat(element, addOnClass = null) {
     else {
         element.classList.add(addOnClass)
     }
+}
+
+function starsAnimation() {
+    let triadBlueLight = "#e0ffff";
+    let triadYellowLight = "#feffb4";
+    let triadMagentaLight = "#ffeaff";
+
+    let rotation = Math.floor(Math.random() * 360)
+
+    let color;
+    let random = Math.random()
+
+    if(random < 0.33) {
+        color = triadBlueLight
+    }
+    else if (random < 0.66) {
+        color = triadYellowLight
+    }
+    else {
+        color = triadMagentaLight
+    }
+
+    document.documentElement.style.setProperty("--random-triad", color)
+    document.documentElement.style.setProperty("--random-rotation", rotation + "deg")
+
+    successOverlayElement.classList.remove('success')
+    setTimeout(() => {
+        successOverlayElement.classList.add('success')
+    }, 25)
 }
 
 function setBodyClass(current) {

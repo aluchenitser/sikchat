@@ -4,8 +4,14 @@
 
 @import "variables";
 
+:root {
+    --random-triad: #{$triad-yellow-light};
+    --random-rotation: 120deg;
+    --star-scale: 2.5
+}
 // $general-background-color: #EE90EE;
 $general-background-color: #d431d4;
+
 
 
 // $body-copy: #2b2b2b;
@@ -216,43 +222,76 @@ h1, p {
             svg {
                 position: absolute;
                 z-index: 1;
-                transform: scale(2) translateY(-20px);
+                transform: scale(var(--star-scale)) translateY(-20px) rotate(var(--random-rotation)); 
                 opacity: 0;
-                
-                &.success {
-                    animation: success .8s;
-                }
+                fill: var(--random-triad);
             }
 
-            span {
+            svg:nth-child(1) {
+                top: 0;
+                left: 0;
+            }
+            svg:nth-child(2) {
+                top: 0;
+                right: 0;
+            }
+            svg:nth-child(3) {
+                bottom: 0;
+                left: 0;
+            }
+            svg:nth-child(4) {
+                bottom: 0;
+                right: 0;
+            }
+
+            svg:nth-child(5) {
+
+            }
+
+            .success-text {
                 font-family: 'Lobster', cursive;
                 font-size: 3rem;
                 z-index: 1;
-                transform: translate(-2px,-37px);
-                user-select: no;
+                user-select: none;
+                position: absolute;
+            }
+
+            &.success {
+    
+                svg {
+                    // transform: scale(2) translateY(-20px) rotate(90deg);
+                    animation: success 0.8s;
+                }
+            }
+
+            &.debug {
+                svg {
+                    opacity: 1;
+                }
             }
         }
 
+
         @keyframes success {
             0% {
-                transform: scale(0) translateY(-20px); opacity: 0;
+                opacity: 0;
             }
             50% {
-                transform: scale(2) translateY(-20px); opacity: 1;
+                opacity: 1;
             }
             100% {
-                transform: scale(0) translateY(-20px); opacity: 0;
+                opacity: 0;
             }
         }
 
         flex: 1 1 auto;
-
         padding: 0 15px;
+
         overflow-y: scroll;
+        overflow-x: hidden;
         display: flex;
         flex-direction: column-reverse;
         background-image: url('../img/notebook-dark.png');
-
 
         .message-output {
             margin-top: 11px;
@@ -353,8 +392,6 @@ h1, p {
         }
     }
       
-    
-
     #game-window {
         flex: 1 1 0;
         position: relative;
@@ -362,9 +399,6 @@ h1, p {
         justify-content: center;
         align-content: center;
         flex-flow: column nowrap;
-        // background-image: url('../img/brilliant.png');
-
-        
     }
 }
 
@@ -1057,6 +1091,12 @@ body.init .sik-spinner {
         .form-column {          flex: 1.5 1 0; }
         .spacer-column {                   flex: .5 1 auto; }
         .logo-column {              flex: .5 1 0; } 
+    }
+}
+
+@media (max-width: 1500px) {
+    :root {
+        --star-scale: 2;
     }
 }
 

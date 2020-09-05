@@ -1,4 +1,10 @@
 /* ----------------- VARIABLES ----------------- */
+:root {
+  --random-triad: #feffb4;
+  --random-rotation: 120deg;
+  --star-scale: 2.5 ;
+}
+
 /* ----------------- GENERAL ----------------- */
 html, body {
   margin: 0;
@@ -153,6 +159,7 @@ body.ending .next-game-in-wrapper {
   flex: 1 1 auto;
   padding: 0 15px;
   overflow-y: scroll;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column-reverse;
   background-image: url("../img/notebook-dark.png");
@@ -173,30 +180,47 @@ body.ending .next-game-in-wrapper {
 .chat-body #messages .success-overlay svg {
   position: absolute;
   z-index: 1;
-  transform: scale(2) translateY(-20px);
+  transform: scale(var(--star-scale)) translateY(-20px) rotate(var(--random-rotation));
   opacity: 0;
+  fill: var(--random-triad);
 }
-.chat-body #messages .success-overlay svg.success {
-  animation: success 0.8s;
+.chat-body #messages .success-overlay svg:nth-child(1) {
+  top: 0;
+  left: 0;
 }
-.chat-body #messages .success-overlay span {
+.chat-body #messages .success-overlay svg:nth-child(2) {
+  top: 0;
+  right: 0;
+}
+.chat-body #messages .success-overlay svg:nth-child(3) {
+  bottom: 0;
+  left: 0;
+}
+.chat-body #messages .success-overlay svg:nth-child(4) {
+  bottom: 0;
+  right: 0;
+}
+.chat-body #messages .success-overlay .success-text {
   font-family: "Lobster", cursive;
   font-size: 3rem;
   z-index: 1;
-  transform: translate(-2px, -37px);
-  user-select: no;
+  user-select: none;
+  position: absolute;
+}
+.chat-body #messages .success-overlay.success svg {
+  animation: success 0.8s;
+}
+.chat-body #messages .success-overlay.debug svg {
+  opacity: 1;
 }
 @keyframes success {
   0% {
-    transform: scale(0) translateY(-20px);
     opacity: 0;
   }
   50% {
-    transform: scale(2) translateY(-20px);
     opacity: 1;
   }
   100% {
-    transform: scale(0) translateY(-20px);
     opacity: 0;
   }
 }
@@ -840,6 +864,11 @@ body.init .sik-spinner {
   }
   .header .logo-column, .chat-bar .logo-column, .chat-body .logo-column {
     flex: 0.5 1 0;
+  }
+}
+@media (max-width: 1500px) {
+  :root {
+    --star-scale: 2;
   }
 }
 @keyframes fadeIn {
