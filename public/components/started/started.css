@@ -9,6 +9,9 @@
 .started-wrap.success .difficulty-wrap img {
   animation: spin 0.3s;
 }
+.started-wrap.success .success-overlay svg {
+  opacity: 1;
+}
 .started-wrap .correct {
   position: absolute;
   font-size: 50px;
@@ -117,7 +120,7 @@
   text-align: justify;
 }
 .started-wrap .started .question-text-wrap .question-text-phantom {
-  color: white;
+  color: transparent;
   font-size: 1.5rem;
   opacity: 1;
   text-align: justify;
@@ -155,6 +158,52 @@
   opacity: 1;
   position: relative;
   transition: opacity 0.5s;
+}
+.started-wrap .success-overlay {
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  z-index: -1;
+  position: absolute;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  overflow: hidden;
+}
+.started-wrap .success-overlay svg {
+  position: absolute;
+  z-index: 1;
+  transform: scale(var(--star-scale)) translateY(-20px) rotate(var(--random-rotation));
+  opacity: 0;
+  fill: var(--random-triad);
+}
+.started-wrap .success-overlay svg:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+.started-wrap .success-overlay svg:nth-child(2) {
+  top: 0;
+  right: 0;
+}
+.started-wrap .success-overlay svg:nth-child(3) {
+  bottom: 0;
+  left: 0;
+}
+.started-wrap .success-overlay svg:nth-child(4) {
+  bottom: 0;
+  right: 0;
+}
+.started-wrap .success-overlay .success-text {
+  font-family: "Lobster", cursive;
+  font-size: 3rem;
+  z-index: 1;
+  user-select: none;
+  position: absolute;
+}
+.started-wrap .success-overlay.debug svg {
+  opacity: 1;
 }
 
 /*# sourceMappingURL=started.css.map */

@@ -985,11 +985,6 @@ function starsAnimation() {
 
     document.documentElement.style.setProperty("--random-triad", color)
     document.documentElement.style.setProperty("--random-rotation", rotation + "deg")
-
-    successOverlayElement.classList.remove('success')
-    setTimeout(() => {
-        successOverlayElement.classList.add('success')
-    }, 25)
 }
 
 function successClassAnimate() {
