@@ -229,6 +229,7 @@ body.ending .next-game-in-wrapper {
   letter-spacing: -1.5px;
   animation: scrollpaper 0.2s;
   position: relative;
+  padding-right: 5px;
 }
 .chat-body #messages .message-output .user-name {
   font-size: 12px;

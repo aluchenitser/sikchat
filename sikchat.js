@@ -160,6 +160,12 @@ app.get('/logout', (req, res) => {
     })
 })
 
+// --- create questions / manage users / general dashboard
+app.get('/management', (req, res) => {
+    res.sendFile(__dirname + '/management.html');
+
+})
+
 /* ----------------- GAME LOOPS ----------------- */
 
 

@@ -137,7 +137,7 @@ module.exports = class Game {
         clearInterval(this.intervalId)
     }
 
-    // insert game function 
+    // --- GAME LOOP ---
     start() {
         let gameState = this.gameState
         let timeConstants = this.timeConstants
@@ -366,6 +366,8 @@ module.exports = class Game {
         gameState.qBank.currentQuestion.questionNumber = ++gameState.questionCount
 
         // console.log("question chosen\n", gameState.qBank.currentQuestion);
+
+        // this.io.to(this.room).emit("new_question")
     }
 
     clearUserStatistics() {

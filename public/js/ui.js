@@ -74,7 +74,8 @@ var gameState = {
     isEnding: false,            // outro
     alreadyInProgress: false,
     noFlag: true,                // similar to isInit on the backend, but doesn't explicitly receive a signal
-    winners: []
+    winners: [],
+    lastSuccess: Date.now()
 }
 
 // read session
@@ -236,19 +237,7 @@ socket.on('tick', server => {
                     difficultyElement.className = "difficulty-wrap " + gameState.qBank.currentQuestion.difficulty
                 }
             }, 0)
-            // progress bar
-            // let percent = gameState.qBank.currentQuestion.timeLeft / (gameState.qBank.currentQuestion.timeAlloted - 1) * 100
-    
-            // if(progressBarElement) {
-            //     progressBarElement.style.width = "calc(" + percent + "% + " + 20 * percent / 100 + "px)"
-            // }
-    
-            // if(startedWrapStartedElement && gameState.qBank.currentQuestion.timeLeft <= 2) {
-            //     startedWrapStartedElement.classList.add("answered")
-            // }
-            // else if(startedWrapStartedElement) {
-            //     startedWrapStartedElement.classList.remove("answered")
-            // }
+
         }
         // console.log("timeAlloted: ", gameState.qBank.currentQuestion.timeAlloted, "timeLeft: ", gameState.qBank.currentQuestion.timeLeft)
     }
@@ -302,13 +291,6 @@ document.getElementById('chat-form').addEventListener('submit', e => {
     socket.emit('chat_message', text )
 })
 
-// open pm window
-// $(PMUsersWrapperElement).on("click", ".fa-comment", e => {
-//     let guid = e.target.parentElement.getAttribute("sik-pm-guid")
-//      if(getPMWindowWithGuid(guid) == undefined) {
-//          socket.emit('pm_window', guid)    
-//      }
-// })
 
 let mouseCoordinates = { x: 0, y: 0 }
 
@@ -348,12 +330,6 @@ socket.on("pm_chat_response", data => { // { msg, username, sender_guid, recipie
     }
 })
 
-// open pm menu
-// document.getElementById('pm-bar-toggle').addEventListener('change', e => {
-//     if(e.target.checked) {
-//         socket.emit('chat_list', gameState.session.user.guid)
-//     }
-// })
 
 // receive who's on chat
 socket.on('chat_list_response', users => { // users[]
@@ -391,6 +367,8 @@ socket.on('chat_message_response', chatMessage => {       // { text, chatCount, 
 
 // answered a question correctly
 socket.on("success_response", successResponse => {     // {difficulty, chatCount, user}
+
+    
 
     // add starts to the chat message that succeeded
     let className = successResponse.difficulty;
