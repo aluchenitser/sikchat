@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>dashboard</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <h1>sikchat dashboard</h1>
+    <div class="dashboard">
+        <div id="game-controls" class="game-controls">
+            <div class="header">
+                <div v-for="tab in gameControlTabs" class="tab" :class="tab"> {{ tab }} </div>
+            </div>
+            <div class="content">
+                <div class="rooms">
+                    <div class="header">new room, start room, stop room, delete room</div>
+                    <div class="room">
+                        <div class="name"></div>
+                        <div class="game"></div>
+                        <div class="occupants"></div>
+                        <div class="state"></div>
+                    </div>
+                    <div class="room-details">
+                        <div class="users">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="trivia">
+                    <div class="question-row">
+                        <div class="id"></div>
+                        <div class="category"></div>
+                        <div class="text"></div>
+                        <div class="answers"></div>
+                        <div class="difficulty"></div>
+                        <div class="followup-id"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="user-controls" class="user-controls">
+            <div class="header">button button button button button button</div>
+            <div class="users">
+                <div class="user-row">
+                    <div class="id"></div>
+                    <div class="user-name"></div>
+                    <div class="real-name"></div>
+                    <div class="password"></div>
+                    <div class="role"></div>
+                    <div class="email"></div>
+                    <div class="points"></div>
+                    <div class="created"></div>
+                    <div class="last-login"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var vue_users = new Vue({
+            el: '#game-controls',
+            data: {
+                gameControlTabs: ["rooms", "trivia"]
+            }
+        })
+
+    </script>
+</body>
+</html>

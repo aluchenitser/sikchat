@@ -55,14 +55,6 @@ create table if not exists questions (
 	constraint fk_question_categories foreign key (category) references question_categories(id)
 );
 
-create table if not exists games (
-	id serial primary key,
-	name varchar not null unique,
-
-	created_on timestamp not null default current_date,
-	last_modified timestamp not null default current_date	
-);
-
 
 rollback;
 
