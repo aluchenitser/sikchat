@@ -11,43 +11,74 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
-    <h1>sikchat dashboard</h1>
-    <div class="dashboard">
-        <div id="game-controls" class="game-controls">
-            <div class="header">
-                <div v-for="tab in gameControlTabs" class="tab" :class="tab"> {{ tab }} </div>
-            </div>
-            <div class="content">
-                <div class="rooms">
-                    <div class="header">new room, start room, stop room, delete room</div>
-                    <div class="room">
-                        <div class="name"></div>
-                        <div class="game"></div>
-                        <div class="occupants"></div>
-                        <div class="state"></div>
-                    </div>
-                    <div class="room-details">
-                        <div class="users">
+    <div id="game-controls" class="game-controls">
+        <h1>Sikchat Dashboard</h1>
+        <div class="header">
+            <div v-for="tab in gameControlTabs" class="tab" :class="tab"> {{ tab }} </div>
+        </div>
+        <div class="content">
+            <div class="rooms">
+                <div class="header">new room, start room, stop room, delete room</div>
+                <div class="room">
+                    <div class="name"></div>
+                    <div class="game"></div>
+                    <div class="occupants"></div>
+                    <div class="state"></div>
+                </div>
+                <div class="room-details">
+                    <div class="users">
 
-                        </div>
                     </div>
                 </div>
-                <div class="trivia">
-                    <div class="question-row">
-                        <div class="id"></div>
-                        <div class="category"></div>
-                        <div class="text"></div>
-                        <div class="answers"></div>
-                        <div class="difficulty"></div>
-                        <div class="followup-id"></div>
-                    </div>
+            </div>
+            <div class="trivia">
+                <div class="question-row">
+                    <div class="id"></div>
+                    <div class="category"></div>
+                    <div class="text"></div>
+                    <div class="answers"></div>
+                    <div class="difficulty"></div>
+                    <div class="followup-id"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div id="user-controls" class="user-controls">
-            <div class="header">button button button button button button</div>
+    <div id="user-controls" class="user-controls">
+        <h2>Accounts</h2>
+        <div class="content">
             <div class="users">
+                <div class="header">add remove disable enable</div>
+                <div class="header"> remove disable enable</div>
+                <div class="header">add  disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header"> remove  enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header"> remove disable enable</div>
+                <div class="header">add remove  enable</div>
+                <div class="header"> remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add  disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable </div>
+                <div class="header">add  disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove  enale</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">  disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable </div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+                <div class="header">add remove disable enable</div>
+            
+                <div class="header">add remove disable enable</div>
                 <div class="user-row">
                     <div class="id"></div>
                     <div class="user-name"></div>
@@ -60,6 +91,9 @@
                     <div class="last-login"></div>
                 </div>
             </div>
+            <div class="user-info">
+                
+            </div>
         </div>
     </div>
 
@@ -68,7 +102,10 @@
         var vue_users = new Vue({
             el: '#game-controls',
             data: {
-                gameControlTabs: ["rooms", "trivia"]
+                gameControlTabs: ["rooms", "trivia"],
+                users: [
+                    
+                ]
             }
         })
 

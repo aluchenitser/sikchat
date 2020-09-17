@@ -2,60 +2,125 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
+    // overflow: hidden;
+}
+
+body {
+    // padding: 5px;
+    font-family: monospace, Arial;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    // border: 1px dotted red;
+    height: 100%;
+    max-height: 100%;
     padding: 5px;
 }
 
-h1 {
+h1, h2 {
     margin-top: 0;
     margin-bottom: 10px;
 }
 
-body {
-    display: grid;
-    grid-template-rows: min-content auto;
-}
 
 * {
     box-sizing: border-box;
     outline-color: black;
 }
 
-.dashboard {
-    height: 100%;
+
+.game-controls {
     display: grid;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: min-content min-content auto;
 
+    .header {
+        display: flex;
 
-    .game-controls {
-        // resize: vertical;
-        // border: 1px dashed pink;
-        // overflow: auto;
-        display: grid;
-        grid-template-rows: min-content auto;
-
-        .header {
-            display: flex;
-
-            .tab {
-                border: 1px dashed pink;
-                border-radius: 4px 4px 0 0;
-                cursor: pointer;
-                padding: 5px;
-            }
-        }
-
-        .content {
+        .tab {
             border: 1px dashed pink;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
             padding: 5px;
+            margin-right: 2px;
         }
     }
 
-
-    .user-controls {
-        // resize: vertical;
-        border: 1px dashed lightgreen;
-        // overflow: auto;
+    .content {
+        border: 1px dashed pink;
         padding: 5px;
+        overflow: auto;
+    }
+}
+
+
+.user-controls {
+    // resize: vertical;
+    // overflow: auto;
+    display: grid;
+    grid-template-rows: min-content auto;
+
+
+    .content {
+        border: 1px dashed lightgreen;
+        padding: 5px;
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+        
+        column-gap: 10px;
+        row-gap: 10px;
+        overflow: auto;
+        // justify-items: center;
+        // align-items: center;
+        
+        > * {
+            border: 1px dotted brown;
+        }
+        
+        // .header {
+            //     grid-column: 1 / span 2;
+            // }
+            
+        .users {
+            // grid-template-rows: min-content 1fr;
+
+            // display: flex;
+            // flex-direction: column;
+            overflow-y: scroll;
+        }
+
+        .user-info {
+
+        }
+
+        // .section {
+        //     border: 1px dotted brown;
+        //     border-radius: 15px;
+        //     padding: 5px;
+
+        //     &.a {
+
+        //     }
+        //     &.b {
+        //         grid-area: 1 / 2 / 3 / 3;
+        //         justify-self: center;
+        //         align-self: end;
+
+        //         // grid-column-start: 2;
+        //         // grid-row: 1 / span 2;
+        //     }                
+        //     &.c {
+                
+        //     }                
+        //     &.d {
+                
+        //     }                
+        //     &.e {
+                
+        //     }                
+        //     &.f {
+                
+        //     }                
+        // }
     }
 }

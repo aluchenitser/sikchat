@@ -2,18 +2,20 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
-  padding: 5px;
-}
-
-h1 {
-  margin-top: 0;
-  margin-bottom: 10px;
 }
 
 body {
+  font-family: monospace, Arial;
   display: grid;
-  grid-template-rows: min-content auto;
+  grid-template-rows: 50% 50%;
+  height: 100%;
+  max-height: 100%;
+  padding: 5px;
+}
+
+h1, h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 * {
@@ -21,31 +23,45 @@ body {
   outline-color: black;
 }
 
-.dashboard {
-  height: 100%;
+.game-controls {
   display: grid;
-  grid-template-rows: 50% 50%;
+  grid-template-rows: min-content min-content auto;
 }
-.dashboard .game-controls {
-  display: grid;
-  grid-template-rows: min-content auto;
-}
-.dashboard .game-controls .header {
+.game-controls .header {
   display: flex;
 }
-.dashboard .game-controls .header .tab {
+.game-controls .header .tab {
   border: 1px dashed pink;
+  border-bottom: none;
   border-radius: 4px 4px 0 0;
   cursor: pointer;
   padding: 5px;
+  margin-right: 2px;
 }
-.dashboard .game-controls .content {
+.game-controls .content {
   border: 1px dashed pink;
   padding: 5px;
+  overflow: auto;
 }
-.dashboard .user-controls {
+
+.user-controls {
+  display: grid;
+  grid-template-rows: min-content auto;
+}
+.user-controls .content {
   border: 1px dashed lightgreen;
   padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 10px;
+  overflow: auto;
+}
+.user-controls .content > * {
+  border: 1px dotted brown;
+}
+.user-controls .content .users {
+  overflow-y: scroll;
 }
 
 /*# sourceMappingURL=dashboard.css.map */
