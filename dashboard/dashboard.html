@@ -19,7 +19,12 @@
         </div>
         <div class="content">
             <div class="rooms" v-if="currentTab == 'rooms'">
-                <div class="header">new room, start room, stop room, delete room</div>
+                <div class="header">
+                    <span>start</span>
+                    <span>stop</span>
+                    <span>new</span>
+                    <span>delete</span>
+                </div>
                 <div class="room">
                     <div class="name"></div>
                     <div class="game"></div>
@@ -32,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div class="trivia" v-if="currentTab == 'trivia'">
+            <div class="trivia" v-cloak v-if="currentTab == 'trivia'">
                 here is a trivia menu how do you like it?
                 <div class="question-row">
                     <div class="id"></div>
