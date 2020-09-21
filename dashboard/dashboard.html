@@ -19,19 +19,20 @@
         </div>
         <div class="content">
             <div class="rooms" v-if="currentTab == 'rooms'">
-                <div class="header">
-                    <span>start</span>
-                    <span>stop</span>
-                    <span>new</span>
-                    <span>delete</span>
-                </div>
-                <div class="wrap">
-                    <div v-for="room in rooms" class="room" :key="room.id" v-cloak>
+                <div class="wrap" v-cloak>
+                    <div class="header">
+                        <div>name</div>
+                        <div>game</div>
+                        <div>occupants</div>
+                        <div>isActive</div>
+                    </div>
+                    <div v-for="room in rooms" class="room" :key="room.id" @click="selectRoom(room.name)" :class="{ active: currentRoom == room.name}">
                         <div class="name"> {{ room.name }} </div>
                         <div class="game"> {{ room.game }} </div>
                         <div class="occupants"> {{ room.occupants }} </div>
                         <div class="state"> {{ room.state }} </div>
                     </div>
+                    <div class="new-room"><span>++ create new room</span></div>   
                 </div>
                 <div class="room-details">
                     <div class="users">
@@ -95,8 +96,10 @@
                 ]
             },
             methods: {
-                tabClick(e) {
-                    console.log(e);
+                selectRoom(room) {
+                    this.currentRoom = this.currentRoom == room
+                        ? null
+                        : room
                 }
             },
 
