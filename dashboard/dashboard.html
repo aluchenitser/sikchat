@@ -14,10 +14,11 @@
     <div id="game-controls" class="game-controls">
         <h1>Sikchat Dashboard</h1>
         <div class="header">
-            <div v-for="tab in gameControlTabs" class="tab" :class="tab"> {{ tab }} </div>
+            <div class="tab rooms" @click="currentTab = 'rooms'" :class="{ active: currentTab == 'rooms' }"> rooms </div>
+            <div class="tab trivia" @click="currentTab = 'trivia'" :class="{ active: currentTab == 'trivia' }"> trivia </div>
         </div>
         <div class="content">
-            <div class="rooms">
+            <div class="rooms" v-if="currentTab == 'rooms'">
                 <div class="header">new room, start room, stop room, delete room</div>
                 <div class="room">
                     <div class="name"></div>
@@ -31,7 +32,8 @@
                     </div>
                 </div>
             </div>
-            <div class="trivia">
+            <div class="trivia" v-if="currentTab == 'trivia'">
+                here is a trivia menu how do you like it?
                 <div class="question-row">
                     <div class="id"></div>
                     <div class="category"></div>
@@ -45,7 +47,7 @@
     </div>
 
     <div id="user-controls" class="user-controls">
-        <h2>Accounts</h2>
+        <h2 style="margin-top: 10px;">Accounts</h2>
         <div class="content">
             <div class="users">
                 <div class="header">add remove disable enable</div>
@@ -102,10 +104,19 @@
         var vue_users = new Vue({
             el: '#game-controls',
             data: {
-                gameControlTabs: ["rooms", "trivia"],
+                currentTab: "rooms",
                 users: [
                     
                 ]
+            },
+            methods: {
+                tabClick(e) {
+                    console.log(e);
+                }
+            },
+
+            computed: {
+
             }
         })
 

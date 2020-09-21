@@ -5,6 +5,8 @@
 
 const express = require('express')
 
+const { Sequelize, DataTypes } = require('sequelize');
+
 var session = require('express-session');
 var MemoryStore = require('memorystore')(session)
 var sessionStore = new MemoryStore({
@@ -51,7 +53,10 @@ var dayjs = require('dayjs')
     dayjs.extend(isSameOrAfter)
     dayjs.extend(advancedFormat)
 
+/* ------------------- CUSTOM MODULES ------------------- */
+
 const Game = require('./game.js')
+const { defineUsers } = require('./sik_db.js')
 
 
 /* ------------------- DEBUG MODES ------------------- */
@@ -61,7 +66,32 @@ if(process.argv[2] == "--host" || process.argv[2] == "-h") {
     return;
 }
 
-/* ------------------- SETUP ------------------- */
+/* ------------------- DATABASE SETUP ------------------- */
+
+
+// (async() => {
+    //     try {
+        //         await sequelize.authenticate();
+        //         console.log('Connection has been established successfully.');
+        //         const Users = await defineUsers(sequelize);
+        //         const queryResult = await Users.findAll();
+        //         console.log("All users:", JSON.stringify(queryResult, null, 2))
+        //     } catch (error) {
+            //         console.error('Unable to connect to the database:', error);
+            //     }
+            // })();
+            
+            
+
+
+
+
+
+// defineUsers(sequelize).findAll()
+// console.log("All users:", JSON.stringify(users, null, 2));
+// return;
+
+/* ------------------- GENERAL SETUP ------------------- */
 
 roomList = ["lobby", "history", "slang", "maps", "madlibs", "history II", "slang II", "people"]
 
@@ -105,7 +135,7 @@ app.route('/')
     .post((req, res) => {
         console.log("post /")
 
-        if (req.session.user && req.cookies.sik_sid) {
+        if(req.session.user && req.cookies.sik_sid) {
             // register new login
             if(req.body.register == true) {
                 console.log(" -- registration attempt -- ")
@@ -166,6 +196,23 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(__dirname + '/dashboard/dashboard.html');
 })
 
+
+
+/* ------------------- WEB SERVER ------------------- */
+            
+const sequelize = new Sequelize('postgres://allanluchenitser:@localhost:5432/sikchat');
+// command line port selection or default to 3000
+let port = parseInt(process.argv[2]);
+port = port && port >= 1023 && port <= 65535
+    ? port
+    : 3000;
+
+
+sequelize.sync().then(() => {
+    http.listen(port, function() {
+        console.log(`listening on *:${port}`);
+    });
+});
 
 /* ----------------- GAME LOOPS ----------------- */
 
@@ -327,18 +374,6 @@ io.on('connection', socket => {
 
         disconnectTimers[socket.handshake.session.user.guid] = timer
     });
-});
-
-/* ------------------- WEB SERVER ------------------- */
-
-// command line port selection or default to 3000
-let port = parseInt(process.argv[2]);
-port = port && port >= 1023 && port <= 65535
-    ? port
-    : 3000;
-
-http.listen(port, function() {
-    console.log(`listening on *:${port}`);
 });
 
 

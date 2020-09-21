@@ -37,13 +37,37 @@ h1, h2 {
   cursor: pointer;
   padding: 5px;
   margin-right: 2px;
+  user-select: none;
+}
+.game-controls .header .tab.active {
+  text-decoration: underline;
 }
 .game-controls .content {
   border: 1px dashed pink;
   padding: 5px;
   overflow: auto;
+  display: flex;
+}
+.game-controls .content .rooms, .game-controls .content .trivia {
+  width: 100%;
+  animation: fadeIn 0.2s;
+  opacity: 1;
+}
+.game-controls .content .rooms {
+  background-color: lightpink;
+}
+.game-controls .content .trivia {
+  background-color: lightgreen;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .user-controls {
   display: grid;
   grid-template-rows: min-content auto;

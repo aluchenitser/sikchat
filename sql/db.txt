@@ -10,23 +10,89 @@ question_categories
 
 
 
-Mia, picturing little Mayan (get it) temples - is it best when the base cheese is a bit more dense? (lol, don't answer)
 
-Miami! Yes, a friend did his undergrad there. They have one of the few terminal Master's of econ programs. Myself, I did an undergrad at OSU (the Harvard of just north of downtown, as they say).
+POSTGRES
+--------
 
-You studied, hmm, i'm thinking a humanities and/or maybe statistics. 
+https://www.postgresqltutorial.com/
 
-Enjoy: Fiona Apple, Sebadoh, BoJack (that horse is a dick), Invisible Man, and Black Mirror creeps me out too.
+mac 
+	https://postgresapp.com/							GUI server for mac
+		postgres.app
 
-Might I recommend, Cobra Kai (you probably already heard). And, since our context is dating, a cute little movie called Timer. 
-
-By the way is New York ok now? Be safe. I don't really have friends there anymore so not much update besides the news.
-
-
+	postico												postgres client for mac
 
 
+Sequelize					ORM for node, compatible with many databases
+Okta
+
+psql -p5432 "allanluchenitser" 			start postgres at port 5432 using database "allanluchenitser"
+
+export PATH=/Applications/Postgres.app/Contents/Versions/12/bin:$PATH
+
+install tips
+	https://stackoverflow.com/questions/25389304/postgres-app-cant-find-database-with-my-username
+
+find
+	-name
+	-iname
+	-type f
+	-type d
+
+less navigation
+	g G				beginning, end of file
+
+
+info
+	\l	or \l+ or
+		SELECT datname FROM pg_database;				show database
+
+	SELECT current_user;
+	SELECT current_database();
+
+psql 
+	-U <username> 										use this username
+	-W													require password
+	-d dvdrental										use this database
+
+pg_restore												load a database
+	pg_restore -U postgres -d dvdrental /Users/allanluchenitser/Downloads/dvdrental
+		make sure you're in /Applications/Postgres.app/Contents/Versions/12/bin
+		and that Postgress.app is running
 
 
 
+pg_dump
+
+\dt								show data tables
+\dt+								"   verbose 
+
+CREATE DATABASE dvdrental;
+
+AS					alias cannot be used in where or having
+
+GROUP BY			splits these rows into groups
+					use with SUM() and COUNT()
+
+WHERE				filters before grouping, evaluates per row
+					cannot have aggregate functions
+					uses index
+
+HAVING				filters after grouping, evaluates per group
+					can have aggregate functions
+					only used in grouping
+					does not ues index
+
+
+
+sequelize
+	https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize
+
+	npm install --save sequelize
+	npm install --save pg pg-hstore
+
+
+postgres connection string?
+	postgres://<db_user>:<db_password>@<host>:<port>/<database>
 
 

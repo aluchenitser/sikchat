@@ -42,6 +42,11 @@ h1, h2 {
             cursor: pointer;
             padding: 5px;
             margin-right: 2px;
+            user-select: none; 
+
+            &.active {
+                text-decoration: underline;
+            }
         }
     }
 
@@ -49,6 +54,35 @@ h1, h2 {
         border: 1px dashed pink;
         padding: 5px;
         overflow: auto;
+        display: flex;
+
+
+
+        .rooms, .trivia {
+            // position: absolute;
+            // height: 100%;
+            width: 100%;
+            animation: fadeIn .2s;
+            opacity: 1;
+        }
+
+        .rooms {
+            background-color: lightpink;
+        }
+
+        .trivia {
+            background-color: lightgreen;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
     }
 }
 
