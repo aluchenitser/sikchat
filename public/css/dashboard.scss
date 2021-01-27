@@ -1,0 +1,203 @@
+[v-cloak] {
+    display: none;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    // overflow: hidden;
+}
+
+body {
+    // padding: 5px;
+    font-family: monospace, Arial;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    // border: 1px dotted red;
+    height: 100%;
+    max-height: 100%;
+    padding: 5px;
+}
+
+h1, h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+
+* {
+    box-sizing: border-box;
+    outline-color: black;
+}
+
+
+.game-controls {
+    display: grid;
+    grid-template-rows: min-content min-content auto;
+
+    .header {
+        display: flex;
+
+        .tab {
+            border: 1px solid pink;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            padding: 5px 8px;
+            margin-right: 4px;
+            user-select: none; 
+            position: relative;
+            top: 1px;
+            background-color: #ffb6c129;
+
+            &.active {
+                background-color: white;
+            }
+        }
+    }
+
+    .content {
+        border: 1px solid pink;
+        padding: 5px;
+        overflow: auto;
+        display: flex;
+
+        .rooms {
+            width: 100%;
+            opacity: 1;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            
+
+            .wrap {
+                border: 1px dotted lightslategray;
+
+                .header {
+                    font-weight: bold;
+                    text-decoration: underline;
+                    margin-bottom: 4px;
+                }
+
+                .room, > .header {
+                    display: flex;
+                    width: 100%;
+                    cursor: pointer;
+
+                    div {
+                        flex: 1 1 0;
+                        user-select: none;
+
+                        &:first-of-type {
+                            user-select: auto;
+                        }
+                    }
+                    
+                    &.active {
+                        background-color: #ffdae0;
+                    }
+
+                    
+                }
+
+                .new-room {
+                    cursor: pointer;
+                    text-align: right;
+                }
+            }
+
+            .room-details {
+                border: 1px dotted lightslategray;
+            }
+        }
+
+        .trivia {
+            width: 100%;
+            opacity: 1;
+        }
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.user-controls {
+    // resize: vertical;
+    // overflow: auto;
+    display: grid;
+    grid-template-rows: min-content auto;
+
+
+    .content {
+        border: 1px dashed lightgreen;
+        padding: 5px;
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+        
+        column-gap: 10px;
+        row-gap: 10px;
+        overflow: auto;
+        // justify-items: center;
+        // align-items: center;
+        
+        > * {
+            border: 1px dotted brown;
+        }
+        
+        // .header {
+            //     grid-column: 1 / span 2;
+            // }
+            
+        .users {
+            // grid-template-rows: min-content 1fr;
+
+            // display: flex;
+            // flex-direction: column;
+            overflow-y: scroll;
+        }
+
+        .user-info {
+
+        }
+
+        // .section {
+        //     border: 1px dotted brown;
+        //     border-radius: 15px;
+        //     padding: 5px;
+
+        //     &.a {
+
+        //     }
+        //     &.b {
+        //         grid-area: 1 / 2 / 3 / 3;
+        //         justify-self: center;
+        //         align-self: end;
+
+        //         // grid-column-start: 2;
+        //         // grid-row: 1 / span 2;
+        //     }                
+        //     &.c {
+                
+        //     }                
+        //     &.d {
+                
+        //     }                
+        //     &.e {
+                
+        //     }                
+        //     &.f {
+                
+        //     }                
+        // }
+    }
+}

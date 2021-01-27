@@ -1,0 +1,92 @@
+div.starting {
+  animation: fadeIn 0.3s;
+  position: relative;
+  margin: auto 0;
+}
+@media (max-height: 799px) {
+  div.starting {
+    top: -35px;
+  }
+}
+@media (min-height: 800px) {
+  div.starting {
+    top: -75px;
+  }
+}
+div.starting h1, div.starting h2 {
+  position: relative;
+  text-align: center;
+  font-family: monospace;
+  line-height: 1;
+  font-size: 63px;
+  font-weight: 300;
+}
+div.starting .starting-h1 {
+  text-align: center;
+  margin: 0;
+  animation: raise 1s;
+  font-size: 63px;
+  line-height: 0.9;
+}
+div.starting .starting-h2 {
+  text-align: center;
+  animation: slideFromLeft 2s;
+  text-align: center;
+  margin: 0 0 10px 0;
+  font-size: 50px;
+}
+div.starting .countdown-wrapper {
+  text-align: center;
+  margin-bottom: 0;
+  position: relative;
+}
+div.starting .countdown-wrapper img {
+  max-width: 300px;
+}
+div.starting .countdown-wrapper .count-down {
+  position: absolute;
+  left: 49.7%;
+  top: 48%;
+  transform: translate(-50%, -50%);
+  font-family: Lobster, monospace;
+  text-decoration: underline;
+  font-size: 65px;
+}
+div.starting .topic {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* ---- KEYFRAMES ---- */
+@keyframes raise {
+  0% {
+    top: 100px;
+    opacity: 0;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    top: 0;
+    opacity: 1;
+  }
+}
+@keyframes slideFromLeft {
+  0% {
+    left: -500px;
+    opacity: 0;
+  }
+  50% {
+    left: -500px;
+    opacity: 0;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    left: 0;
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=starting.css.map */

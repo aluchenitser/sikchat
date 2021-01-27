@@ -1,0 +1,127 @@
+[v-cloak] {
+  display: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: monospace, Arial;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  height: 100%;
+  max-height: 100%;
+  padding: 5px;
+}
+
+h1, h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+* {
+  box-sizing: border-box;
+  outline-color: black;
+}
+
+.game-controls {
+  display: grid;
+  grid-template-rows: min-content min-content auto;
+}
+.game-controls .header {
+  display: flex;
+}
+.game-controls .header .tab {
+  border: 1px solid pink;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  padding: 5px 8px;
+  margin-right: 4px;
+  user-select: none;
+  position: relative;
+  top: 1px;
+  background-color: #ffb6c129;
+}
+.game-controls .header .tab.active {
+  background-color: white;
+}
+.game-controls .content {
+  border: 1px solid pink;
+  padding: 5px;
+  overflow: auto;
+  display: flex;
+}
+.game-controls .content .rooms {
+  width: 100%;
+  opacity: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.game-controls .content .rooms .wrap {
+  border: 1px dotted lightslategray;
+}
+.game-controls .content .rooms .wrap .header {
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: 4px;
+}
+.game-controls .content .rooms .wrap .room, .game-controls .content .rooms .wrap > .header {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+}
+.game-controls .content .rooms .wrap .room div, .game-controls .content .rooms .wrap > .header div {
+  flex: 1 1 0;
+  user-select: none;
+}
+.game-controls .content .rooms .wrap .room div:first-of-type, .game-controls .content .rooms .wrap > .header div:first-of-type {
+  user-select: auto;
+}
+.game-controls .content .rooms .wrap .room.active, .game-controls .content .rooms .wrap > .header.active {
+  background-color: #ffdae0;
+}
+.game-controls .content .rooms .wrap .new-room {
+  cursor: pointer;
+  text-align: right;
+}
+.game-controls .content .rooms .room-details {
+  border: 1px dotted lightslategray;
+}
+.game-controls .content .trivia {
+  width: 100%;
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.user-controls {
+  display: grid;
+  grid-template-rows: min-content auto;
+}
+.user-controls .content {
+  border: 1px dashed lightgreen;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 10px;
+  overflow: auto;
+}
+.user-controls .content > * {
+  border: 1px dotted brown;
+}
+.user-controls .content .users {
+  overflow-y: scroll;
+}
+
+/*# sourceMappingURL=dashboard.css.map */

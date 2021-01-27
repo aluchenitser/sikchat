@@ -1,0 +1,168 @@
+@import "../../css/_variables";  
+
+div.ending {
+    width: 80%;
+    margin: auto; 
+    padding: 0 15px;
+    left: -2px;
+    position: relative;
+    animation: fadeIn $fade-in-length;  
+    transition: opacity 0.5s;
+
+
+    .points-wrap {
+        width: 75%;
+        margin: 0 auto;
+        transform: translateX(-2%);
+
+        letter-spacing: 0.5px;
+
+        .dots {
+            width: 100%;
+            border-bottom: 3px dotted;
+            margin-left: 8px;
+            margin-right: 8px;
+            position: relative;
+            top: -6px;
+        }
+    }
+
+    * {
+        font-size: 1.6rem;
+        font-style: italic;
+        letter-spacing: -1.5px;
+    }
+
+    @media (max-height: 799px) {
+        top: 5px;
+    }
+    @media (min-height: 800px) {
+        top: -45px;
+    }
+
+  
+    .you-header {
+        text-align: center;
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .stats-header {
+        border-bottom: 1px solid;
+        margin-bottom: 4px;
+
+        text-shadow: 1px 1px black, -1px -1px black;
+        animation: _31D4D4 5s infinite;
+        letter-spacing: 0.5px;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+        &.round-complete {
+            text-align: center;
+        }
+    }
+
+    @keyframes _31D4D4 {
+        0% {
+            color: #31D4D4;
+          }
+          33% {
+            color: #D4D431;
+          }
+          66% {
+            color: #d431d4;
+          }
+          100% {
+            color: #31D4D4;
+          }
+    }
+
+
+    .skew-box-wrap {
+
+        position: relative;
+        width: 85%;
+        margin: 0 auto;
+        
+        span {
+            display: inline-block;
+            color: white;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-family: monospace;
+            text-shadow: 2px 2px black;
+            width: 100%;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .skew-box {
+            height: 60px;
+            margin: 0 auto 35px auto;
+            transform: skewX(-35deg);
+            text-align: center;
+            box-shadow: 1px 1px 1px black;
+            
+            user-select: none;
+
+            &.round-complete-box {
+                background-color: $triad-magenta;
+                animation: _EE90EE_bg 5s infinite;
+
+                + span {
+                    text-decoration: underline;
+                }
+            }
+
+            &.winner-box {
+                background-color: $triad-blue;
+                animation: _31D4D4_bg 5s infinite;
+
+                + .fin {
+                    background-color: $triad-blue;
+                    animation: _31D4D4_bg 5s infinite;
+                }
+            }
+
+            &.topic-box {
+                background-color: $triad-yellow;
+                animation: _D4D431_bg 5s infinite;
+
+                + .fin {
+                    background-color: $triad-yellow;
+                    animation: _D4D431_bg 5s infinite;
+                }                
+            }
+
+            + .fin {
+                position: absolute;
+                right: -20px;
+                top: -19px;
+                height: 18px;
+                font-size: 16px;
+                color: white;
+                padding: 0 30px;
+                text-shadow: 1px 1px 1px black;
+                letter-spacing: 0.5px;
+
+                box-shadow: 1px 1px 1px black;
+                user-select: none;
+            }
+        }
+
+        &.last {
+            margin-bottom: 95px;
+        }
+    }
+
+    .stats-wrap {
+        margin-bottom: 30px;
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}

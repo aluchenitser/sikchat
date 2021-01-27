@@ -1,0 +1,123 @@
+{
+    "meta": {
+       "topic": "slang",
+       "starting-h1": "Talk street?",
+       "starting-h2": "GET CRED",
+       "ending-quip": "Raised your paper? Or, smooched the curb.",
+       "description": "various slang, from street to goofy",
+       "created": "July 15th",
+       "creator": "Allan"
+    },
+    "questions": [
+       {
+          "question": "adjective describing a rough, likely public denouncement of another person",
+          "answer": "savage",
+          "difficulty": "hard",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null
+          }
+       },
+       {
+          "question": "percieved as dull and / or gravitating towards only the most obvious cultural offerings",
+          "answer": "basic",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null
+          }
+       },
+       {
+          "question": "slang word for juicy gossip",
+          "answer": "tea",
+          "difficulty": "medium",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "upon doing something reckless, one might utter this acronym, used as an aphorism",
+          "answer": "YOLO",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "an item or items of proof that rejects the notion that a piece of gossip is untrue",
+          "answer": "receipts",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "you are aware of social injustice, you might be considered _______ ",
+          "answer": "woke",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "someone who is particularly gifted at a thing, though sometimes this acronym is used in jest",
+          "answer": "GOAT",
+          "difficulty": "medium",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "an acronym used as term of endearment, generally but not exclusively between romantic partners",
+          "answer": "BAE",
+          "difficulty": "medium",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "looking unappealing, or more generally, just haggard",
+          "answer": "busted",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       },
+       {
+          "question": "if an individual is seen as excelling in an agressive or sudden fashion, they may have gone _______",
+          "answer": "beast",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null
+          }
+       },
+       {
+          "question": "often used publically to accuse someone of having their feelings hurt",
+          "answer": "salty",
+          "difficulty": "easy",
+          "extras": {
+             "hints": [],
+             "postAnswerMessage": null,
+             "image": null 
+          }
+       }
+    ]
+ }

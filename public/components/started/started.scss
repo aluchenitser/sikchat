@@ -1,0 +1,299 @@
+@import "../../css/variables";
+
+.started-wrap {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+
+    &.success {
+        .correct {
+            opacity: 1;
+        }
+
+        .difficulty-wrap img {
+            animation: spin 0.3s;
+        }
+
+        .success-overlay svg {
+            opacity: 1;
+        }
+    }
+
+    .correct {
+        position: absolute; 
+        font-size: 50px;
+        font-family: Courier, monospace;
+        opacity: 0;
+        text-decoration: underline;
+        font-style: italic;
+        transition: opacity 0.4s;
+
+        letter-spacing: 0.5px;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        color: white;
+
+        &.top {
+            top: -100px;
+        }
+
+        &.bottom {
+            bottom: -100px;
+        }
+    }
+
+    .countdown-wrap {
+        width: 45px;
+        height: 45px;
+
+        margin: 8px 10px;
+        position: absolute;
+
+        img {
+            position: absolute;
+            width: 45px;
+            filter: drop-shadow(1px 1px 1px black);
+        }   
+
+        span {
+            position: absolute;
+            left: 51%;
+            top: 56%;
+            transform: translate(-49%, -52%);
+            font-size: 22px;
+            color: #2b2b2b;
+        }  
+
+    }
+
+    .difficulty-wrap {
+        position: absolute;
+        width: 109px;
+        margin: 8px 10px;
+        right: 0;
+        overflow: hidden;
+        height: 35px;
+        display: flex;
+        transition: width 0.3s 0.3s;
+
+        img {
+            width: 33px;
+            filter: drop-shadow(1px 1px 1px black);
+            margin-left: 3px;
+        }
+
+        &.easy {
+            width: 38px;
+        }
+
+        &.medium {
+            width: 75px;
+        }
+
+        &.hard {
+            width: 109px;
+        }
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0);
+        }
+       
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    // @keyframes fadeInOut {
+    //     0% {
+    //         opacity: 0;
+    //     }
+       
+    //     50% {
+    //         opacity: 1;
+    //     }
+
+    //     100% {
+    //         opacity: 0;
+    //     }
+    // }    
+    
+   
+    .started {
+        display: flex;
+        flex-flow: column nowrap;
+        height: 100%;
+        width: 80%;
+        margin: 0 auto;
+        align-items: center;
+        
+        animation: fadeIn $fade-in-length;
+
+        .question-answer-wrap {
+            display: flex;
+            align-items: center;
+            flex-flow: column nowrap;
+            margin: auto 0;
+            min-height: 25%;
+            position: relative;
+
+            // @media (max-height: 720px) {
+            //     top: -30px;
+            // }
+            // @media (min-height: 721px) {
+            //     top: -75px;
+            // }
+
+    
+            // @media (max-height: 799px) {
+            //     top: -60px;
+            // }
+            // @media (min-height: 800px) {
+            //     top: -75px;
+            // }            
+        }
+
+        .question-text-wrap {
+            // align-items: center;
+            // justify-content: center;
+            flex: 1;
+
+            display: flex;
+            flex-flow: column;
+
+            justify-content: center;
+
+            .question-text {
+                font-size: 1.5rem;
+                opacity: 1;
+                text-align: justify;
+                // border: 1px dotted blue;
+
+            }
+
+            .question-text-phantom {
+                color: transparent;
+                // border: 1px dotted pink;
+
+                font-size: 1.5rem;
+                opacity: 1;
+                text-align: justify;
+
+                // visibility: hidden;
+                height: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+                // overflow: hidden;
+            }
+        }
+
+        .answer-text-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0;
+            transition: flex .5s;
+         
+            
+            .answer-text {
+                font-size: 1.8rem;
+                font-style: italic;
+                width: 80%;
+                text-align: center;
+                opacity: 0;
+                position: absolute;
+                text-align: justify;
+            }
+        }
+
+        &.answered {
+            
+            .question-text-wrap {
+                flex: 1;
+
+                .question-text {
+                    opacity: 0.3;
+                    transition: opacity .5s;
+                }
+            }
+            .answer-text-wrap {
+                flex: 2;
+
+                .answer-text {
+                    opacity: 1;
+                    position: relative;
+                    transition: opacity .5s;
+                }
+            }
+        }
+    }
+
+
+    .success-overlay {
+        height: 100%;
+        width: 100%;
+        background-color: transparent;
+        // opacity: 0;
+        z-index: -1;
+        position: absolute;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        left: 0;
+        overflow: hidden;
+            
+        svg {
+            position: absolute;
+            z-index: 1;
+            transform: scale(var(--star-scale)) translateY(-20px) rotate(var(--random-rotation)); 
+            opacity: 0;
+            fill: var(--random-triad);
+            transition: opacity 0.4s;
+        }
+
+        svg:nth-child(1) {
+            top: 0;
+            left: 0;
+        }
+        svg:nth-child(2) {
+            top: 0;
+            right: 0;
+        }
+        svg:nth-child(3) {
+            bottom: 0;
+            left: 0;
+        }
+        svg:nth-child(4) {
+            bottom: 0;
+            right: 0;
+        }
+
+        svg:nth-child(5) {
+
+        }
+
+        .success-text {
+            font-family: 'Lobster', cursive;
+            font-size: 3rem;
+            z-index: 1;
+            user-select: none;
+            position: absolute;
+        }
+
+        // &.success {
+
+        //     svg {
+        //         // transform: scale(2) translateY(-20px) rotate(90deg);
+        //         animation: success 0.8s;
+        //     }
+        // }
+
+        &.debug {
+            svg {
+                opacity: 1;
+            }
+        }
+    }
+}
+

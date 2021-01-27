@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>sikchat</title>
+        
+        <!-- UNIVERSAL -->
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/sikchat.css">
+
+        <!-- FONTS -->
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&display=swap" rel="stylesheet">
+
+
+        <!-- GAMES -->
+        <link rel="stylesheet" type="text/css" href="components/intermission/intermission.css">
+        <link rel="stylesheet" type="text/css" href="components/starting/starting.css">
+        
+        <link rel="stylesheet" type="text/css" href="components/started/started.css">
+        <link rel="stylesheet" type="text/css" href="components/alreadyinprogress/alreadyinprogress.css">
+        <!-- <link rel="stylesheet" type="text/css" href="components/alreadyinprogress/clock.css"> -->
+
+        <link rel="stylesheet" type="text/css" href="components/ending/ending.css">
+
+        
+        <script src="https://use.fontawesome.com/4d7207fa33.js"></script>
+    </head>
+    <body>
+        <input id="side-bar-toggle" type="checkbox" />
+        <label class="open-side-bar shine" for="side-bar-toggle" tabindex="0" ><i class="fa fa-bars"></i></label>
+        <div class="side-bar">
+            <input type="checkbox" class="toggles" id="register-wrap-toggle" />
+            <input type="checkbox" class="toggles" id="login-wrap-toggle" />
+            <input type="checkbox" class="toggles" id="register-password-toggle" />
+            <input type="checkbox" class="toggles" id="logout-toggle" />
+
+            <label class="close-side-bar" for="side-bar-toggle" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
+
+            <div class="side-bar-row side-bar-row-username">
+                <form id="user-bar" class="user-bar">
+                    <input id="username" tabindex="0" name="username" type="text" autocomplete="off" spellcheck="false" maxlength="16" />
+                </form> 
+                <div class="user-label-wrap">
+                    <label>moniker</label><span class="change-username" tabindex="0">save</span>
+                </div>
+            </div>
+
+            <div class="side-bar-row rooms">
+                <label>rooms</label><br />
+                <div class="rooms-wrapper">
+                    
+                </div>
+            </div>
+            <div class="side-bar-row">
+                <div class="logout-wrap">
+                    <span class="logout" tabindex="0">logout</span>
+                </div>
+                <div class="login-choosers">
+                    <div class="login" tabindex="0" id="login-wrap-toggler">LOGIN</div>
+                    <div class="register" tabindex="0" id="register-wrap-toggler">REGISTER</div>
+                </div>
+                <div class="login-wrap">
+                     <hr />
+                    <div class="email-wrap">
+                        <label class="email" for="register-email">email</label>
+                        <input id="email-input-login" class="email" name="email" type="text" autocomplete="off" />
+                    </div>
+                    <div class="password-wrap">
+                        <label class="password">password (w/ number)</label>
+                        <input id="password-login" type="password" maxlength="8" autocomplete="off" />
+                    </div>
+                    <div class="login-submit-wrap">
+                        <span class="login-submit" tabindex="0">submit</span>
+                    </div>
+                </div>
+                <div class="register-wrap">
+                        <hr />
+
+                    <div class="email-wrap">
+                        <label class="email" for="register-email">email</label>
+                        <input id="email-input-register" class="email" name="email" type="text" autocomplete="off" />
+                    </div>
+                    <div class="password-wrap">
+                        <label class="password">password (w/ number)</label>
+                        <input id="password-register" type="password" maxlength="8" autocomplete="off" />
+                    </div>
+                    <div class="retype-password-wrap">
+                        <label class="retype-password">retype password</label>
+                        <input id="retype-password-register" type="password" maxlength="8" autocomplete="off" />
+                    </div>
+                    <div class="register-submit-wrap">
+                        <span class="register-submit" tabindex="0">submit</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input id="pm-bar-toggle" type="checkbox" />
+        <label class="open-pm-bar shine" for="pm-bar-toggle" tabindex="0" ><i class="fa fa-comment"></i></label>
+        <div class="pm-bar">
+            <label class="close-pm-bar" for="pm-bar-toggle" tabindex="0"><i style="opacity: 1" class="fa fa-caret-left"></i></label>
+            <div class="header">occupants</div>
+            <div class="pm-users-wrapper">
+                <div class="pm-user"> ... just you ... </div>
+            </div>
+        </div>
+
+
+        <!-- <div class="tiny-header-user-name"></div> -->
+      
+        <div class="chat-body">
+            <div id="messages">
+                <!-- <div class="success-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="260" height="245">
+                        <path d="m55,237 74-228 74,228L9,96h240"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="260" height="245">
+                        <path d="m55,237 74-228 74,228L9,96h240"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="260" height="245">
+                        <path d="m55,237 74-228 74,228L9,96h240"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="260" height="245">
+                        <path d="m55,237 74-228 74,228L9,96h240"/>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="260" height="245">
+                        <path d="m55,237 74-228 74,228L9,96h240"/>
+                    </svg>
+                    <span class="success-text"></span>
+                </div> -->
+                <div class="sik-spinner">
+                    <span>init..</span>
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+            </div>
+            <div class="handler"></div>
+                
+            <div id="game-window">
+                <div class="sik-spinner">
+                    <span>init..</span>
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-bar-wrap">
+            <div class="chat-bar">
+                <form id="chat-form" class="form-column">
+                    <label tabindex="0" id="tab-segue-1" style="position: absolute">&nbsp</label>
+
+                    <input id="message-input" name="message-input" autofocus="true" autocomplete="off" maxlength="280" /><button id="submit-button" tabindex="-1"></button>
+                    <div class="next-game-in-wrapper">NEXT GAME IN: <span id="next-game-in"></span>s</div>
+                </form>
+
+                <div class="spacer-column"></div>
+                <div class="logo-column"> <span id="logo">sikchat</span> </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.29/dayjs.min.js" integrity="sha512-APVsMirhHF2o3YdCSwYonM7egfT589pTqyoy5hIzEbs9sAGJSbEI6ssXUwngHjaq4V/GmmmpgqrcLSvsO+gsJQ==" crossorigin="anonymous"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+       
+        <script src="js/FEUtils.js"></script>
+        <script src="js/screen.js"></script>
+        <script src="js/ui.js"></script>
+
+        <script>
+            /* ------------- DRAGGABLE WINDOW DIVIDER ------------- */
+            
+            var handler = document.querySelector('.handler');
+            var chatBody = document.querySelector('.chat-body');
+            var messages = document.getElementById('messages');
+            var isHandlerDragging = false;
+
+            // --- resizeable center bar ---
+
+            // init left window
+            initDrag()
+
+            document.addEventListener('mousedown', function(e) {
+                // console.log()
+
+                // If mousedown event is fired from .handler, toggle flag to true
+                if (e.target === handler) {
+                    isHandlerDragging = true;
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+            // Don't do anything if dragging flag is false
+                if (!isHandlerDragging) {
+                    return false;
+                }
+
+            // Get offset
+                var containerOffsetLeft = chatBody.offsetLeft;
+
+                // Get x-coordinate of pointer relative to container
+                var pointerRelativeXpos = e.clientX - containerOffsetLeft;
+
+                // Resize box A
+                // * 8px is the left/right spacing between .handler and its inner pseudo-element
+                // * Set flex-grow to 0 to prevent it from growing
+                // messages.style.width = (pointerRelativeXpos - 8) + 'px';
+                messages.style.width = pointerRelativeXpos + 'px';
+                messages.style.flexGrow = 0;
+            });
+
+            document.addEventListener('mouseup', function(e) {
+                // Turn off dragging flag when user mouse is up
+                isHandlerDragging = false;
+                // console.log(e.target)
+            });
+
+
+            window.addEventListener("resize", () => {
+                if(messages.style.flexGrow == 0) {
+                    messages.style.flex = "1 1 0"
+                    messages.style.width = "auto"
+                }
+            })
+
+            var resizeId;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeId);
+                resizeId = setTimeout(initDrag, 500)
+            })
+
+            function initDrag() {
+                messages.style.width = messages.offsetWidth + "px"
+                messages.style.flex = "0 1 auto"
+            }
+
+
+            document.addEventListener('mouseup', function(e) {
+                // Turn off dragging flag when user mouse is up
+                isHandlerDragging = false;
+            });
+
+            window.addEventListener("keyup", function(e) {
+                // console.log(e)
+                if(e.key == "Escape" && e.target.id != "message-input") {
+                    document.getElementById("side-bar-toggle").checked = false
+                }
+            })
+
+            /* ----------- UTILITY FOR DEV TOOLS ----------- */
+            function activeElement(bool) {
+                if(bool) {
+                    t = setInterval(() => {
+                        console.log(document.activeElement)
+                    }, 500)
+                }
+                else {
+                    clearTimeout(t)
+                }
+            }
+
+
+        </script>
+    </body>
+</html>

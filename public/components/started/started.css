@@ -1,0 +1,200 @@
+.started-wrap {
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+}
+.started-wrap.success .correct {
+  opacity: 1;
+}
+.started-wrap.success .difficulty-wrap img {
+  animation: spin 0.3s;
+}
+.started-wrap.success .success-overlay svg {
+  opacity: 1;
+}
+.started-wrap .correct {
+  position: absolute;
+  font-size: 50px;
+  font-family: Courier, monospace;
+  opacity: 0;
+  text-decoration: underline;
+  font-style: italic;
+  transition: opacity 0.4s;
+  letter-spacing: 0.5px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  color: white;
+}
+.started-wrap .correct.top {
+  top: -100px;
+}
+.started-wrap .correct.bottom {
+  bottom: -100px;
+}
+.started-wrap .countdown-wrap {
+  width: 45px;
+  height: 45px;
+  margin: 8px 10px;
+  position: absolute;
+}
+.started-wrap .countdown-wrap img {
+  position: absolute;
+  width: 45px;
+  filter: drop-shadow(1px 1px 1px black);
+}
+.started-wrap .countdown-wrap span {
+  position: absolute;
+  left: 51%;
+  top: 56%;
+  transform: translate(-49%, -52%);
+  font-size: 22px;
+  color: #2b2b2b;
+}
+.started-wrap .difficulty-wrap {
+  position: absolute;
+  width: 109px;
+  margin: 8px 10px;
+  right: 0;
+  overflow: hidden;
+  height: 35px;
+  display: flex;
+  transition: width 0.3s 0.3s;
+}
+.started-wrap .difficulty-wrap img {
+  width: 33px;
+  filter: drop-shadow(1px 1px 1px black);
+  margin-left: 3px;
+}
+.started-wrap .difficulty-wrap.easy {
+  width: 38px;
+}
+.started-wrap .difficulty-wrap.medium {
+  width: 75px;
+}
+.started-wrap .difficulty-wrap.hard {
+  width: 109px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.started-wrap .started {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+  width: 80%;
+  margin: 0 auto;
+  align-items: center;
+  animation: fadeIn 0.3s;
+}
+.started-wrap .started .question-answer-wrap {
+  display: flex;
+  align-items: center;
+  flex-flow: column nowrap;
+  margin: auto 0;
+  min-height: 25%;
+  position: relative;
+}
+.started-wrap .started .question-text-wrap {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+.started-wrap .started .question-text-wrap .question-text {
+  font-size: 1.5rem;
+  opacity: 1;
+  text-align: justify;
+}
+.started-wrap .started .question-text-wrap .question-text-phantom {
+  color: transparent;
+  font-size: 1.5rem;
+  opacity: 1;
+  text-align: justify;
+  height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.started-wrap .started .answer-text-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0;
+  transition: flex 0.5s;
+}
+.started-wrap .started .answer-text-wrap .answer-text {
+  font-size: 1.8rem;
+  font-style: italic;
+  width: 80%;
+  text-align: center;
+  opacity: 0;
+  position: absolute;
+  text-align: justify;
+}
+.started-wrap .started.answered .question-text-wrap {
+  flex: 1;
+}
+.started-wrap .started.answered .question-text-wrap .question-text {
+  opacity: 0.3;
+  transition: opacity 0.5s;
+}
+.started-wrap .started.answered .answer-text-wrap {
+  flex: 2;
+}
+.started-wrap .started.answered .answer-text-wrap .answer-text {
+  opacity: 1;
+  position: relative;
+  transition: opacity 0.5s;
+}
+.started-wrap .success-overlay {
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  z-index: -1;
+  position: absolute;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  overflow: hidden;
+}
+.started-wrap .success-overlay svg {
+  position: absolute;
+  z-index: 1;
+  transform: scale(var(--star-scale)) translateY(-20px) rotate(var(--random-rotation));
+  opacity: 0;
+  fill: var(--random-triad);
+  transition: opacity 0.4s;
+}
+.started-wrap .success-overlay svg:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+.started-wrap .success-overlay svg:nth-child(2) {
+  top: 0;
+  right: 0;
+}
+.started-wrap .success-overlay svg:nth-child(3) {
+  bottom: 0;
+  left: 0;
+}
+.started-wrap .success-overlay svg:nth-child(4) {
+  bottom: 0;
+  right: 0;
+}
+.started-wrap .success-overlay .success-text {
+  font-family: "Lobster", cursive;
+  font-size: 3rem;
+  z-index: 1;
+  user-select: none;
+  position: absolute;
+}
+.started-wrap .success-overlay.debug svg {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=started.css.map */

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>dashboard</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="game-controls" class="game-controls">
+        <h1>Sikchat Dashboard</h1>
+        <div class="header">
+            <div class="tab rooms" @click="currentTab = 'rooms'" :class="{ active: currentTab == 'rooms' }"> rooms </div>
+            <div class="tab trivia" @click="currentTab = 'trivia'" :class="{ active: currentTab == 'trivia' }"> trivia </div>
+        </div>
+        <div class="content">
+            <div class="rooms" v-if="currentTab == 'rooms'">
+                <div class="wrap" v-cloak>
+                    <div class="header">
+                        <div>name</div>
+                        <div>game</div>
+                        <div>occupants</div>
+                        <div>isActive</div>
+                    </div>
+                    <div v-for="room in rooms" class="room" :key="room.id" @click="selectRoom(room.name)" :class="{ active: currentRoom == room.name}">
+                        <div class="name"> {{ room.name }} </div>
+                        <div class="game"> {{ room.game }} </div>
+                        <div class="occupants"> {{ room.occupants }} </div>
+                        <div class="state"> {{ room.state }} </div>
+                    </div>
+                    <div class="new-room"><span>++ create new room</span></div>   
+                </div>
+                <div class="room-details">
+                    <div class="users">
+
+                    </div>
+                </div>
+            </div>
+            <div class="trivia" v-cloak v-if="currentTab == 'trivia'">
+                here is a trivia menu how do you like it?
+                <div class="question-row">
+                    <div class="id"></div>
+                    <div class="category"></div>
+                    <div class="text"></div>
+                    <div class="answers"></div>
+                    <div class="difficulty"></div>
+                    <div class="followup-id"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="user-controls" class="user-controls">
+        <h2 style="margin-top: 10px;">Accounts</h2>
+        <div class="content">
+            <div class="users">
+                <div class="header">add remove disable enable</div>
+                <div class="user-row">
+                    <div class="id"></div>
+                    <div class="user-name"></div>
+                    <div class="real-name"></div>
+                    <div class="password"></div>
+                    <div class="role"></div>
+                    <div class="email"></div>
+                    <div class="points"></div>
+                    <div class="created"></div>
+                    <div class="last-login"></div>
+                </div>
+            </div>
+            <div class="user-info">
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var vue_users = new Vue({
+            el: '#game-controls',
+            data: {
+                currentTab: "rooms",
+                currentRoom: null,
+                rooms: [
+                    {id: 1, name: "trivia1", game: "trivia", occupants: 20, state: true },
+                    {id: 2, name: "trivia2", game: "trivia", occupants: 20, state: true},
+                    {id: 3, name: "trivia3", game: "trivia", occupants: 14, state: true},
+                    {id: 4, name: "triviaAdvanced1", game: "trivia", occupants: 10, state: true},
+                    {id: 5, name: "triviaAdvanced2", game: "trivia", occupants: 0, state: false}
+                ],
+                users: [
+                    {}
+                ]
+            },
+            methods: {
+                selectRoom(room) {
+                    this.currentRoom = this.currentRoom == room
+                        ? null
+                        : room
+                }
+            },
+
+            computed: {
+
+            }
+        })
+
+    </script>
+</body>
+</html>

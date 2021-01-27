@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>sessions & sockets</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <h1>sockets & sessions</h1>
+        
+        <input id="data" type="text"> <button id="send-data-to-socket">send</button>
+        <br /><br />
+        <!-- <button id="start">START</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="stop">STOP</button> <br /><br /> -->
+
+        <button id="retrieve">retreive</button><br /><br />
+        <div>Retrieved: <span id="retrieved-data"></span></div>
+
+
+
+        <script>
+            var socket = io() 
+
+            // document.getElementById("start").addEventListener("click", e => {
+            //     socket.emit("start_game")
+            // })
+
+            // document.getElementById("stop").addEventListener("click", e => {
+            //     socket.emit("stop_game")
+            // })
+
+            document.getElementById("send-data-to-socket").addEventListener("click", e => {
+                socket.emit("data", document.getElementById("data").value)
+            })
+
+            document.getElementById("retrieve").addEventListener("click", e => {
+                socket.emit("retrieve")
+            })
+            
+            socket.on("retrieve_response", data => {
+                document.getElementById("retrieved-data").textContent = data
+            })
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,143 @@
+div.ending {
+  width: 80%;
+  margin: auto;
+  padding: 0 15px;
+  left: -2px;
+  position: relative;
+  animation: fadeIn 0.3s;
+  transition: opacity 0.5s;
+}
+div.ending .points-wrap {
+  width: 75%;
+  margin: 0 auto;
+  transform: translateX(-2%);
+  letter-spacing: 0.5px;
+}
+div.ending .points-wrap .dots {
+  width: 100%;
+  border-bottom: 3px dotted;
+  margin-left: 8px;
+  margin-right: 8px;
+  position: relative;
+  top: -6px;
+}
+div.ending * {
+  font-size: 1.6rem;
+  font-style: italic;
+  letter-spacing: -1.5px;
+}
+@media (max-height: 799px) {
+  div.ending {
+    top: 5px;
+  }
+}
+@media (min-height: 800px) {
+  div.ending {
+    top: -45px;
+  }
+}
+div.ending .you-header {
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+div.ending .stats-header {
+  border-bottom: 1px solid;
+  margin-bottom: 4px;
+  text-shadow: 1px 1px black, -1px -1px black;
+  animation: _31D4D4 5s infinite;
+  letter-spacing: 0.5px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+div.ending .stats-header.round-complete {
+  text-align: center;
+}
+@keyframes _31D4D4 {
+  0% {
+    color: #31D4D4;
+  }
+  33% {
+    color: #D4D431;
+  }
+  66% {
+    color: #d431d4;
+  }
+  100% {
+    color: #31D4D4;
+  }
+}
+div.ending .skew-box-wrap {
+  position: relative;
+  width: 85%;
+  margin: 0 auto;
+}
+div.ending .skew-box-wrap span {
+  display: inline-block;
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-family: monospace;
+  text-shadow: 2px 2px black;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+div.ending .skew-box-wrap .skew-box {
+  height: 60px;
+  margin: 0 auto 35px auto;
+  transform: skewX(-35deg);
+  text-align: center;
+  box-shadow: 1px 1px 1px black;
+  user-select: none;
+}
+div.ending .skew-box-wrap .skew-box.round-complete-box {
+  background-color: #d431d4;
+  animation: _EE90EE_bg 5s infinite;
+}
+div.ending .skew-box-wrap .skew-box.round-complete-box + span {
+  text-decoration: underline;
+}
+div.ending .skew-box-wrap .skew-box.winner-box {
+  background-color: #31D4D4;
+  animation: _31D4D4_bg 5s infinite;
+}
+div.ending .skew-box-wrap .skew-box.winner-box + .fin {
+  background-color: #31D4D4;
+  animation: _31D4D4_bg 5s infinite;
+}
+div.ending .skew-box-wrap .skew-box.topic-box {
+  background-color: #D4D431;
+  animation: _D4D431_bg 5s infinite;
+}
+div.ending .skew-box-wrap .skew-box.topic-box + .fin {
+  background-color: #D4D431;
+  animation: _D4D431_bg 5s infinite;
+}
+div.ending .skew-box-wrap .skew-box + .fin {
+  position: absolute;
+  right: -20px;
+  top: -19px;
+  height: 18px;
+  font-size: 16px;
+  color: white;
+  padding: 0 30px;
+  text-shadow: 1px 1px 1px black;
+  letter-spacing: 0.5px;
+  box-shadow: 1px 1px 1px black;
+  user-select: none;
+}
+div.ending .skew-box-wrap.last {
+  margin-bottom: 95px;
+}
+div.ending .stats-wrap {
+  margin-bottom: 30px;
+}
+div.ending .stats-wrap .stats-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+/*# sourceMappingURL=ending.css.map */
